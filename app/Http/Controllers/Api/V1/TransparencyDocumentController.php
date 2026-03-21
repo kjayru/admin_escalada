@@ -14,16 +14,16 @@ class TransparencyDocumentController extends Controller
      */
     public function index(Request $request)
     {
-        $query = TransparencyDocument::where('is_published', true)
-            ->with(['file'])
+        $query = TransparencyDocument::published()
+            ->with(['media'])
             ->orderBy('published_at', 'desc');
 
         if ($request->has('type')) {
-            $query->where('type', $request->type);
+            $query->byType($request->input('type'));
         }
 
         if ($request->has('year')) {
-            $query->whereYear('published_at', $request->year);
+            $query->byYear((int) $request->input('year'));
         }
 
         $documents = $query->paginate($request->input('per_page', 20));
@@ -37,8 +37,8 @@ class TransparencyDocumentController extends Controller
     public function show(string $slug)
     {
         $document = TransparencyDocument::where('slug', $slug)
-            ->where('is_published', true)
-            ->with(['file'])
+            ->published()
+            ->with(['media'])
             ->firstOrFail();
 
         return new TransparencyDocumentResource($document);

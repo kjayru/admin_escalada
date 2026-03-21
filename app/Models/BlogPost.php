@@ -12,9 +12,12 @@ class BlogPost extends Model
     protected $fillable = [
         'title',
         'slug',
+        'category',
+        'author_name',
         'excerpt',
         'body',
         'status',
+        'is_featured',
         'published_at',
         'featured_media_id',
         'seo_title',
@@ -22,8 +25,16 @@ class BlogPost extends Model
     ];
 
     protected $casts = [
+        'is_featured'  => 'boolean',
         'published_at' => 'datetime',
     ];
+
+    protected $appends = ['author'];
+
+    public function getAuthorAttribute(): array
+    {
+        return ['name' => $this->author_name ?? 'Escalada Libre'];
+    }
 
     public function featuredMedia(): BelongsTo
     {

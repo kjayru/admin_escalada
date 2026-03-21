@@ -14,9 +14,9 @@ class SupportCampaignController extends Controller
      */
     public function index(Request $request)
     {
-        $campaigns = SupportCampaign::where('is_active', true)
-            ->with(['featuredMedia', 'supportMethods'])
-            ->orderBy('display_order', 'asc')
+        $campaigns = SupportCampaign::active()
+            ->with(['activeMethods.media'])
+            ->orderBy('name', 'asc')
             ->get();
 
         return SupportCampaignResource::collection($campaigns);
@@ -28,8 +28,8 @@ class SupportCampaignController extends Controller
     public function show(string $slug)
     {
         $campaign = SupportCampaign::where('slug', $slug)
-            ->where('is_active', true)
-            ->with(['featuredMedia', 'supportMethods'])
+            ->active()
+            ->with(['activeMethods.media'])
             ->firstOrFail();
 
         return new SupportCampaignResource($campaign);

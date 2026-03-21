@@ -13,8 +13,7 @@ class ProductCategoryController extends Controller
      */
     public function index()
     {
-        $categories = ProductCategory::where('is_active', true)
-            ->orderBy('name', 'asc')
+        $categories = ProductCategory::orderBy('name', 'asc')
             ->get(['id', 'name', 'slug', 'description']);
 
         return response()->json([
@@ -28,7 +27,6 @@ class ProductCategoryController extends Controller
     public function show(string $slug)
     {
         $category = ProductCategory::where('slug', $slug)
-            ->where('is_active', true)
             ->firstOrFail();
 
         return response()->json([

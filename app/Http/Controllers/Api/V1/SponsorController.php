@@ -14,15 +14,10 @@ class SponsorController extends Controller
      */
     public function index(Request $request)
     {
-        $query = Sponsor::where('is_active', true)
-            ->with(['logo'])
-            ->orderBy('display_order', 'asc');
-
-        if ($request->has('level')) {
-            $query->where('level', $request->level);
-        }
-
-        $sponsors = $query->get();
+        $sponsors = Sponsor::active()
+            ->with(['logo', 'slideImage', 'gallery1', 'gallery2', 'gallery3', 'gallery4', 'contactMedia'])
+            ->orderBy('name', 'asc')
+            ->get();
 
         return SponsorResource::collection($sponsors);
     }
@@ -33,8 +28,8 @@ class SponsorController extends Controller
     public function show(string $slug)
     {
         $sponsor = Sponsor::where('slug', $slug)
-            ->where('is_active', true)
-            ->with(['logo'])
+            ->active()
+            ->with(['logo', 'slideImage', 'gallery1', 'gallery2', 'gallery3', 'gallery4', 'contactMedia'])
             ->firstOrFail();
 
         return new SponsorResource($sponsor);

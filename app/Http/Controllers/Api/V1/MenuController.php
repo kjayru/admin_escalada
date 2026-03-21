@@ -14,12 +14,11 @@ class MenuController extends Controller
      */
     public function show(string $location)
     {
-        $menu = Menu::where('location', $location)
-            ->where('is_active', true)
-            ->with(['items' => function ($query) {
-                $query->whereNull('parent_id')
-                      ->orderBy('order')
-                      ->with('children');
+        $menu = Menu::where('name', $location)
+            ->with(['activeItems' => function ($query) {
+                $query->with(['children' => function ($q) {
+                    $q->where('is_active', true)->orderBy('sort_order');
+                }]);
             }])
             ->firstOrFail();
 

@@ -36,6 +36,11 @@ class SponsorPlacement extends Model
         return $this->belongsTo(Media::class, 'banner_media_id');
     }
 
+    public function bannerMedia(): BelongsTo
+    {
+        return $this->belongsTo(Media::class, 'banner_media_id');
+    }
+
     public function scopeActive($query)
     {
         return $query->where('is_active', true)

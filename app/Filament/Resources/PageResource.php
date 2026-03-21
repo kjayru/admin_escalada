@@ -3,6 +3,7 @@
 namespace App\Filament\Resources;
 
 use App\Filament\Resources\PageResource\Pages;
+use App\Models\Media;
 use App\Models\Page;
 use Filament\Forms;
 use Filament\Forms\Form;
@@ -83,13 +84,14 @@ class PageResource extends Resource
                                 Forms\Components\Select::make('type')
                                     ->label('Tipo de Sección')
                                     ->options([
-                                        'hero' => 'Hero',
-                                        'text' => 'Texto',
-                                        'gallery' => 'Galería',
-                                        'cards' => 'Tarjetas',
+                                        'hero'     => 'Hero',
+                                        'text'     => 'Texto',
+                                        'gallery'  => 'Galería',
+                                        'cards'    => 'Tarjetas',
                                         'timeline' => 'Línea de Tiempo',
-                                        'cta' => 'Call to Action',
-                                        'split' => 'Split (Texto + Imagen)',
+                                        'cta'      => 'Call to Action',
+                                        'split'    => 'Split (Texto + Imagen)',
+                                        'map'      => 'Mapa',
                                     ])
                                     ->required(),
                                 Forms\Components\TextInput::make('heading')
@@ -101,9 +103,86 @@ class PageResource extends Resource
                                 Forms\Components\RichEditor::make('body')
                                     ->label('Contenido')
                                     ->columnSpanFull(),
+                                Forms\Components\Select::make('featured_media_id')
+                                    ->label('Imagen principal')
+                                    ->relationship('featuredMedia', 'file_name')
+                                    ->searchable()
+                                    ->preload()
+                                    ->getSearchResultsUsing(fn (string $search) =>
+                                        Media::where('mime_type', 'like', 'image/%')
+                                            ->where('file_name', 'like', "%{$search}%")
+                                            ->limit(20)
+                                            ->pluck('file_name', 'id')
+                                    )
+                                    ->nullable()
+                                    ->columnSpanFull(),
                                 Forms\Components\KeyValue::make('settings')
                                     ->label('Configuraciones')
-                                    ->helperText('Configuraciones adicionales en formato JSON'),
+                                    ->helperText('Configuraciones adicionales en formato JSON')
+                                    ->afterStateHydrated(function (Forms\Components\KeyValue $component, mixed $state): void {
+                                        if (is_string($state)) {
+                                            $decoded = json_decode($state, true);
+                                            $component->state(is_array($decoded) ? $decoded : []);
+                                        }
+                                    }),
+                                Forms\Components\Repeater::make('items')
+                                    ->label('Ítems / Bullets')
+                                    ->relationship()
+                                    ->schema([
+                                        Forms\Components\TextInput::make('title')
+                                            ->label('Texto')
+                                            ->required()
+                                            ->maxLength(500),
+                                        Forms\Components\TextInput::make('sort_order')
+                                            ->label('Orden')
+                                            ->numeric()
+                                            ->default(0),
+                                    ])
+                                    ->columns(2)
+                                    ->defaultItems(0)
+                                    ->reorderable('sort_order')
+                                    ->collapsible()
+                                    ->collapsed()
+                                    ->addActionLabel('Agregar ítem')
+                                    ->columnSpanFull(),
+                                Forms\Components\CheckboxList::make('galleryMediaIds')
+                                    ->label('Imágenes del mosaico (solo tipo gallery)')
+                                    ->options(
+                                        fn () => Media::where('mime_type', 'like', 'image/%')
+                                            ->orderBy('file_name')
+                                            ->pluck('file_name', 'id')
+                                            ->toArray()
+                                    )
+                                    ->afterStateHydrated(function (Forms\Components\CheckboxList $component, $record) {
+                                        if (! $record || ! $record->exists) {
+                                            return;
+                                        }
+                                        $ids = $record->media()
+                                            ->orderByPivot('sort_order')
+                                            ->pluck('media.id')
+                                            ->map(fn ($id) => (string) $id)
+                                            ->toArray();
+                                        $component->state($ids);
+                                    })
+                                    ->dehydrated(false)
+                                    ->saveRelationshipsUsing(function (Forms\Components\CheckboxList $component) {
+                                        $record = $component->getRecord();
+                                        if (! $record) {
+                                            return;
+                                        }
+                                        $selected = array_values(array_filter($component->getState() ?? []));
+                                        $record->media()->detach();
+                                        foreach ($selected as $i => $mediaId) {
+                                            $record->media()->attach((int) $mediaId, [
+                                                'collection' => 'gallery',
+                                                'sort_order' => $i,
+                                            ]);
+                                        }
+                                    })
+                                    ->visible(fn (Forms\Get $get) => $get('type') === 'gallery')
+                                    ->columns(3)
+                                    ->columnSpanFull()
+                                    ->helperText('Marca las imágenes para el mosaico. El orden de sort_order sigue el orden numérico de los IDs seleccionados.'),
                                 Forms\Components\Select::make('status')
                                     ->label('Estado')
                                     ->options([

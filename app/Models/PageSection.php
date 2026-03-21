@@ -17,6 +17,7 @@ class PageSection extends Model
         'subheading',
         'body',
         'settings',
+        'featured_media_id',
         'status',
     ];
 
@@ -29,6 +30,11 @@ class PageSection extends Model
         return $this->belongsTo(Page::class);
     }
 
+    public function featuredMedia(): BelongsTo
+    {
+        return $this->belongsTo(Media::class, 'featured_media_id');
+    }
+
     public function items(): HasMany
     {
         return $this->hasMany(SectionItem::class, 'section_id')->orderBy('sort_order');
@@ -38,6 +44,6 @@ class PageSection extends Model
     {
         return $this->morphToMany(Media::class, 'mediable', 'mediables')
             ->withPivot('collection', 'sort_order')
-            ->orderBy('sort_order');
+            ->orderByPivot('sort_order');
     }
 }

@@ -17,28 +17,33 @@ class SupportCampaignResource extends JsonResource
         return [
             'id' => $this->id,
             'slug' => $this->slug,
-            'title' => $this->title,
+            'name' => $this->name,
             'description' => $this->description,
-            'goal_amount' => $this->goal_amount,
-            'currency' => $this->currency,
-            'start_date' => $this->start_date?->toIso8601String(),
-            'end_date' => $this->end_date?->toIso8601String(),
-            'featured_media' => $this->featuredMedia ? [
-                'id' => $this->featuredMedia->id,
-                'url' => $this->featuredMedia->url,
-                'alt_text' => $this->featuredMedia->alt_text,
-            ] : null,
-            'support_methods' => $this->supportMethods->map(function ($method) {
-                return [
-                    'id' => $method->id,
-                    'type' => $method->type,
-                    'name' => $method->name,
-                    'instructions' => $method->instructions,
-                    'is_active' => $method->is_active,
-                ];
+            'status' => $this->status,
+            'start_at' => $this->start_at?->toIso8601String(),
+            'end_at' => $this->end_at?->toIso8601String(),
+            'methods' => $this->whenLoaded('activeMethods', function () {
+                return $this->activeMethods->map(function ($method) {
+                    // settings puede llegar como string JSON o como array
+                    $settings = is_string($method->settings)
+                        ? json_decode($method->settings, true)
+                        : ($method->settings ?? []);
+
+                    // Imagen: primero media subida, luego settings[image], luego null
+                    $imageUrl = $method->media?->url
+                        ?? $settings['image']
+                        ?? null;
+
+                    return [
+                        'id'       => $method->id,
+                        'type'     => $method->type,
+                        'title'    => $method->title,
+                        'body'     => $method->body,
+                        'image'    => $imageUrl,
+                        'settings' => $settings,
+                    ];
+                });
             }),
-            'display_order' => $this->display_order,
-            'is_active' => $this->is_active,
             'created_at' => $this->created_at?->toIso8601String(),
             'updated_at' => $this->updated_at?->toIso8601String(),
         ];

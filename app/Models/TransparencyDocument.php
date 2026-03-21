@@ -9,6 +9,7 @@ class TransparencyDocument extends Model
 {
     protected $fillable = [
         'title',
+        'slug',
         'year',
         'type',
         'description',

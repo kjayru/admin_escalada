@@ -22,6 +22,12 @@ class PageSectionResource extends JsonResource
             'body' => $this->body,
             'sort_order' => $this->sort_order,
             'settings' => $this->settings,
+            'featured_media' => $this->featuredMedia ? [
+                'id'        => $this->featuredMedia->id,
+                'url'       => $this->featuredMedia->url,
+                'file_name' => $this->featuredMedia->file_name,
+                'alt'       => $this->featuredMedia->alt,
+            ] : null,
             'items' => $this->whenLoaded('items', function () {
                 return $this->items->map(function ($item) {
                     return [

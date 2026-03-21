@@ -23,6 +23,7 @@ class BlogPostController extends Controller
         $query = BlogPost::where('status', 'published')
             ->with(['featuredMedia'])
             ->withCount('approvedComments')
+            ->orderBy('is_featured', 'desc')
             ->orderBy('published_at', 'desc');
 
         if ($search) {

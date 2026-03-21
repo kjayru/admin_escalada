@@ -1,14 +1,18 @@
 <?php
 
+use App\Http\Controllers\Api\V1\ActivityController;
 use App\Http\Controllers\Api\V1\BlogPostController;
 use App\Http\Controllers\Api\V1\ContactController;
+use App\Http\Controllers\Api\V1\MemberGroupController;
 use App\Http\Controllers\Api\V1\MenuController;
 use App\Http\Controllers\Api\V1\PageController;
 use App\Http\Controllers\Api\V1\ProductCategoryController;
 use App\Http\Controllers\Api\V1\ProductController;
 use App\Http\Controllers\Api\V1\SettingController;
 use App\Http\Controllers\Api\V1\SponsorController;
+use App\Http\Controllers\Api\V1\SponsorPlacementController;
 use App\Http\Controllers\Api\V1\SupportCampaignController;
+use App\Http\Controllers\Api\V1\TimelineController;
 use App\Http\Controllers\Api\V1\TransparencyDocumentController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
@@ -40,6 +44,9 @@ Route::prefix('v1')->group(function () {
     // Sponsors
     Route::get('/sponsors', [SponsorController::class, 'index']);
     Route::get('/sponsors/{slug}', [SponsorController::class, 'show']);
+
+    // Sponsor Placements
+    Route::get('/sponsor-placements', [SponsorPlacementController::class, 'index']);
     
     // Support Campaigns
     Route::get('/support-campaigns', [SupportCampaignController::class, 'index']);
@@ -48,6 +55,14 @@ Route::prefix('v1')->group(function () {
     // Transparency Documents
     Route::get('/transparency-documents', [TransparencyDocumentController::class, 'index']);
     Route::get('/transparency-documents/{slug}', [TransparencyDocumentController::class, 'show']);
+    
+    // Activities
+    Route::get('/activities', [ActivityController::class, 'index']);
+    Route::get('/activities/{id}', [ActivityController::class, 'show']);
+    
+    // Timeline (Historia)
+    Route::get('/timeline', [TimelineController::class, 'index']);
+    Route::get('/timeline/{id}', [TimelineController::class, 'show']);
     
     // Contact
     Route::post('/contact', [ContactController::class, 'store']);
@@ -58,5 +73,8 @@ Route::prefix('v1')->group(function () {
     // Settings
     Route::get('/settings', [SettingController::class, 'index']);
     Route::get('/settings/{key}', [SettingController::class, 'show']);
+
+    // Member Groups (Asociación)
+    Route::get('/member-groups', [MemberGroupController::class, 'index']);
 });
 

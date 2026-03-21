@@ -9,6 +9,7 @@ class SupportMethod extends Model
 {
     protected $fillable = [
         'campaign_id',
+        'media_id',
         'type',
         'title',
         'body',
@@ -27,6 +28,11 @@ class SupportMethod extends Model
         return $this->belongsTo(SupportCampaign::class, 'campaign_id');
     }
 
+    public function media(): BelongsTo
+    {
+        return $this->belongsTo(Media::class, 'media_id');
+    }
+
     public function scopeActive($query)
     {
         return $query->where('is_active', true);
@@ -37,3 +43,4 @@ class SupportMethod extends Model
         return $query->where('type', $type);
     }
 }
+

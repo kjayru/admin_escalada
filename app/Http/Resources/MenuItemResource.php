@@ -16,10 +16,9 @@ class MenuItemResource extends JsonResource
     {
         return [
             'id' => $this->id,
-            'title' => $this->title,
+            'label' => $this->label,
             'url' => $this->url,
-            'type' => $this->type,
-            'order' => $this->order,
+            'sort_order' => $this->sort_order,
             'children' => MenuItemResource::collection($this->whenLoaded('children')),
         ];
     }
