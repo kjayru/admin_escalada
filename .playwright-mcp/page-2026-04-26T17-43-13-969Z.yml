@@ -1,0 +1,497 @@
+- generic [ref=e5]:
+  - generic [ref=e6]:
+    - generic [ref=e7]:
+      - generic [ref=e41]:
+        - application [ref=e50]
+        - status [ref=e51]: La compatibilidad con lectores de pantalla para el tablero está deshabilitada actualmente. Para habilitarla a través de la configuración de accesibilidad, presiona ⌘,, escribe Configuración de accesibilidad y pulsa Enter. Para ver los atajos de teclado disponibles, ingresa a ⌃⇧Signo de interrogación .
+        - generic:
+          - generic:
+            - generic:
+              - img "Texto":
+                - generic:
+                  - img
+        - generic:
+          - generic:
+            - generic:
+              - region "Comentarios en el lienzo":
+                - button "Crear nuevo comentario"
+        - generic:
+          - region "Barra lateral izquierda":
+            - generic [ref=e52]:
+              - generic [ref=e53]:
+                - generic [ref=e54]:
+                  - button "Menú principal" [ref=e55]:
+                    - img [ref=e56]
+                    - img [ref=e59]
+                  - generic [ref=e61]:
+                    - generic [ref=e62]:
+                      - status
+                    - button "Minimizar la UI" [ref=e63]:
+                      - generic:
+                        - img
+                - generic [ref=e65]:
+                  - generic [ref=e67]:
+                    - generic [ref=e69]:
+                      - button "Escalada-Libre-Website-Seleccionado-Wile, nombre del archivo" [ref=e70]: Escalada-Libre-Website-Seleccionado-Wile
+                      - generic [ref=e71]: Nombre del archivo
+                    - button "Menú de edición de archivo" [ref=e75]:
+                      - generic:
+                        - img
+                  - link "Team project" [ref=e78]:
+                    - /url: https://www.figma.com/files/team/1604640323355255721/project/554697315
+                - generic [ref=e79]:
+                  - heading "DISEÑO COMPLETO - TODAS LAS PANTALLAS Buscar" [level=2] [ref=e83]:
+                    - generic [ref=e84]:
+                      - button "DISEÑO COMPLETO - TODAS LAS PANTALLAS" [ref=e85]:
+                        - generic:
+                          - img
+                        - generic: DISEÑO COMPLETO - TODAS LAS PANTALLAS
+                      - button "Buscar" [ref=e88]:
+                        - generic:
+                          - img
+                  - generic [ref=e89]:
+                    - button "Ready for dev" [expanded] [ref=e92]:
+                      - generic: Ready for dev
+                    - generic [ref=e96]:
+                      - img [ref=e866]
+                      - generic [ref=e868]: Aún no hay nada marcado como ready for dev. Selecciona una sección o un marco de nivel superior para marcarlo como ready for dev.
+                    - generic [ref=e99]:
+                      - button "Capas" [ref=e102]:
+                        - generic:
+                          - generic: Capas
+                      - button "Marco Nosotros - 1920px" [ref=e104]:
+                        - generic [ref=e105]:
+                          - img "Marco" [ref=e106]:
+                            - img [ref=e108]
+                          - generic [ref=e110]: Nosotros - 1920px
+                      - button "Texto “QUIENES SOMOS” Bloquear/desbloquear temporalmente la selección en el lienzo, solo para ti." [ref=e869]:
+                        - generic [ref=e113]:
+                          - img "Texto" [ref=e115]:
+                            - img [ref=e117]
+                          - generic [ref=e119]: “QUIENES SOMOS”
+                        - button "Bloquear/desbloquear temporalmente la selección en el lienzo, solo para ti." [ref=e870]:
+                          - img
+                      - button "nosotros-banner 1 · 1,920 x 1,080" [ref=e121]:
+                        - generic [ref=e122]:
+                          - img [ref=e124]
+                          - generic [ref=e125]: nosotros-banner 1
+                          - generic [ref=e127]: · 1,920 x 1,080
+                      - button "Grupo Group 1000001981" [active] [ref=e129]:
+                        - generic [ref=e130]:
+                          - img [ref=e872]
+                          - img "Grupo" [ref=e132]:
+                            - img [ref=e134]
+                          - generic [ref=e136]: Group 1000001981
+                      - button "Rectángulo Rectangle 3944" [ref=e138]:
+                        - generic [ref=e139]:
+                          - img "Rectángulo" [ref=e141]:
+                            - img [ref=e143]
+                          - generic [ref=e145]: Rectangle 3944
+                      - button "Rectángulo Rectangle 3945" [ref=e147]:
+                        - generic [ref=e148]:
+                          - img "Rectángulo" [ref=e150]:
+                            - img [ref=e152]
+                          - generic [ref=e154]: Rectangle 3945
+                      - button "Texto “Mesa directiva”" [ref=e156]:
+                        - generic [ref=e157]:
+                          - img "Texto" [ref=e159]:
+                            - img [ref=e161]
+                          - generic [ref=e163]: “Mesa directiva”
+                      - button "Línea Line 22" [ref=e165]:
+                        - generic [ref=e166]:
+                          - img "Línea" [ref=e168]:
+                            - img [ref=e170]
+                          - generic [ref=e171]: Line 22
+                      - button "Group · 30 x 30" [ref=e173]:
+                        - generic [ref=e174]:
+                          - img [ref=e875]
+                          - img [ref=e176]
+                          - generic [ref=e177]: Group
+                          - generic [ref=e179]: · 30 x 30
+                      - button "Group · 30 x 30" [ref=e181]:
+                        - generic [ref=e182]:
+                          - img [ref=e878]
+                          - img [ref=e184]
+                          - generic [ref=e185]: Group
+                          - generic [ref=e187]: · 30 x 30
+                      - button "Group · 30 x 30" [ref=e189]:
+                        - generic [ref=e190]:
+                          - img [ref=e881]
+                          - img [ref=e192]
+                          - generic [ref=e193]: Group
+                          - generic [ref=e195]: · 30 x 30
+                      - button "Grupo Group 1000001930" [ref=e197]:
+                        - generic [ref=e198]:
+                          - img [ref=e884]
+                          - img "Grupo" [ref=e200]:
+                            - img [ref=e202]
+                          - generic [ref=e204]: Group 1000001930
+                      - button "Texto “Miembros fundadores”" [ref=e206]:
+                        - generic [ref=e207]:
+                          - img "Texto" [ref=e209]:
+                            - img [ref=e211]
+                          - generic [ref=e213]: “Miembros fundadores”
+                      - button "Línea Line 23" [ref=e215]:
+                        - generic [ref=e216]:
+                          - img "Línea" [ref=e218]:
+                            - img [ref=e220]
+                          - generic [ref=e221]: Line 23
+                      - button "Texto “Miembros pasados”" [ref=e223]:
+                        - generic [ref=e224]:
+                          - img "Texto" [ref=e226]:
+                            - img [ref=e228]
+                          - generic [ref=e230]: “Miembros pasados”
+                      - button "Línea Line 22" [ref=e232]:
+                        - generic [ref=e233]:
+                          - img "Línea" [ref=e235]:
+                            - img [ref=e237]
+                          - generic [ref=e238]: Line 22
+                      - button "Línea Line 23" [ref=e240]:
+                        - generic [ref=e241]:
+                          - img "Línea" [ref=e243]:
+                            - img [ref=e245]
+                          - generic [ref=e246]: Line 23
+                      - button "Group · 30 x 30" [ref=e248]:
+                        - generic [ref=e249]:
+                          - img [ref=e887]
+                          - img [ref=e251]
+                          - generic [ref=e252]: Group
+                          - generic [ref=e254]: · 30 x 30
+                      - button "Rectángulo Rectangle 3938" [ref=e256]:
+                        - generic [ref=e257]:
+                          - img "Rectángulo" [ref=e259]:
+                            - img [ref=e261]
+                          - generic [ref=e263]: Rectangle 3938
+                      - button "Marco image" [ref=e265]:
+                        - generic [ref=e266]:
+                          - img [ref=e890]
+                          - img "Marco" [ref=e268]:
+                            - img [ref=e270]
+                          - generic [ref=e272]: image
+                      - button "Texto “Ramón Narváez”" [ref=e274]:
+                        - generic [ref=e275]:
+                          - img "Texto" [ref=e277]:
+                            - img [ref=e279]
+                          - generic [ref=e281]: “Ramón Narváez”
+                      - button "Rectángulo Rectangle 3938" [ref=e283]:
+                        - generic [ref=e284]:
+                          - img "Rectángulo" [ref=e286]:
+                            - img [ref=e288]
+                          - generic [ref=e290]: Rectangle 3938
+                      - button "Marco image" [ref=e292]:
+                        - generic [ref=e293]:
+                          - img [ref=e893]
+                          - img "Marco" [ref=e295]:
+                            - img [ref=e297]
+                          - generic [ref=e299]: image
+                      - button "Texto “Jacobo Jasso”" [ref=e301]:
+                        - generic [ref=e302]:
+                          - img "Texto" [ref=e304]:
+                            - img [ref=e306]
+                          - generic [ref=e308]: “Jacobo Jasso”
+                      - button "Rectángulo Rectangle 3938" [ref=e310]:
+                        - generic [ref=e311]:
+                          - img "Rectángulo" [ref=e313]:
+                            - img [ref=e315]
+                          - generic [ref=e317]: Rectangle 3938
+                      - button "Marco image" [ref=e319]:
+                        - generic [ref=e320]:
+                          - img [ref=e896]
+                          - img "Marco" [ref=e322]:
+                            - img [ref=e324]
+                          - generic [ref=e326]: image
+                      - button "Texto “Salvador Escamilla”" [ref=e328]:
+                        - generic [ref=e329]:
+                          - img "Texto" [ref=e331]:
+                            - img [ref=e333]
+                          - generic [ref=e335]: “Salvador Escamilla”
+                      - button "Rectángulo Rectangle 3938" [ref=e337]:
+                        - generic [ref=e338]:
+                          - img "Rectángulo" [ref=e340]:
+                            - img [ref=e342]
+                          - generic [ref=e344]: Rectangle 3938
+                      - button "Marco image" [ref=e346]:
+                        - generic [ref=e347]:
+                          - img [ref=e899]
+                          - img "Marco" [ref=e349]:
+                            - img [ref=e351]
+                          - generic [ref=e353]: image
+              - slider "Control de redimensionamiento" [ref=e372]
+        - generic:
+          - generic:
+            - region "Propiedades y plugins":
+              - generic [ref=e374]:
+                - generic [ref=e375]:
+                  - generic [ref=e377]:
+                    - generic [ref=e379]:
+                      - button "Herramientas multiusuario" [ref=e381]:
+                        - generic:
+                          - generic:
+                            - generic:
+                              - generic:
+                                - img
+                        - img [ref=e384]
+                      - generic:
+                        - generic:
+                          - generic [ref=e387]:
+                            - button "Sigue kjayru tinoco" [ref=e388]
+                            - img [ref=e391]
+                          - generic [ref=e397]:
+                            - button "Sigue kjayru tinoco" [ref=e398]
+                            - img [ref=e401]
+                    - generic [ref=e407]:
+                      - group "Vista de prototipo" [ref=e408]:
+                        - button "Presentar" [ref=e409]:
+                          - generic:
+                            - img
+                        - button "Vista de prototipo" [ref=e410]:
+                          - generic:
+                            - img
+                      - generic [ref=e411]:
+                        - button "Compartir" [ref=e412]
+                        - status
+                  - generic [ref=e414]:
+                    - tablist [ref=e416]:
+                      - tab "Inspeccionar" [selected] [ref=e417]:
+                        - generic [ref=e418]: Inspeccionar
+                        - generic [ref=e419]: Inspeccionar
+                      - tab "Plugins" [ref=e420]:
+                        - generic [ref=e421]: Plugins
+                        - generic [ref=e422]: Plugins
+                    - generic [ref=e423]:
+                      - button "Figma to Code (HTML, Tailwind, Flutter, SwiftUI) icon" [ref=e431]:
+                        - img "Figma to Code (HTML, Tailwind, Flutter, SwiftUI) icon" [ref=e432]
+                      - button "8%" [ref=e435]:
+                        - text: 8%
+                        - img
+                  - tabpanel "Inspeccionar" [ref=e437]:
+                    - generic [ref=e445]:
+                      - generic [ref=e448]:
+                        - generic [ref=e449]:
+                          - 'button "Haz clic para copiar el nombre de la capa: Group 1000001981" [ref=e901]':
+                            - generic: Group 1000001981
+                          - generic [ref=e452]:
+                            - button "Copiar la URL para la capa seleccionada" [ref=e454]:
+                              - generic:
+                                - img
+                            - button "Más acciones" [ref=e460]:
+                              - generic:
+                                - generic:
+                                  - img
+                        - generic [ref=e464]:
+                          - img "Grupo" [ref=e902]:
+                            - img [ref=e903]
+                          - generic [ref=e469]: Grupo
+                      - generic [ref=e470]:
+                        - generic [ref=e471]:
+                          - button "MCP" [expanded] [ref=e472]:
+                            - generic:
+                              - img
+                            - heading "MCP" [level=3]
+                          - link [ref=e475] [cursor=pointer]:
+                            - /url: https://developers.figma.com/docs/figma-mcp-server/
+                            - img [ref=e476]
+                        - generic [ref=e478]:
+                          - paragraph [ref=e480]:
+                            - generic [ref=e481]:
+                              - text: Genera código con contexto a partir de este archivo a través del servidor MCP.
+                              - link "Más información" [ref=e482] [cursor=pointer]:
+                                - /url: https://developers.figma.com/docs/figma-mcp-server/
+                          - button "Conectar con el agente de IA" [ref=e484]:
+                            - generic:
+                              - generic:
+                                - generic:
+                                  - generic:
+                                    - img
+                                    - text: Conectar con el agente de IA
+                      - generic [ref=e485]:
+                        - button "Propiedades de capa" [expanded] [ref=e487]:
+                          - generic:
+                            - img
+                          - heading "Propiedades de capa" [level=3]
+                        - generic [ref=e488]:
+                          - img "Representación visual de las propiedades de la disposición de elementos que incluye padding, border box y espaciado" [ref=e492]:
+                            - 'button "Copiar distancia al borde izquierdo del contenedor: -3" [ref=e907]':
+                              - generic: "-3"
+                            - generic [ref=e497]:
+                              - generic [ref=e499]: "-"
+                              - generic [ref=e500]:
+                                - generic [ref=e501]: Border
+                                - generic [ref=e503]: "-"
+                              - generic [ref=e505]: "-"
+                              - generic [ref=e507]: "-"
+                              - generic [ref=e508]:
+                                - generic [ref=e510]:
+                                  - generic [ref=e511]: Padding
+                                  - generic [ref=e513]: "-"
+                                - generic [ref=e516]: "-"
+                                - generic [ref=e517]:
+                                  - 'button "Copiar ancho: 1926" [ref=e908]': "1926"
+                                  - generic [ref=e519]: ×
+                                  - 'button "Copiar altura: 102" [ref=e909]': "102"
+                                - generic [ref=e522]: "-"
+                                - generic [ref=e525]: "-"
+                              - generic [ref=e528]: "-"
+                              - generic [ref=e530]: "-"
+                              - generic [ref=e532]: "-"
+                              - generic [ref=e534]: "-"
+                            - 'button "Copiar distancia al borde derecho del contenedor: -3" [ref=e912]':
+                              - generic: "-3"
+                            - 'button "Copiar distancia al borde inferior del contenedor: 9609" [ref=e915]':
+                              - generic: "9609"
+                            - 'button "Copiar box-sizing: border-box" [ref=e539]': border-box
+                          - generic [ref=e542]:
+                            - radiogroup "Ver" [ref=e544]:
+                              - generic [ref=e545]: Ver
+                              - generic [ref=e546]:
+                                - generic [ref=e547]:
+                                  - radio "Lista" [ref=e548]
+                                  - generic [ref=e549]: Lista
+                                - generic [ref=e550]:
+                                  - radio "Código" [checked] [ref=e551]
+                                  - generic [ref=e552]: Código
+                            - generic [ref=e553]:
+                              - generic [ref=e554]: "Idioma: CSS"
+                              - 'button "Idioma: CSS" [ref=e555]':
+                                - generic: CSS
+                                - generic:
+                                  - img
+                          - generic [ref=e560]:
+                            - generic [ref=e562]:
+                              - heading "Disposición" [level=3] [ref=e563]
+                              - button "Copia Layout, presiona Shift para copiar todo el código" [ref=e916]:
+                                - generic:
+                                  - img
+                            - generic [ref=e566]:
+                              - generic [ref=e567]:
+                                - generic [ref=e568]: "1"
+                                - generic [ref=e569]: "2"
+                              - code [ref=e574]:
+                                - generic [ref=e578]: "width: 1926px;"
+                                - generic [ref=e582]: "height: 102px;"
+                          - generic [ref=e622]:
+                            - generic [ref=e624]:
+                              - img [ref=e626]
+                              - heading "Modes" [level=3] [ref=e628]
+                            - 'button "Copiar Variable collection: Automático (Mode 1)" [ref=e631]':
+                              - generic "Variable collection" [ref=e633]
+                              - generic "Automático (Mode 1)" [ref=e635]
+                          - generic [ref=e644]:
+                            - generic [ref=e645]:
+                              - generic [ref=e646]:
+                                - img [ref=e648]
+                                - heading "Colores" [level=3] [ref=e650]
+                              - generic [ref=e652]:
+                                - generic [ref=e653]: Formato de color
+                                - combobox "Formato de color" [ref=e654]:
+                                  - generic [ref=e655]:
+                                    - generic [ref=e656]: Hex
+                                    - img [ref=e657]
+                            - generic [ref=e659]:
+                              - generic [ref=e917]:
+                                - generic [ref=e919]:
+                                  - img [ref=e921]
+                                  - heading "Colores del borde" [level=3] [ref=e923]
+                                - generic [ref=e927]:
+                                  - button "Copiar amarillo" [ref=e929]:
+                                    - generic "amarillo" [ref=e930]
+                                  - 'button "Detalles de la variable: amarillo" [ref=e932]':
+                                    - img
+                              - generic [ref=e674]:
+                                - generic [ref=e676]:
+                                  - img [ref=e678]
+                                  - heading "Colores" [level=3] [ref=e680]
+                                - generic [ref=e681]:
+                                  - generic [ref=e934]:
+                                    - button "Copiar amarillo" [ref=e936]:
+                                      - generic "amarillo" [ref=e937]
+                                    - 'button "Detalles de la variable: amarillo" [ref=e939]':
+                                      - img
+                                  - 'button "Copiar #6A6867" [ref=e943]':
+                                    - generic: "#6A6867"
+                                  - 'button "Copiar #F8C52D" [ref=e948]':
+                                    - generic: "#F8C52D"
+                                  - 'button "Copiar #FFFFFF" [ref=e953]':
+                                    - generic: "#FFFFFF"
+                      - generic [ref=e685]:
+                        - button "Recursos" [expanded] [ref=e687]:
+                          - generic:
+                            - img
+                          - heading "Recursos" [level=3]
+                        - generic [ref=e689]:
+                          - generic [ref=e690]:
+                            - generic [ref=e691]:
+                              - img [ref=e693]
+                              - heading "Íconos" [level=3] [ref=e695]
+                            - button "Descargar íconos" [ref=e697]:
+                              - generic:
+                                - img
+                          - generic [ref=e698]:
+                            - generic [ref=e956]:
+                              - button [ref=e957]:
+                                - img
+                              - generic [ref=e958]:
+                                - generic [ref=e959]: Group 79
+                                - generic [ref=e961]: 83.63 x 64.12
+                            - generic [ref=e963]:
+                              - button [ref=e964]:
+                                - img
+                              - generic [ref=e965]:
+                                - generic [ref=e966]: Frame
+                                - generic [ref=e968]: 149 x 37.17
+                      - generic [ref=e761]:
+                        - button "Exportar" [ref=e969]:
+                          - generic:
+                            - img
+                          - generic: Exportar
+                        - button "Añadir ajustes de exportación" [ref=e770]:
+                          - generic:
+                            - img
+                - slider "Control de redimensionamiento" [ref=e809]
+      - generic:
+        - generic:
+          - generic:
+            - region "Barra de herramientas de la aplicación":
+              - generic [ref=e810]:
+                - toolbar "Editor" [ref=e812]:
+                  - generic [ref=e818]:
+                    - button "Mover" [pressed] [ref=e819]:
+                      - img
+                    - button "Copiar colores" [ref=e820]:
+                      - img
+                    - button "Medidas" [ref=e821]:
+                      - img
+                    - button "Anotación" [ref=e822]:
+                      - img
+                    - button "Comentario" [ref=e823]:
+                      - img
+                  - radiogroup "Modo multifunción" [ref=e827]:
+                    - generic [ref=e828]: Modo multifunción
+                    - generic [ref=e829]:
+                      - generic [ref=e831]:
+                        - radio "Dibujar" [ref=e832]
+                        - img [ref=e834]
+                        - generic [ref=e836]: Dibujar
+                      - generic [ref=e837]:
+                        - radio "Design" [ref=e838]
+                        - img [ref=e840]
+                        - generic [ref=e842]: Design
+                      - generic [ref=e843]:
+                        - radio "Dev Mode" [checked] [ref=e844]
+                        - img [ref=e846]
+                        - generic [ref=e848]: Dev Mode
+                - toolbar "Inspeccionar" [ref=e970]:
+                  - generic "Volver a centrar" [ref=e973]:
+                    - img [ref=e974]
+                    - generic [ref=e976]:
+                      - generic [ref=e977]: Volver a centrar
+                      - generic [ref=e978]: ⇧2
+    - region "Barra de herramientas de ayuda/zoom" [ref=e27]:
+      - toolbar "Barra de herramientas de ayuda/zoom" [ref=e29]:
+        - button "Ayuda" [ref=e31]:
+          - img
+  - generic:
+    - status
+    - group [ref=e858]:
+      - alert [ref=e860]
+      - alert [ref=e862]

@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Slimani\MediaManager\Models\File as SlimaniFile;
 
 class SupportMethod extends Model
 {
@@ -30,7 +31,7 @@ class SupportMethod extends Model
 
     public function media(): BelongsTo
     {
-        return $this->belongsTo(Media::class, 'media_id');
+        return $this->belongsTo(SlimaniFile::class, 'media_id');
     }
 
     public function scopeActive($query)

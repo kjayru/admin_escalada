@@ -1,0 +1,203 @@
+- generic [active] [ref=e1]:
+  - generic [ref=e4]:
+    - banner [ref=e5]:
+      - navigation [ref=e7]:
+        - link "Escalada Libre A.C." [ref=e8] [cursor=pointer]:
+          - /url: /
+          - img "Escalada Libre A.C." [ref=e9]
+        - list [ref=e10]:
+          - listitem [ref=e11]:
+            - link "Inicio" [ref=e12] [cursor=pointer]:
+              - /url: /
+          - listitem [ref=e13]:
+            - link "Nosotros" [ref=e14] [cursor=pointer]:
+              - /url: /nosotros
+          - listitem [ref=e15]:
+            - link "Actividades" [ref=e16] [cursor=pointer]:
+              - /url: /actividades
+          - listitem [ref=e17]:
+            - link "Historia" [ref=e18] [cursor=pointer]:
+              - /url: /historia
+          - listitem [ref=e19]:
+            - link "Blog" [ref=e20] [cursor=pointer]:
+              - /url: /blog
+          - listitem [ref=e21]:
+            - link "Cómo apoyar" [ref=e22] [cursor=pointer]:
+              - /url: /como-apoyar
+          - listitem [ref=e23]:
+            - link "Transparencia" [ref=e24] [cursor=pointer]:
+              - /url: /transparencia
+          - listitem [ref=e25]:
+            - link "Patrocinio" [ref=e26] [cursor=pointer]:
+              - /url: /patrocinio
+          - listitem [ref=e27]:
+            - link "Contacto" [ref=e28] [cursor=pointer]:
+              - /url: /contacto
+          - listitem [ref=e29]:
+            - link "Donar" [ref=e30] [cursor=pointer]:
+              - /url: /como-apoyar
+    - main [ref=e32]:
+      - generic [ref=e33]:
+        - img "Nosotros - Escalada Libre" [ref=e35]
+        - generic [ref=e39]:
+          - generic [ref=e40]:
+            - heading "Misión" [level=2] [ref=e41]
+            - paragraph [ref=e43]: Somos una asociación de escaladores costarricenses comprometidos con el fomento seguro y sustentable del montañismo y la escalada. Buscamos contribuir al cuidado de los ecosistemas, al acceso a un medio ambiente sano y al desarrollo social, mediante planes y acciones que protejan y mantengan los espacios naturales donde se practican estas actividades.
+          - generic [ref=e44]:
+            - heading "Visión" [level=2] [ref=e45]
+            - paragraph [ref=e47]: Buscamos fomentar la conciencia comunitaria sobre la importancia de proteger los ecosistemas para disfrutarlos de forma sustentable, promover el potencial de Costa Rica para los deportes de montaña, impulsar una práctica segura y preparada de estas actividades, y motivar a los sectores público y privado a sumarse a acciones que apoyen la misión de nuestra Asociación.
+        - generic [ref=e48]:
+          - heading "¿Qué hacemos?" [level=2] [ref=e52]
+          - generic [ref=e53]:
+            - generic [ref=e55]:
+              - generic [ref=e56]:
+                - generic [ref=e57]:
+                  - img "Infraestructura" [ref=e58]
+                  - generic [ref=e59]: Infraestructura
+                - paragraph [ref=e62]: "Trabajamos en el mantenimiento de infraestructura para hacer posible que la escalada pueda practicarse de la forma más segura posible:"
+                - list [ref=e63]:
+                  - listitem [ref=e64]:
+                    - img [ref=e66]
+                    - generic [ref=e68]: Requipamos rutas de escalada a lo largo y ancho del Estado de Nuevo León
+                  - listitem [ref=e69]:
+                    - img [ref=e71]
+                    - generic [ref=e73]: Instalamos señalética en parajes naturales para brindar información a deportistas y visitantes
+              - img "Infraestructura" [ref=e75]
+            - generic [ref=e77]:
+              - img "Acceso" [ref=e79]
+              - generic [ref=e80]:
+                - generic [ref=e81]:
+                  - img "Acceso" [ref=e82]
+                  - generic [ref=e83]: Acceso
+                - paragraph [ref=e86]: Buscamos gestionar con autoridades públicas y entidades privadas el acceso a las zonas de escalada de la región.
+                - list [ref=e87]:
+                  - listitem [ref=e88]:
+                    - img [ref=e90]
+                    - generic [ref=e92]: Atendemos el llamado de autoridades de los tres niveles de gobierno para brindar información y asesoría respecto a la escalada
+                  - listitem [ref=e93]:
+                    - img [ref=e95]
+                    - generic [ref=e97]: Buscamos reunir a los actores claves involucrados con la conservación y el deporte para sumar esfuerzos
+            - generic [ref=e99]:
+              - generic [ref=e100]:
+                - generic [ref=e101]:
+                  - img "Conservación" [ref=e102]
+                  - generic [ref=e103]: Conservación
+                - paragraph [ref=e106]: Llevamos a cabo actividades enfocadas en diseminar información y garantizar la conservación de nuestras áreas naturales a través de pláticas, clínicas y litigio estratégico.
+                - list [ref=e107]:
+                  - listitem [ref=e108]:
+                    - img [ref=e110]
+                    - generic [ref=e112]: Apoyamos la presentación de una solicitud de audiencia pública frente al Gobierno del Estado para conservar el lecho del Rio Santa Catarina
+                  - listitem [ref=e113]:
+                    - img [ref=e115]
+                    - generic [ref=e117]: Celebramos días importantes como el día de la Tierra para concientizar sobre la importancia de la conservación de los espacios naturales
+              - img "Conservación" [ref=e119]
+            - generic [ref=e121]:
+              - img "Conocimiento" [ref=e123]
+              - generic [ref=e124]:
+                - generic [ref=e125]:
+                  - img "Conocimiento" [ref=e126]
+                  - generic [ref=e127]: Conocimiento
+                - paragraph [ref=e130]: Nos interesa proveer a las nuevas generaciones de los conocimientos necesarios para que puedan aventurarse a escalar de forma segura y sustentable.
+                - list [ref=e131]:
+                  - listitem [ref=e132]:
+                    - img [ref=e134]
+                    - generic [ref=e136]: Llevamos a cabo clínicas enfocadas en proveer conocimiento técnico a los deportistas para que puedan escalar de forma segura
+                  - listitem [ref=e137]:
+                    - img [ref=e139]
+                    - generic [ref=e141]: Realizamos pláticas y conferencias enfocadas en la difusión de relevancia para la comunidad de escaladores
+        - generic [ref=e143]:
+          - heading "¿Quiénes conforman nuestra asociación?" [level=2] [ref=e147]
+          - generic [ref=e148]:
+            - generic [ref=e149]:
+              - button "Mesa directiva" [ref=e150] [cursor=pointer]:
+                - generic [ref=e151]: Mesa directiva
+              - generic [ref=e155]:
+                - generic [ref=e156]:
+                  - img "home-team-carlos" [ref=e158]
+                  - generic [ref=e159]:
+                    - paragraph [ref=e160]: Carlos Ortiz
+                    - paragraph [ref=e161]: Presidente de la asociación.
+                - generic [ref=e162]:
+                  - img "home-team-adrian" [ref=e164]
+                  - generic [ref=e165]:
+                    - paragraph [ref=e166]: Sebastián Landeros
+                    - paragraph [ref=e167]: Vicepresidente de la asociación.
+                - generic [ref=e168]:
+                  - img "Gustavo Castro" [ref=e170]
+                  - generic [ref=e171]:
+                    - paragraph [ref=e172]: Gustavo Castro
+                    - paragraph [ref=e173]: Tesorero
+                - generic [ref=e174]:
+                  - img "Adrián Lozano" [ref=e176]
+                  - generic [ref=e177]:
+                    - paragraph [ref=e178]: Adrián Lozano
+                    - paragraph [ref=e179]: Consejero
+                - generic [ref=e180]:
+                  - img "Ricardo Vara" [ref=e182]
+                  - generic [ref=e183]:
+                    - paragraph [ref=e184]: Ricardo Vara
+                    - paragraph [ref=e185]: Consejero
+            - button "Miembros actuales" [ref=e187] [cursor=pointer]:
+              - generic [ref=e188]: Miembros actuales
+            - button "Miembros fundadores" [ref=e193] [cursor=pointer]:
+              - generic [ref=e194]: Miembros fundadores
+            - button "Miembros pasados" [ref=e199] [cursor=pointer]:
+              - generic [ref=e200]: Miembros pasados
+        - generic [ref=e206]:
+          - generic [ref=e207]:
+            - generic [ref=e208]:
+              - paragraph [ref=e209]: NEWSLETTER
+              - heading "Recibe noticias de Escalada Libre a tu correo" [level=3] [ref=e210]
+            - generic [ref=e211]:
+              - textbox "Escribe tu correo" [ref=e212]
+              - button "Suscribir" [ref=e213] [cursor=pointer]
+          - link "ASPECT PRO" [ref=e214] [cursor=pointer]:
+            - /url: /patrocinio
+            - img "ASPECT PRO" [ref=e215]
+          - link "patrocinio" [ref=e216] [cursor=pointer]:
+            - /url: /patrocinio
+            - img "patrocinio" [ref=e217]
+        - generic [ref=e220]:
+          - img "Escalada Libre A.C." [ref=e222]
+          - generic [ref=e223]:
+            - heading "¡GRACIAS POR TU APOYO!" [level=2] [ref=e224]:
+              - text: ¡GRACIAS POR
+              - text: TU APOYO!
+            - link "Donar ahora" [ref=e225] [cursor=pointer]:
+              - /url: /como-apoyar
+    - contentinfo [ref=e226]:
+      - generic [ref=e228]:
+        - separator [ref=e229]
+        - generic [ref=e230]:
+          - generic [ref=e231]:
+            - link "Home" [ref=e232] [cursor=pointer]:
+              - /url: /
+            - link "Nosotros" [ref=e233] [cursor=pointer]:
+              - /url: /nosotros
+          - generic [ref=e234]:
+            - link "Actividades" [ref=e235] [cursor=pointer]:
+              - /url: /actividades
+            - link "Historia" [ref=e236] [cursor=pointer]:
+              - /url: /historia
+          - generic [ref=e237]:
+            - link "Cómo apoyar" [ref=e238] [cursor=pointer]:
+              - /url: /como-apoyar
+            - link "Blog" [ref=e239] [cursor=pointer]:
+              - /url: /blog
+          - generic [ref=e240]:
+            - link "Transparencia" [ref=e241] [cursor=pointer]:
+              - /url: /transparencia
+            - link "Contacto" [ref=e242] [cursor=pointer]:
+              - /url: /contacto
+        - separator [ref=e243]
+      - img "Sierra Madre Occidental" [ref=e245]
+  - generic:
+    - img
+  - generic [ref=e246]:
+    - button "Toggle Nuxt DevTools" [ref=e247] [cursor=pointer]:
+      - img [ref=e248]
+    - generic "Page load time" [ref=e251]:
+      - generic [ref=e252]: "70"
+      - generic [ref=e253]: ms
+    - button "Toggle Component Inspector" [ref=e255] [cursor=pointer]:
+      - img [ref=e256]

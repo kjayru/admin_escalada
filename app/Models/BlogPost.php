@@ -5,7 +5,9 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Relations\MorphMany;
 use Illuminate\Database\Eloquent\Relations\MorphToMany;
+use Slimani\MediaManager\Models\File as MediaFile;
 
 class BlogPost extends Model
 {
@@ -16,6 +18,7 @@ class BlogPost extends Model
         'author_name',
         'excerpt',
         'body',
+        'content_mode',
         'status',
         'is_featured',
         'published_at',
@@ -36,9 +39,20 @@ class BlogPost extends Model
         return ['name' => $this->author_name ?? 'Escalada Libre'];
     }
 
+    public function sections(): MorphMany
+    {
+        return $this->morphMany(PageSection::class, 'contentable')->orderBy('sort_order');
+    }
+
     public function featuredMedia(): BelongsTo
     {
-        return $this->belongsTo(Media::class, 'featured_media_id');
+        return $this->belongsTo(LegacyMedia::class, 'featured_media_id');
+    }
+
+    /** Imagen destacada desde el nuevo sistema slimani/filament-media-manager */
+    public function featuredFile(): BelongsTo
+    {
+        return $this->belongsTo(MediaFile::class, 'featured_media_id');
     }
 
     public function comments(): HasMany

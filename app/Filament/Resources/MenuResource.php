@@ -2,11 +2,25 @@
 
 namespace App\Filament\Resources;
 
+use Filament\Schemas\Schema;
+use Filament\Schemas\Components\Section;
+use Filament\Forms\Components\TextInput;
+use Filament\Forms\Components\Repeater;
+use Filament\Forms\Components\Select;
+use Filament\Schemas\Components\Utilities\Set;
+use Filament\Forms\Components\Toggle;
+use Filament\Tables\Columns\TextColumn;
+use Filament\Actions\EditAction;
+use Filament\Actions\DeleteAction;
+use Filament\Actions\BulkActionGroup;
+use Filament\Actions\DeleteBulkAction;
+use App\Filament\Resources\MenuResource\Pages\ListMenus;
+use App\Filament\Resources\MenuResource\Pages\CreateMenu;
+use App\Filament\Resources\MenuResource\Pages\EditMenu;
 use App\Filament\Resources\MenuResource\Pages;
 use App\Models\Menu;
 use App\Models\Page;
 use Filament\Forms;
-use Filament\Forms\Form;
 use Filament\Resources\Resource;
 use Filament\Tables;
 use Filament\Tables\Table;
@@ -15,9 +29,9 @@ class MenuResource extends Resource
 {
     protected static ?string $model = Menu::class;
 
-    protected static ?string $navigationIcon = 'heroicon-o-bars-3';
+    protected static string | \BackedEnum | null $navigationIcon = 'heroicon-o-bars-3';
 
-    protected static ?string $navigationGroup = 'Configuración';
+    protected static string | \UnitEnum | null $navigationGroup = 'Configuración';
 
     protected static ?string $modelLabel = 'Menú';
 
@@ -25,30 +39,30 @@ class MenuResource extends Resource
 
     protected static ?int $navigationSort = 2;
 
-    public static function form(Form $form): Form
+    public static function form(Schema $schema): Schema
     {
-        return $form
-            ->schema([
-                Forms\Components\Section::make('Información del Menú')
+        return $schema
+            ->components([
+                Section::make('Información del Menú')
                     ->schema([
-                        Forms\Components\TextInput::make('name')
+                        TextInput::make('name')
                             ->label('Nombre')
                             ->required()
                             ->maxLength(255)
                             ->helperText('Ej: Menú Principal, Menú Footer'),
                     ]),
 
-                Forms\Components\Section::make('Ítems del Menú')
+                Section::make('Ítems del Menú')
                     ->schema([
-                        Forms\Components\Repeater::make('allItems')
+                        Repeater::make('allItems')
                             ->label('')
                             ->relationship()
                             ->schema([
-                                Forms\Components\TextInput::make('label')
+                                TextInput::make('label')
                                     ->label('Etiqueta')
                                     ->required()
                                     ->maxLength(100),
-                                Forms\Components\Select::make('page_id')
+                                Select::make('page_id')
                                     ->label('Página vinculada')
                                     ->options(fn () => Page::where('status', 'published')
                                         ->orderBy('title')
@@ -57,7 +71,7 @@ class MenuResource extends Resource
                                     ->searchable()
                                     ->nullable()
                                     ->live()
-                                    ->afterStateUpdated(function ($state, Forms\Set $set) {
+                                    ->afterStateUpdated(function ($state, Set $set) {
                                         if ($state) {
                                             $page = Page::find($state);
                                             if ($page) {
@@ -65,16 +79,16 @@ class MenuResource extends Resource
                                             }
                                         }
                                     }),
-                                Forms\Components\TextInput::make('url')
+                                TextInput::make('url')
                                     ->label('URL')
                                     ->maxLength(255)
                                     ->helperText('Ruta relativa ej: /nosotros, o URL externa'),
-                                Forms\Components\TextInput::make('sort_order')
+                                TextInput::make('sort_order')
                                     ->label('Orden')
                                     ->numeric()
                                     ->default(0)
                                     ->minValue(0),
-                                Forms\Components\Toggle::make('is_active')
+                                Toggle::make('is_active')
                                     ->label('Activo')
                                     ->default(true),
                             ])
@@ -92,29 +106,29 @@ class MenuResource extends Resource
     {
         return $table
             ->columns([
-                Tables\Columns\TextColumn::make('name')
+                TextColumn::make('name')
                     ->label('Nombre')
                     ->searchable()
                     ->sortable(),
-                Tables\Columns\TextColumn::make('allItems_count')
+                TextColumn::make('allItems_count')
                     ->label('Ítems')
                     ->counts('allItems')
                     ->badge()
                     ->color('primary'),
-                Tables\Columns\TextColumn::make('updated_at')
+                TextColumn::make('updated_at')
                     ->label('Actualizado')
                     ->since()
                     ->sortable()
                     ->toggleable(),
             ])
             ->filters([])
-            ->actions([
-                Tables\Actions\EditAction::make(),
-                Tables\Actions\DeleteAction::make(),
+            ->recordActions([
+                EditAction::make(),
+                DeleteAction::make(),
             ])
-            ->bulkActions([
-                Tables\Actions\BulkActionGroup::make([
-                    Tables\Actions\DeleteBulkAction::make(),
+            ->toolbarActions([
+                BulkActionGroup::make([
+                    DeleteBulkAction::make(),
                 ]),
             ]);
     }
@@ -127,9 +141,9 @@ class MenuResource extends Resource
     public static function getPages(): array
     {
         return [
-            'index'  => Pages\ListMenus::route('/'),
-            'create' => Pages\CreateMenu::route('/create'),
-            'edit'   => Pages\EditMenu::route('/{record}/edit'),
+            'index'  => ListMenus::route('/'),
+            'create' => CreateMenu::route('/create'),
+            'edit'   => EditMenu::route('/{record}/edit'),
         ];
     }
 }

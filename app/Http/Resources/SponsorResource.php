@@ -12,13 +12,29 @@ class SponsorResource extends JsonResource
      *
      * @return array<string, mixed>
      */
-    private function mediaItem($media, string $fallback = null): array
+    private function mediaItem($fileRelation, $legacyRelation, ?string $fallback = null): array
     {
-        return [
-            'id'  => $media?->id,
-            'url' => $media?->url ?? $fallback,
-            'alt' => $media?->alt ?? '',
-        ];
+        // Prefer Slimani/Spatie file (saved by MediaPicker)
+        if ($fileRelation && !($fileRelation instanceof \Illuminate\Http\Resources\MissingValue)) {
+            $spatieMedia = $fileRelation->getFirstMedia();
+            $url = $spatieMedia?->getUrl();
+            if ($url) {
+                return [
+                    'id'  => $fileRelation->id,
+                    'url' => $url,
+                    'alt' => $fileRelation->alt_text ?? '',
+                ];
+            }
+        }
+        // Fallback to legacy media
+        if ($legacyRelation && !($legacyRelation instanceof \Illuminate\Http\Resources\MissingValue)) {
+            return [
+                'id'  => $legacyRelation->id,
+                'url' => $legacyRelation->url ?? $fallback,
+                'alt' => $legacyRelation->alt ?? '',
+            ];
+        }
+        return ['id' => null, 'url' => $fallback, 'alt' => ''];
     }
 
     public function toArray(Request $request): array
@@ -33,15 +49,19 @@ class SponsorResource extends JsonResource
 
             // -- Imágenes --
             'logo' => $this->mediaItem(
-                $this->logo,
+                $this->whenLoaded('logoFile', fn() => $this->logoFile),
+                $this->whenLoaded('logo', fn() => $this->logo),
                 "https://picsum.photos/seed/{$this->slug}-logo/400/200"
             ),
-            'slide_image' => $this->mediaItem($this->slideImage),
+            'slide_image' => $this->mediaItem(
+                $this->whenLoaded('slideImageFile', fn() => $this->slideImageFile),
+                $this->whenLoaded('slideImage', fn() => $this->slideImage),
+            ),
             'gallery' => array_values(array_filter([
-                $this->gallery1 ? $this->mediaItem($this->gallery1) : null,
-                $this->gallery2 ? $this->mediaItem($this->gallery2) : null,
-                $this->gallery3 ? $this->mediaItem($this->gallery3) : null,
-                $this->gallery4 ? $this->mediaItem($this->gallery4) : null,
+                $this->gallery1File || $this->gallery1 ? $this->mediaItem($this->gallery1File, $this->gallery1) : null,
+                $this->gallery2File || $this->gallery2 ? $this->mediaItem($this->gallery2File, $this->gallery2) : null,
+                $this->gallery3File || $this->gallery3 ? $this->mediaItem($this->gallery3File, $this->gallery3) : null,
+                $this->gallery4File || $this->gallery4 ? $this->mediaItem($this->gallery4File, $this->gallery4) : null,
             ])),
 
             // -- Tarjeta de representante --
@@ -49,7 +69,7 @@ class SponsorResource extends JsonResource
                 'name'  => $this->contact_name,
                 'title' => $this->contact_title,
                 'text'  => $this->contact_text,
-                'image' => $this->mediaItem($this->contactMedia),
+                'image' => $this->mediaItem($this->contactMediaFile, $this->contactMedia),
             ],
 
             // -- Redes sociales --

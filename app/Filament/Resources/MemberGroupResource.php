@@ -2,10 +2,24 @@
 
 namespace App\Filament\Resources;
 
+use Filament\Schemas\Schema;
+use Filament\Schemas\Components\Section;
+use Filament\Forms\Components\TextInput;
+use Filament\Schemas\Components\Utilities\Set;
+use Filament\Forms\Components\Select;
+use Filament\Tables\Columns\TextColumn;
+use Filament\Tables\Columns\BadgeColumn;
+use Filament\Actions\EditAction;
+use Filament\Actions\DeleteAction;
+use Filament\Actions\BulkActionGroup;
+use Filament\Actions\DeleteBulkAction;
+use App\Filament\Resources\MemberGroupResource\Pages\ListMemberGroups;
+use App\Filament\Resources\MemberGroupResource\Pages\CreateMemberGroup;
+use App\Filament\Resources\MemberGroupResource\Pages\EditMemberGroup;
+use App\Filament\Resources\MemberGroupResource\RelationManagers\MembersRelationManager;
 use App\Filament\Resources\MemberGroupResource\Pages;
 use App\Models\MemberGroup;
 use Filament\Forms;
-use Filament\Forms\Form;
 use Filament\Resources\Resource;
 use Filament\Tables;
 use Filament\Tables\Table;
@@ -15,9 +29,9 @@ class MemberGroupResource extends Resource
 {
     protected static ?string $model = MemberGroup::class;
 
-    protected static ?string $navigationIcon = 'heroicon-o-user-group';
+    protected static string | \BackedEnum | null $navigationIcon = 'heroicon-o-user-group';
 
-    protected static ?string $navigationGroup = 'Contenido';
+    protected static string | \UnitEnum | null $navigationGroup = 'Contenido';
 
     protected static ?string $modelLabel = 'Grupo de Miembros';
 
@@ -25,28 +39,28 @@ class MemberGroupResource extends Resource
 
     protected static ?int $navigationSort = 10;
 
-    public static function form(Form $form): Form
+    public static function form(Schema $schema): Schema
     {
-        return $form
-            ->schema([
-                Forms\Components\Section::make('Grupo')
+        return $schema
+            ->components([
+                Section::make('Grupo')
                     ->schema([
-                        Forms\Components\TextInput::make('name')
+                        TextInput::make('name')
                             ->label('Nombre del grupo')
                             ->required()
                             ->maxLength(255)
                             ->live(onBlur: true)
-                            ->afterStateUpdated(fn ($state, Forms\Set $set) => $set('slug', Str::slug($state))),
-                        Forms\Components\TextInput::make('slug')
+                            ->afterStateUpdated(fn ($state, Set $set) => $set('slug', Str::slug($state))),
+                        TextInput::make('slug')
                             ->label('Slug')
                             ->required()
                             ->maxLength(255)
                             ->unique(ignoreRecord: true),
-                        Forms\Components\TextInput::make('sort_order')
+                        TextInput::make('sort_order')
                             ->label('Orden')
                             ->numeric()
                             ->default(0),
-                        Forms\Components\Select::make('status')
+                        Select::make('status')
                             ->label('Estado')
                             ->options([
                                 'active'   => 'Activo',
@@ -55,47 +69,6 @@ class MemberGroupResource extends Resource
                             ->default('active')
                             ->required(),
                     ])->columns(2),
-
-                Forms\Components\Section::make('Miembros')
-                    ->schema([
-                        Forms\Components\Repeater::make('members')
-                            ->label('')
-                            ->relationship()
-                            ->schema([
-                                Forms\Components\TextInput::make('name')
-                                    ->label('Nombre completo')
-                                    ->required()
-                                    ->maxLength(255),
-                                Forms\Components\TextInput::make('role')
-                                    ->label('Cargo / Rol')
-                                    ->maxLength(100)
-                                    ->placeholder('Ej. Presidente, Secretario...'),
-                                Forms\Components\Select::make('featured_media_id')
-                                    ->label('Foto')
-                                    ->relationship('featuredMedia', 'file_name')
-                                    ->searchable()
-                                    ->nullable()
-                                    ->helperText('Selecciona de la biblioteca de medios'),
-                                Forms\Components\TextInput::make('sort_order')
-                                    ->label('Orden')
-                                    ->numeric()
-                                    ->default(0),
-                                Forms\Components\Select::make('status')
-                                    ->label('Estado')
-                                    ->options([
-                                        'active'   => 'Activo',
-                                        'inactive' => 'Inactivo',
-                                    ])
-                                    ->default('active'),
-                            ])
-                            ->columns(2)
-                            ->defaultItems(0)
-                            ->reorderable('sort_order')
-                            ->collapsible()
-                            ->itemLabel(fn (array $state): ?string => $state['name'] ?? 'Nuevo miembro')
-                            ->addActionLabel('Agregar miembro')
-                            ->columnSpanFull(),
-                    ]),
             ]);
     }
 
@@ -103,24 +76,24 @@ class MemberGroupResource extends Resource
     {
         return $table
             ->columns([
-                Tables\Columns\TextColumn::make('sort_order')
+                TextColumn::make('sort_order')
                     ->label('#')
                     ->sortable()
                     ->width(50),
-                Tables\Columns\TextColumn::make('name')
+                TextColumn::make('name')
                     ->label('Grupo')
                     ->searchable(),
-                Tables\Columns\TextColumn::make('members_count')
+                TextColumn::make('members_count')
                     ->label('Miembros')
                     ->counts('members')
                     ->sortable(),
-                Tables\Columns\BadgeColumn::make('status')
+                BadgeColumn::make('status')
                     ->label('Estado')
                     ->colors([
                         'success' => 'active',
                         'danger'  => 'inactive',
                     ]),
-                Tables\Columns\TextColumn::make('updated_at')
+                TextColumn::make('updated_at')
                     ->label('Actualizado')
                     ->dateTime('d/m/Y')
                     ->sortable()
@@ -128,28 +101,30 @@ class MemberGroupResource extends Resource
             ])
             ->defaultSort('sort_order')
             ->filters([])
-            ->actions([
-                Tables\Actions\EditAction::make(),
-                Tables\Actions\DeleteAction::make(),
+            ->recordActions([
+                EditAction::make(),
+                DeleteAction::make(),
             ])
-            ->bulkActions([
-                Tables\Actions\BulkActionGroup::make([
-                    Tables\Actions\DeleteBulkAction::make(),
+            ->toolbarActions([
+                BulkActionGroup::make([
+                    DeleteBulkAction::make(),
                 ]),
             ]);
     }
 
     public static function getRelations(): array
     {
-        return [];
+        return [
+            MembersRelationManager::class,
+        ];
     }
 
     public static function getPages(): array
     {
         return [
-            'index'  => Pages\ListMemberGroups::route('/'),
-            'create' => Pages\CreateMemberGroup::route('/create'),
-            'edit'   => Pages\EditMemberGroup::route('/{record}/edit'),
+            'index'  => ListMemberGroups::route('/'),
+            'create' => CreateMemberGroup::route('/create'),
+            'edit'   => EditMemberGroup::route('/{record}/edit'),
         ];
     }
 }

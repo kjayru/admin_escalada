@@ -2,10 +2,27 @@
 
 namespace App\Filament\Resources;
 
+use Filament\Schemas\Schema;
+use Filament\Schemas\Components\Section;
+use Filament\Forms\Components\TextInput;
+use Filament\Schemas\Components\Utilities\Set;
+use Filament\Forms\Components\Select;
+use Filament\Forms\Components\Hidden;
+use Filament\Forms\Components\Textarea;
+use Filament\Forms\Components\RichEditor;
+use Slimani\MediaManager\Form\MediaPicker;
+use Filament\Tables\Columns\TextColumn;
+use Filament\Tables\Filters\SelectFilter;
+use Filament\Actions\EditAction;
+use Filament\Actions\DeleteAction;
+use Filament\Actions\BulkActionGroup;
+use Filament\Actions\DeleteBulkAction;
+use App\Filament\Resources\ProductResource\Pages\ListProducts;
+use App\Filament\Resources\ProductResource\Pages\CreateProduct;
+use App\Filament\Resources\ProductResource\Pages\EditProduct;
 use App\Filament\Resources\ProductResource\Pages;
 use App\Models\Product;
 use Filament\Forms;
-use Filament\Forms\Form;
 use Filament\Resources\Resource;
 use Filament\Tables;
 use Filament\Tables\Table;
@@ -15,9 +32,9 @@ class ProductResource extends Resource
 {
     protected static ?string $model = Product::class;
 
-    protected static ?string $navigationIcon = 'heroicon-o-shopping-bag';
+    protected static string | \BackedEnum | null $navigationIcon = 'heroicon-o-shopping-bag';
 
-    protected static ?string $navigationGroup = 'Tienda';
+    protected static string | \UnitEnum | null $navigationGroup = 'Tienda';
 
     protected static ?string $modelLabel = 'Producto';
 
@@ -25,63 +42,61 @@ class ProductResource extends Resource
 
     protected static ?int $navigationSort = 2;
 
-    public static function form(Form $form): Form
+    public static function form(Schema $schema): Schema
     {
-        return $form
-            ->schema([
-                Forms\Components\Section::make('Información del Producto')
+        return $schema
+            ->components([
+                Section::make('Información del Producto')
                     ->schema([
-                        Forms\Components\TextInput::make('name')
+                        TextInput::make('name')
                             ->label('Nombre')
                             ->required()
                             ->maxLength(255)
                             ->live(onBlur: true)
-                            ->afterStateUpdated(fn ($state, Forms\Set $set) => $set('slug', Str::slug($state))),
-                        Forms\Components\TextInput::make('slug')
+                            ->afterStateUpdated(fn ($state, Set $set) => $set('slug', Str::slug($state))),
+                        TextInput::make('slug')
                             ->label('Slug')
                             ->required()
                             ->maxLength(255)
                             ->unique(ignoreRecord: true),
-                        Forms\Components\Select::make('category_id')
+                        Select::make('category_id')
                             ->label('Categoría')
                             ->relationship('category', 'name')
                             ->searchable()
                             ->nullable(),
-                        Forms\Components\Select::make('status')
+                        Select::make('status')
                             ->label('Estado')
                             ->options(['draft' => 'Borrador', 'published' => 'Publicado', 'out_of_stock' => 'Sin Stock'])
                             ->required()
                             ->default('draft'),
-                        Forms\Components\Hidden::make('user_id')
+                        Hidden::make('user_id')
                             ->default(fn () => auth()->id()),
                     ])->columns(2),
 
-                Forms\Components\Section::make('Precio y Medios')
+                Section::make('Precio y Medios')
                     ->schema([
-                        Forms\Components\TextInput::make('price')
+                        TextInput::make('price')
                             ->label('Precio')
                             ->numeric()
                             ->prefix('$')
                             ->nullable(),
-                        Forms\Components\TextInput::make('currency')
+                        TextInput::make('currency')
                             ->label('Moneda')
                             ->default('USD')
                             ->maxLength(10),
-                        Forms\Components\Select::make('featured_media_id')
+                        MediaPicker::make('featured_media_id')
                             ->label('Imagen Destacada')
-                            ->relationship('featuredMedia', 'file_name')
-                            ->searchable()
                             ->nullable(),
                     ])->columns(3),
 
-                Forms\Components\Section::make('Descripción')
+                Section::make('Descripción')
                     ->schema([
-                        Forms\Components\Textarea::make('summary')
+                        Textarea::make('summary')
                             ->label('Resumen')
                             ->rows(2)
                             ->maxLength(500)
                             ->columnSpanFull(),
-                        Forms\Components\RichEditor::make('description')
+                        RichEditor::make('description')
                             ->label('Descripción Completa')
                             ->columnSpanFull()
                             ->fileAttachmentsDisk('public')
@@ -94,19 +109,19 @@ class ProductResource extends Resource
     {
         return $table
             ->columns([
-                Tables\Columns\TextColumn::make('name')
+                TextColumn::make('name')
                     ->label('Nombre')
                     ->searchable()
                     ->sortable(),
-                Tables\Columns\TextColumn::make('category.name')
+                TextColumn::make('category.name')
                     ->label('Categoría')
                     ->badge()
                     ->color('primary'),
-                Tables\Columns\TextColumn::make('price')
+                TextColumn::make('price')
                     ->label('Precio')
                     ->money('usd')
                     ->sortable(),
-                Tables\Columns\TextColumn::make('status')
+                TextColumn::make('status')
                     ->label('Estado')
                     ->badge()
                     ->color(fn ($state) => match($state) {
@@ -114,27 +129,27 @@ class ProductResource extends Resource
                         'out_of_stock' => 'danger',
                         default        => 'gray',
                     }),
-                Tables\Columns\TextColumn::make('updated_at')
+                TextColumn::make('updated_at')
                     ->label('Actualizado')
                     ->since()
                     ->sortable()
                     ->toggleable(),
             ])
             ->filters([
-                Tables\Filters\SelectFilter::make('status')
+                SelectFilter::make('status')
                     ->label('Estado')
                     ->options(['draft' => 'Borrador', 'published' => 'Publicado', 'out_of_stock' => 'Sin Stock']),
-                Tables\Filters\SelectFilter::make('category_id')
+                SelectFilter::make('category_id')
                     ->label('Categoría')
                     ->relationship('category', 'name'),
             ])
-            ->actions([
-                Tables\Actions\EditAction::make(),
-                Tables\Actions\DeleteAction::make(),
+            ->recordActions([
+                EditAction::make(),
+                DeleteAction::make(),
             ])
-            ->bulkActions([
-                Tables\Actions\BulkActionGroup::make([
-                    Tables\Actions\DeleteBulkAction::make(),
+            ->toolbarActions([
+                BulkActionGroup::make([
+                    DeleteBulkAction::make(),
                 ]),
             ])
             ->defaultSort('name');
@@ -145,9 +160,9 @@ class ProductResource extends Resource
     public static function getPages(): array
     {
         return [
-            'index'  => Pages\ListProducts::route('/'),
-            'create' => Pages\CreateProduct::route('/create'),
-            'edit'   => Pages\EditProduct::route('/{record}/edit'),
+            'index'  => ListProducts::route('/'),
+            'create' => CreateProduct::route('/create'),
+            'edit'   => EditProduct::route('/{record}/edit'),
         ];
     }
 }

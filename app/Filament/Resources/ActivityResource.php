@@ -2,11 +2,26 @@
 
 namespace App\Filament\Resources;
 
+use Filament\Schemas\Schema;
+use Filament\Schemas\Components\Section;
+use Filament\Forms\Components\TextInput;
+use Filament\Forms\Components\Select;
+use Filament\Forms\Components\FileUpload;
+use Filament\Schemas\Components\Utilities\Set;
+use Filament\Forms\Components\DateTimePicker;
+use Filament\Tables\Columns\TextColumn;
+use Filament\Tables\Filters\SelectFilter;
+use Filament\Actions\EditAction;
+use Filament\Actions\DeleteAction;
+use Filament\Actions\BulkActionGroup;
+use Filament\Actions\DeleteBulkAction;
+use App\Filament\Resources\ActivityResource\Pages\ListActivities;
+use App\Filament\Resources\ActivityResource\Pages\CreateActivity;
+use App\Filament\Resources\ActivityResource\Pages\EditActivity;
 use App\Filament\Resources\ActivityResource\Pages;
 use App\Filament\Resources\ActivityResource\RelationManagers;
 use App\Models\Activity;
 use Filament\Forms;
-use Filament\Forms\Form;
 use Filament\Resources\Resource;
 use Filament\Tables;
 use Filament\Tables\Table;
@@ -17,9 +32,9 @@ class ActivityResource extends Resource
 {
     protected static ?string $model = Activity::class;
 
-    protected static ?string $navigationIcon = 'heroicon-o-calendar-days';
+    protected static string | \BackedEnum | null $navigationIcon = 'heroicon-o-calendar-days';
 
-    protected static ?string $navigationGroup = 'Contenido';
+    protected static string | \UnitEnum | null $navigationGroup = 'Contenido';
 
     protected static ?string $modelLabel = 'Actividad';
 
@@ -27,25 +42,25 @@ class ActivityResource extends Resource
 
     protected static ?int $navigationSort = 5;
 
-    public static function form(Form $form): Form
+    public static function form(Schema $schema): Schema
     {
-        return $form
-            ->schema([
-                Forms\Components\Section::make('Información de la Actividad')
+        return $schema
+            ->components([
+                Section::make('Información de la Actividad')
                     ->schema([
-                        Forms\Components\TextInput::make('name')
+                        TextInput::make('name')
                             ->label('Nombre de la Actividad')
                             ->required()
                             ->maxLength(255)
                             ->columnSpanFull(),
-                        Forms\Components\TextInput::make('year')
+                        TextInput::make('year')
                             ->label('Año')
                             ->required()
                             ->numeric()
                             ->default(date('Y'))
                             ->minValue(2000)
                             ->maxValue(2100),
-                        Forms\Components\TextInput::make('order')
+                        TextInput::make('order')
                             ->label('Orden')
                             ->required()
                             ->numeric()
@@ -53,19 +68,21 @@ class ActivityResource extends Resource
                             ->helperText('Orden de aparición dentro del año (menor = primero)'),
                     ])->columns(2),
 
-                Forms\Components\Section::make('Archivo PDF')
+                Section::make('Archivo PDF')
                     ->schema([
-                        Forms\Components\Select::make('media_id')
+                        FileUpload::make('pdf_path')
                             ->label('Archivo PDF')
-                            ->relationship('media', 'file_name')
-                            ->searchable()
-                            ->required()
-                            ->helperText('Selecciona el PDF desde la Biblioteca de Medios'),
+                            ->disk('public')
+                            ->directory('activities/pdfs')
+                            ->acceptedFileTypes(['application/pdf'])
+                            ->maxSize(20480)
+                            ->downloadable()
+                            ->helperText('Sube el PDF de la actividad (máx. 20 MB)'),
                     ]),
 
-                Forms\Components\Section::make('Publicación')
+                Section::make('Publicación')
                     ->schema([
-                        Forms\Components\Select::make('status')
+                        Select::make('status')
                             ->label('Estado')
                             ->options([
                                 'draft' => 'Borrador',
@@ -74,12 +91,12 @@ class ActivityResource extends Resource
                             ->required()
                             ->default('draft')
                             ->live()
-                            ->afterStateUpdated(function ($state, Forms\Set $set) {
+                            ->afterStateUpdated(function ($state, Set $set) {
                                 if ($state === 'published') {
                                     $set('published_at', now()->toDateTimeString());
                                 }
                             }),
-                        Forms\Components\DateTimePicker::make('published_at')
+                        DateTimePicker::make('published_at')
                             ->label('Fecha de Publicación'),
                     ])->columns(2),
             ]);
@@ -89,19 +106,19 @@ class ActivityResource extends Resource
     {
         return $table
             ->columns([
-                Tables\Columns\TextColumn::make('name')
+                TextColumn::make('name')
                     ->label('Nombre')
                     ->searchable()
                     ->sortable(),
-                Tables\Columns\TextColumn::make('year')
+                TextColumn::make('year')
                     ->label('Año')
                     ->numeric()
                     ->sortable(),
-                Tables\Columns\TextColumn::make('media.file_name')
+                TextColumn::make('pdf_path')
                     ->label('Archivo')
-                    ->sortable()
+                    ->formatStateUsing(fn ($state) => $state ? basename($state) : '—')
                     ->limit(30),
-                Tables\Columns\TextColumn::make('status')
+                TextColumn::make('status')
                     ->label('Estado')
                     ->badge()
                     ->colors([
@@ -110,38 +127,38 @@ class ActivityResource extends Resource
                     ])
                     ->formatStateUsing(fn ($state) => $state === 'draft' ? 'Borrador' : 'Publicado')
                     ->searchable(),
-                Tables\Columns\TextColumn::make('order')
+                TextColumn::make('order')
                     ->label('Orden')
                     ->numeric()
                     ->sortable(),
-                Tables\Columns\TextColumn::make('published_at')
+                TextColumn::make('published_at')
                     ->label('Fecha de Publicación')
                     ->dateTime('d/m/Y H:i')
                     ->sortable(),
-                Tables\Columns\TextColumn::make('created_at')
+                TextColumn::make('created_at')
                     ->label('Creado')
                     ->dateTime('d/m/Y H:i')
                     ->sortable()
                     ->toggleable(isToggledHiddenByDefault: true),
             ])
             ->filters([
-                Tables\Filters\SelectFilter::make('year')
+                SelectFilter::make('year')
                     ->label('Año')
                     ->options(fn () => Activity::distinct()->pluck('year', 'year')->toArray()),
-                Tables\Filters\SelectFilter::make('status')
+                SelectFilter::make('status')
                     ->label('Estado')
                     ->options([
                         'draft' => 'Borrador',
                         'published' => 'Publicado',
                     ]),
             ])
-            ->actions([
-                Tables\Actions\EditAction::make(),
-                Tables\Actions\DeleteAction::make(),
+            ->recordActions([
+                EditAction::make(),
+                DeleteAction::make(),
             ])
-            ->bulkActions([
-                Tables\Actions\BulkActionGroup::make([
-                    Tables\Actions\DeleteBulkAction::make(),
+            ->toolbarActions([
+                BulkActionGroup::make([
+                    DeleteBulkAction::make(),
                 ]),
             ])
             ->defaultSort('year', 'desc');
@@ -157,9 +174,9 @@ class ActivityResource extends Resource
     public static function getPages(): array
     {
         return [
-            'index' => Pages\ListActivities::route('/'),
-            'create' => Pages\CreateActivity::route('/create'),
-            'edit' => Pages\EditActivity::route('/{record}/edit'),
+            'index' => ListActivities::route('/'),
+            'create' => CreateActivity::route('/create'),
+            'edit' => EditActivity::route('/{record}/edit'),
         ];
     }
 }

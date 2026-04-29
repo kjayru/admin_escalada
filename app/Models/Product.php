@@ -38,7 +38,7 @@ class Product extends Model
 
     public function featuredMedia(): BelongsTo
     {
-        return $this->belongsTo(Media::class, 'featured_media_id');
+        return $this->belongsTo(LegacyMedia::class, 'featured_media_id');
     }
 
     public function inquiries(): HasMany

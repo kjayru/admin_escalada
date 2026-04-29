@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Slimani\MediaManager\Models\File as SlimaniFile;
 
 class Member extends Model
 {
@@ -11,9 +12,15 @@ class Member extends Model
         'member_group_id',
         'name',
         'role',
+        'bio',
+        'featured_home',
         'featured_media_id',
         'sort_order',
         'status',
+    ];
+
+    protected $casts = [
+        'featured_home' => 'boolean',
     ];
 
     public function group(): BelongsTo
@@ -23,6 +30,6 @@ class Member extends Model
 
     public function featuredMedia(): BelongsTo
     {
-        return $this->belongsTo(Media::class, 'featured_media_id');
+        return $this->belongsTo(SlimaniFile::class, 'featured_media_id');
     }
 }

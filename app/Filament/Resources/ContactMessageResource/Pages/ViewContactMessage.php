@@ -2,6 +2,8 @@
 
 namespace App\Filament\Resources\ContactMessageResource\Pages;
 
+use Filament\Actions\Action;
+use Filament\Actions\DeleteAction;
 use App\Filament\Resources\ContactMessageResource;
 use App\Models\ContactMessage;
 use Filament\Actions;
@@ -14,19 +16,19 @@ class ViewContactMessage extends ViewRecord
     protected function getHeaderActions(): array
     {
         return [
-            Actions\Action::make('mark_read')
+            Action::make('mark_read')
                 ->label('Marcar como Leído')
                 ->icon('heroicon-o-eye')
                 ->color('warning')
                 ->action(fn () => $this->record->update(['status' => 'read']))
                 ->visible(fn () => $this->record->status === 'new'),
-            Actions\Action::make('mark_replied')
+            Action::make('mark_replied')
                 ->label('Marcar como Respondido')
                 ->icon('heroicon-o-check-circle')
                 ->color('success')
                 ->action(fn () => $this->record->update(['status' => 'replied']))
                 ->visible(fn () => in_array($this->record->status, ['new', 'read'])),
-            Actions\DeleteAction::make(),
+            DeleteAction::make(),
         ];
     }
 }

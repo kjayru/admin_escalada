@@ -21,7 +21,7 @@ class BlogPostController extends Controller
         $search = $request->input('search');
 
         $query = BlogPost::where('status', 'published')
-            ->with(['featuredMedia'])
+            ->with(['featuredMedia', 'featuredFile'])
             ->withCount('approvedComments')
             ->orderBy('is_featured', 'desc')
             ->orderBy('published_at', 'desc');
@@ -46,8 +46,12 @@ class BlogPostController extends Controller
     {
         $post = BlogPost::where('slug', $slug)
             ->where('status', 'published')
-            ->with(['featuredMedia', 'approvedComments', 'media'])
+            ->with(['featuredMedia', 'featuredFile', 'approvedComments', 'media'])
             ->firstOrFail();
+
+        if ($post->content_mode === 'blocks') {
+            $post->load(['sections.items', 'sections.featuredMedia']);
+        }
 
         return new BlogPostResource($post);
     }

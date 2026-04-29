@@ -2,10 +2,28 @@
 
 namespace App\Filament\Resources;
 
+use Filament\Schemas\Schema;
+use Filament\Schemas\Components\Section;
+use Filament\Forms\Components\Select;
+use Filament\Forms\Components\TextInput;
+use Filament\Forms\Components\Textarea;
+use Filament\Forms\Components\DateTimePicker;
+use Filament\Forms\Components\Toggle;
+use Slimani\MediaManager\Form\MediaPicker;
+use Filament\Tables\Columns\TextColumn;
+use Filament\Tables\Columns\IconColumn;
+use Filament\Tables\Filters\SelectFilter;
+use Filament\Tables\Filters\TernaryFilter;
+use Filament\Actions\EditAction;
+use Filament\Actions\DeleteAction;
+use Filament\Actions\BulkActionGroup;
+use Filament\Actions\DeleteBulkAction;
+use App\Filament\Resources\SponsorPlacementResource\Pages\ListSponsorPlacements;
+use App\Filament\Resources\SponsorPlacementResource\Pages\CreateSponsorPlacement;
+use App\Filament\Resources\SponsorPlacementResource\Pages\EditSponsorPlacement;
 use App\Filament\Resources\SponsorPlacementResource\Pages;
 use App\Models\SponsorPlacement;
 use Filament\Forms;
-use Filament\Forms\Form;
 use Filament\Resources\Resource;
 use Filament\Tables;
 use Filament\Tables\Table;
@@ -14,9 +32,9 @@ class SponsorPlacementResource extends Resource
 {
     protected static ?string $model = SponsorPlacement::class;
 
-    protected static ?string $navigationIcon = 'heroicon-o-photo';
+    protected static string | \BackedEnum | null $navigationIcon = 'heroicon-o-photo';
 
-    protected static ?string $navigationGroup = 'Patrocinadores';
+    protected static string | \UnitEnum | null $navigationGroup = 'Patrocinadores';
 
     protected static ?string $modelLabel = 'Ubicación de Patrocinador';
 
@@ -24,18 +42,18 @@ class SponsorPlacementResource extends Resource
 
     protected static ?int $navigationSort = 2;
 
-    public static function form(Form $form): Form
+    public static function form(Schema $schema): Schema
     {
-        return $form
-            ->schema([
-                Forms\Components\Section::make('Asignación')
+        return $schema
+            ->components([
+                Section::make('Asignación')
                     ->schema([
-                        Forms\Components\Select::make('sponsor_id')
+                        Select::make('sponsor_id')
                             ->label('Patrocinador')
                             ->relationship('sponsor', 'name')
                             ->searchable()
                             ->required(),
-                        Forms\Components\Select::make('placement')
+                        Select::make('placement')
                             ->label('Ubicación')
                             ->options([
                                 'hero'                 => 'Hero (slider principal)',
@@ -49,39 +67,36 @@ class SponsorPlacementResource extends Resource
                                 'como_apoyar'          => 'Cómo Apoyar',
                             ])
                             ->required(),
-                        Forms\Components\TextInput::make('title')
+                        TextInput::make('title')
                             ->label('Título')
                             ->maxLength(255),
-                        Forms\Components\Textarea::make('body')
+                        Textarea::make('body')
                             ->label('Texto / Descripción')
                             ->rows(3)
                             ->columnSpanFull(),
                     ])->columns(2),
 
-                Forms\Components\Section::make('Banner y Enlace')
+                Section::make('Banner y Enlace')
                     ->schema([
-                        Forms\Components\Select::make('banner_media_id')
+                        MediaPicker::make('banner_media_id')
                             ->label('Banner / Imagen')
-                            ->relationship('bannerMedia', 'file_name')
-                            ->searchable()
                             ->nullable(),
-                        Forms\Components\TextInput::make('link_url')
+                        TextInput::make('link_url')
                             ->label('URL de Enlace')
-                            ->url()
                             ->maxLength(255),
                     ])->columns(2),
 
-                Forms\Components\Section::make('Visibilidad')
+                Section::make('Visibilidad')
                     ->schema([
-                        Forms\Components\DateTimePicker::make('start_at')
+                        DateTimePicker::make('start_at')
                             ->label('Inicio'),
-                        Forms\Components\DateTimePicker::make('end_at')
+                        DateTimePicker::make('end_at')
                             ->label('Fin'),
-                        Forms\Components\TextInput::make('sort_order')
+                        TextInput::make('sort_order')
                             ->label('Orden')
                             ->numeric()
                             ->default(0),
-                        Forms\Components\Toggle::make('is_active')
+                        Toggle::make('is_active')
                             ->label('Activo')
                             ->default(true),
                     ])->columns(2),
@@ -92,36 +107,36 @@ class SponsorPlacementResource extends Resource
     {
         return $table
             ->columns([
-                Tables\Columns\TextColumn::make('sponsor.name')
+                TextColumn::make('sponsor.name')
                     ->label('Patrocinador')
                     ->searchable()
                     ->sortable(),
-                Tables\Columns\TextColumn::make('placement')
+                TextColumn::make('placement')
                     ->label('Ubicación')
                     ->badge()
                     ->color('primary'),
-                Tables\Columns\TextColumn::make('title')
+                TextColumn::make('title')
                     ->label('Título')
                     ->searchable()
                     ->toggleable(),
-                Tables\Columns\TextColumn::make('start_at')
+                TextColumn::make('start_at')
                     ->label('Inicio')
                     ->dateTime('d/m/Y')
                     ->sortable(),
-                Tables\Columns\TextColumn::make('end_at')
+                TextColumn::make('end_at')
                     ->label('Fin')
                     ->dateTime('d/m/Y')
                     ->sortable(),
-                Tables\Columns\IconColumn::make('is_active')
+                IconColumn::make('is_active')
                     ->label('Activo')
                     ->boolean(),
-                Tables\Columns\TextColumn::make('sort_order')
+                TextColumn::make('sort_order')
                     ->label('Orden')
                     ->numeric()
                     ->sortable(),
             ])
             ->filters([
-                Tables\Filters\SelectFilter::make('placement')
+                SelectFilter::make('placement')
                     ->label('Ubicación')
                     ->options([
                         'hero'                 => 'Hero',
@@ -134,16 +149,16 @@ class SponsorPlacementResource extends Resource
                         'blog'                 => 'Blog',
                         'como_apoyar'          => 'Cómo Apoyar',
                     ]),
-                Tables\Filters\TernaryFilter::make('is_active')
+                TernaryFilter::make('is_active')
                     ->label('Activo'),
             ])
-            ->actions([
-                Tables\Actions\EditAction::make(),
-                Tables\Actions\DeleteAction::make(),
+            ->recordActions([
+                EditAction::make(),
+                DeleteAction::make(),
             ])
-            ->bulkActions([
-                Tables\Actions\BulkActionGroup::make([
-                    Tables\Actions\DeleteBulkAction::make(),
+            ->toolbarActions([
+                BulkActionGroup::make([
+                    DeleteBulkAction::make(),
                 ]),
             ])
             ->defaultSort('sort_order');
@@ -154,9 +169,9 @@ class SponsorPlacementResource extends Resource
     public static function getPages(): array
     {
         return [
-            'index'  => Pages\ListSponsorPlacements::route('/'),
-            'create' => Pages\CreateSponsorPlacement::route('/create'),
-            'edit'   => Pages\EditSponsorPlacement::route('/{record}/edit'),
+            'index'  => ListSponsorPlacements::route('/'),
+            'create' => CreateSponsorPlacement::route('/create'),
+            'edit'   => EditSponsorPlacement::route('/{record}/edit'),
         ];
     }
 }

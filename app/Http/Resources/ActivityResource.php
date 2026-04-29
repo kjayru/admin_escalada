@@ -19,12 +19,9 @@ class ActivityResource extends JsonResource
             'name' => $this->name,
             'year' => $this->year,
             'order' => $this->order,
-            'file' => $this->media ? [
-                'id' => $this->media->id,
-                'url' => $this->media->url,
-                'file_name' => $this->media->file_name,
-                'mime_type' => $this->media->mime_type,
-                'size' => $this->media->size,
+            'file' => $this->pdf_url ? [
+                'url' => $this->pdf_url,
+                'file_name' => basename($this->pdf_path),
             ] : null,
             'published_at' => $this->published_at?->toIso8601String(),
         ];

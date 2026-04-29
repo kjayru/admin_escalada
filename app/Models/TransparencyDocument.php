@@ -25,7 +25,7 @@ class TransparencyDocument extends Model
 
     public function media(): BelongsTo
     {
-        return $this->belongsTo(Media::class);
+        return $this->belongsTo(LegacyMedia::class);
     }
 
     public function scopePublished($query)

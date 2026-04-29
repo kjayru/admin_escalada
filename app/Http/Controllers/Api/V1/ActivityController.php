@@ -15,7 +15,6 @@ class ActivityController extends Controller
     public function index(Request $request)
     {
         $query = Activity::published()
-            ->with(['media'])
             ->orderBy('year', 'desc')
             ->orderBy('order', 'asc');
 
@@ -36,7 +35,6 @@ class ActivityController extends Controller
     {
         $activity = Activity::where('id', $id)
             ->published()
-            ->with(['media'])
             ->firstOrFail();
 
         return new ActivityResource($activity);

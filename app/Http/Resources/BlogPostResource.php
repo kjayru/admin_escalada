@@ -4,6 +4,7 @@ namespace App\Http\Resources;
 
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
+use App\Http\Resources\PageSectionResource;
 
 class BlogPostResource extends JsonResource
 {
@@ -17,6 +18,34 @@ class BlogPostResource extends JsonResource
         return "https://picsum.photos/seed/{$seed}/{$w}/{$h}";
     }
 
+    private function resolveFeaturedMedia(): array
+    {
+        // Preferir slimani/spatie (sistema nuevo) — el MediaPicker de Filament guarda su File ID
+        if ($this->relationLoaded('featuredFile') && $this->featuredFile) {
+            $spatieMedia = $this->featuredFile->getFirstMedia() ?? $this->featuredFile->getFirstMedia('default');
+            $url = $spatieMedia?->getUrl();
+            if ($url) {
+                return [
+                    'url' => $url,
+                    'alt' => $this->featuredFile->alt_text ?? $this->title,
+                ];
+            }
+        }
+
+        // Fallback al sistema legacy si aún existe el archivo
+        if ($this->relationLoaded('featuredMedia') && $this->featuredMedia) {
+            return [
+                'url' => $this->featuredMedia->url ?? self::picsum($this->slug, 1200, 630),
+                'alt' => $this->featuredMedia->alt ?? $this->title,
+            ];
+        }
+
+        return [
+            'url' => self::picsum($this->slug, 1200, 630),
+            'alt' => $this->title,
+        ];
+    }
+
     public function toArray(Request $request): array
     {
         return [
@@ -26,16 +55,13 @@ class BlogPostResource extends JsonResource
             'category' => $this->category,
             'author' => ['name' => $this->author_name ?? 'Escalada Libre'],
             'excerpt' => $this->excerpt,
-            'body'   => $this->body,
-            'featured_media' => $this->whenLoaded('featuredMedia', function () {
-                return [
-                    'url' => $this->featuredMedia?->url ?? self::picsum($this->slug, 1200, 630),
-                    'alt' => $this->featuredMedia?->alt ?? $this->title,
-                ];
-            }, [
-                'url' => self::picsum($this->slug, 1200, 630),
-                'alt' => $this->title,
-            ]),
+            'body'   => $this->when($this->content_mode !== 'blocks', $this->body),
+            'content_mode' => $this->content_mode ?? 'classic',
+            'sections' => $this->when(
+                $this->content_mode === 'blocks' && $this->relationLoaded('sections'),
+                PageSectionResource::collection($this->sections)
+            ),
+            'featured_media' => $this->resolveFeaturedMedia(),
             'media' => MediaResource::collection($this->whenLoaded('media')),
             'published_at' => $this->published_at?->toISOString(),
             'comments' => $this->when(

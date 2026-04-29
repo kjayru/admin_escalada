@@ -10,14 +10,16 @@ class MemberResource extends JsonResource
     public function toArray(Request $request): array
     {
         return [
-            'id'    => $this->id,
-            'name'  => $this->name,
-            'role'  => $this->role,
+            'id'            => $this->id,
+            'name'          => $this->name,
+            'role'          => $this->role,
+            'bio'           => $this->bio,
+            'featured_home' => (bool) $this->featured_home,
             'photo' => $this->featuredMedia ? [
                 'id'        => $this->featuredMedia->id,
-                'url'       => $this->featuredMedia->url,
+                'url'       => $this->featuredMedia->getUrl(),
                 'file_name' => $this->featuredMedia->file_name,
-                'alt'       => $this->featuredMedia->alt,
+                'alt'       => $this->featuredMedia->name ?? '',
             ] : null,
             'sort_order' => $this->sort_order,
         ];

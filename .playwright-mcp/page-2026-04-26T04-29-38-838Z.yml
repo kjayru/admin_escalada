@@ -1,0 +1,10 @@
+- generic [ref=e5]:
+  - region "Barra de herramientas de ayuda/zoom" [ref=e27]:
+    - toolbar "Barra de herramientas de ayuda/zoom" [ref=e29]:
+      - button "Ayuda" [ref=e31]:
+        - img
+  - generic:
+    - status
+    - group [ref=e33]:
+      - alert [ref=e35]
+      - alert [ref=e37]

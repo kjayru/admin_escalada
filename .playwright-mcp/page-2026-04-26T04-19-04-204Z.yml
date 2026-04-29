@@ -1,0 +1,390 @@
+- generic [ref=e1]:
+  - generic [ref=e4]:
+    - banner [ref=e5]:
+      - generic [ref=e6]:
+        - navigation [ref=e7]:
+          - link "Escalada Libre A.C." [ref=e8] [cursor=pointer]:
+            - /url: /
+            - img "Escalada Libre A.C." [ref=e9]
+          - button "Cerrar menú" [active] [ref=e466] [cursor=pointer]:
+            - img [ref=e467]
+        - list [ref=e470]:
+          - listitem [ref=e471]:
+            - link "Inicio" [ref=e472] [cursor=pointer]:
+              - /url: /
+          - listitem [ref=e473]:
+            - link "Nosotros" [ref=e474] [cursor=pointer]:
+              - /url: /nosotros
+          - listitem [ref=e475]:
+            - link "Actividades" [ref=e476] [cursor=pointer]:
+              - /url: /actividades
+          - listitem [ref=e477]:
+            - link "Historia" [ref=e478] [cursor=pointer]:
+              - /url: /historia
+          - listitem [ref=e479]:
+            - link "Blog" [ref=e480] [cursor=pointer]:
+              - /url: /blog
+          - listitem [ref=e481]:
+            - link "Cómo apoyar" [ref=e482] [cursor=pointer]:
+              - /url: /como-apoyar
+          - listitem [ref=e483]:
+            - link "Transparencia" [ref=e484] [cursor=pointer]:
+              - /url: /transparencia
+          - listitem [ref=e485]:
+            - link "Patrocinio" [ref=e486] [cursor=pointer]:
+              - /url: /patrocinio
+          - listitem [ref=e487]:
+            - link "Contacto" [ref=e488] [cursor=pointer]:
+              - /url: /contacto
+          - listitem [ref=e489]:
+            - link "Donar" [ref=e490] [cursor=pointer]:
+              - /url: /como-apoyar
+    - main [ref=e14]:
+      - generic [ref=e15]:
+        - generic [ref=e16]:
+          - img "La Huasteca, Santa Catarina" [ref=e18]
+          - generic [ref=e20]:
+            - generic [ref=e23]: ESCALADA LIBRE
+            - heading "Proteger, conservar y promover la escalada en México." [level=1] [ref=e24]
+          - button "scroll down" [ref=e25] [cursor=pointer]:
+            - generic [ref=e26]: scroll down
+            - img [ref=e27]
+        - generic [ref=e29]:
+          - paragraph [ref=e34]: Somos ciudadanos con interés en beneficiar las actividades recreativas de montaña.
+          - generic [ref=e35]:
+            - img "El Potrero Chico, Hidalgo N.L. México" [ref=e36]
+            - generic [ref=e38]: El Potrero Chico, Hidalgo N.L. México
+        - generic [ref=e40]:
+          - generic [ref=e43]:
+            - heading "Contribuimos al cuidado de los Ecosistemas Terrestres" [level=2] [ref=e44]
+            - paragraph [ref=e46]: Una Vida Sana, el Desarrollo de Sociedades Pacificas, el Desarrollo de los Pueblos y el Desarrollo Sustentable mediante la elaboración de planes y programas para la protección y mantenimiento de las áreas donde es posible su práctica.
+          - generic [ref=e47]:
+            - img "El Salto, Coahuila de Zaragoza, Santiago N.L. México" [ref=e48]
+            - generic [ref=e50]:
+              - text: El Salto, Coahuila de Zaragoza
+              - text: Santiago N.L. México
+        - generic [ref=e54]:
+          - generic [ref=e55]:
+            - generic: "01"
+            - generic [ref=e56]:
+              - generic [ref=e59]: BLOG
+              - link "Nos reunimos con el gobierno de Nuevo León" [ref=e60] [cursor=pointer]:
+                - /url: /blog/nos-reunimos-con-el-gobierno-de-nuevo-leon
+                - heading "Nos reunimos con el gobierno de Nuevo León" [level=2] [ref=e61]
+              - paragraph [ref=e62]: Con el fin de la gestión integral de la Huasteca zona natural protegida de Nuevo León
+              - link "Ver más" [ref=e63] [cursor=pointer]:
+                - /url: /blog/nos-reunimos-con-el-gobierno-de-nuevo-leon
+          - img "Nos reunimos con el gobierno de Nuevo León" [ref=e65]
+        - generic [ref=e68]:
+          - generic [ref=e69]:
+            - generic: "02"
+            - generic [ref=e70]:
+              - generic [ref=e73]: BLOG
+              - link "Protegemos las montañas y a la comunidad." [ref=e74] [cursor=pointer]:
+                - /url: /blog/protegemos-las-montanas-y-a-la-comunidad
+                - heading "Protegemos las montañas y a la comunidad." [level=2] [ref=e75]
+              - paragraph [ref=e76]: Somos una asociación de escaladores costarricenses con interés en beneficiar, de manera segura y sustentable, al fomento del montañismo y escalada en sus diferentes modalidades.
+              - link "Ver más" [ref=e77] [cursor=pointer]:
+                - /url: /blog/protegemos-las-montanas-y-a-la-comunidad
+          - img "Protegemos las montañas y a la comunidad." [ref=e79]
+        - generic [ref=e82]:
+          - generic [ref=e83]:
+            - generic: "03"
+            - generic [ref=e84]:
+              - generic [ref=e87]: BLOG
+              - link "Reforestación completa." [ref=e88] [cursor=pointer]:
+                - /url: /blog/reforestacion-completa
+                - heading "Reforestación completa." [level=2] [ref=e89]
+              - paragraph [ref=e90]: Llenamos de vida zonas de Costa Rica cubriendo áreas que lo necesitaban debido a daños ocasionados por incendios y deforestación.
+              - link "Ver más" [ref=e91] [cursor=pointer]:
+                - /url: /blog/reforestacion-completa
+          - img "Reforestación completa." [ref=e93]
+        - generic [ref=e95]:
+          - generic [ref=e96]:
+            - generic [ref=e100]:
+              - img "ALTRAC Técnicos en Alturas" [ref=e101]
+              - paragraph [ref=e102]: Somos distribuidores autorizados con amplia experiencia en proyectos con Escalada Libre, ofreciendo productos para montañismo y escalada en México.
+              - link "Ver más" [ref=e103] [cursor=pointer]:
+                - /url: "#"
+            - generic [ref=e107]:
+              - img "Banco Deportivo Nacional" [ref=e108]
+              - paragraph [ref=e109]: Organización financiera comprometida con el desarrollo del deporte amateur en Costa Rica. Patrocinador principal de las competencias nacionales.
+              - link "Ver más" [ref=e110] [cursor=pointer]:
+                - /url: https://bdn.cr
+            - generic [ref=e114]:
+              - img "Black Diamond" [ref=e115]
+              - paragraph [ref=e116]: Somos distribuidores autorizados con amplia experiencia en proyectos con Escalada Libre, ofreciendo productos para montañismo y escalada en México.
+              - link "Ver más" [ref=e117] [cursor=pointer]:
+                - /url: "#"
+            - generic [ref=e121]:
+              - img "ClimbWork" [ref=e122]
+              - paragraph [ref=e123]: Siéntete seguro en todas partes, la inspiración viene del equipo que usamos. Estamos enfocados en promover actividades recreativas de montaña de manera segura y sustentable. Buscamos contribuir al cuidado del medio ambiente y al desarrollo de sociedades pacíficas y sustentables a través del deporte. Siéntete seguro en todas partes, la inspiración viene del equipo que usamos. Estamos enfocados en promover actividades recreativas de montaña de manera segura y sustentable. Buscamos contribuir al cuidado del medio ambiente y al desarrollo de sociedades pacíficas y sustentables a través del deporte.
+              - link "Ver más" [ref=e124] [cursor=pointer]:
+                - /url: "#"
+            - generic [ref=e128]:
+              - img "Clínica Everest IPETH" [ref=e129]
+              - paragraph [ref=e130]: Somos distribuidores autorizados con amplia experiencia en proyectos con Escalada Libre, ofreciendo productos para montañismo y escalada en México.
+              - link "Ver más" [ref=e131] [cursor=pointer]:
+                - /url: "#"
+            - generic [ref=e135]:
+              - img "Exposure" [ref=e136]
+              - paragraph [ref=e137]: El Aspect Pro está diseñado para misiones a tope, grandes días en el valle y altos picos alpinos. Diseñado para funcionar en losas y terrenos verticales, el Aspect Pro tiene un talón moldeado en 3D, una entresuela rígida y un antepié ligeramente inclinado hacia abajo. La cobertura adicional en la puntera brinda mayor durabilidad para escalar grietas. Un diseño de altura media brinda protección y cobertura para los tobillos en espacios abiertos. Finalmente, la parte superior de cuero Ecco DriTan™ está hecha con un proceso que requiere menos agua y la lengüeta de malla agrega transpirabilidad. Somos distribuidores autorizados con amplia experiencia en proyectos con Escalada Libre, ofreciendo productos para montañismo y escalada en México.
+              - link "Ver más" [ref=e138] [cursor=pointer]:
+                - /url: "#"
+            - generic [ref=e142]:
+              - img "Hanuman Café" [ref=e143]
+              - paragraph [ref=e144]: Somos distribuidores autorizados con amplia experiencia en proyectos con Escalada Libre, ofreciendo productos para montañismo y escalada en México.
+              - link "Ver más" [ref=e145] [cursor=pointer]:
+                - /url: "#"
+            - generic [ref=e149]:
+              - img "La Cumbre Cotidiana AC" [ref=e150]
+              - paragraph [ref=e151]: Somos distribuidores autorizados con amplia experiencia en proyectos con Escalada Libre, ofreciendo productos para montañismo y escalada en México.
+              - link "Ver más" [ref=e152] [cursor=pointer]:
+                - /url: "#"
+            - generic [ref=e156]:
+              - img "Mad Rock" [ref=e157]
+              - paragraph [ref=e158]: Somos distribuidores autorizados con amplia experiencia en proyectos con Escalada Libre, ofreciendo productos para montañismo y escalada en México.
+              - link "Ver más" [ref=e159] [cursor=pointer]:
+                - /url: "#"
+            - generic [ref=e163]:
+              - img "Medi Lab" [ref=e164]
+              - paragraph [ref=e165]: Somos distribuidores autorizados con amplia experiencia en proyectos con Escalada Libre, ofreciendo productos para montañismo y escalada en México.
+              - link "Ver más" [ref=e166] [cursor=pointer]:
+                - /url: "#"
+            - generic [ref=e170]:
+              - img "Monkey Hands" [ref=e171]
+              - paragraph [ref=e172]: Somos distribuidores autorizados con amplia experiencia en proyectos con Escalada Libre, ofreciendo productos para montañismo y escalada en México.
+              - link "Ver más" [ref=e173] [cursor=pointer]:
+                - /url: "#"
+            - generic [ref=e177]:
+              - img "Montaña Gear CR" [ref=e178]
+              - paragraph [ref=e179]: Tienda especializada en equipamiento de escalada y montañismo con las mejores marcas internacionales. 15 años apoyando a la comunidad escaladora de Costa Rica.
+              - link "Ver más" [ref=e180] [cursor=pointer]:
+                - /url: https://montanagear.cr
+            - generic [ref=e184]:
+              - img "Mountain Bites" [ref=e185]
+              - paragraph [ref=e186]: Somos distribuidores autorizados con amplia experiencia en proyectos con Escalada Libre, ofreciendo productos para montañismo y escalada en México.
+              - link "Ver más" [ref=e187] [cursor=pointer]:
+                - /url: "#"
+            - generic [ref=e191]:
+              - img "Papelería Morelos" [ref=e192]
+              - paragraph [ref=e193]: Somos distribuidores autorizados con amplia experiencia en proyectos con Escalada Libre, ofreciendo productos para montañismo y escalada en México.
+              - link "Ver más" [ref=e194] [cursor=pointer]:
+                - /url: "#"
+            - generic [ref=e198]:
+              - img "Pico Norte Climbing" [ref=e199]
+              - paragraph [ref=e200]: Somos distribuidores autorizados con amplia experiencia en proyectos con Escalada Libre, ofreciendo productos para montañismo y escalada en México.
+              - link "Ver más" [ref=e201] [cursor=pointer]:
+                - /url: "#"
+            - generic [ref=e205]:
+              - img "Source Climbing" [ref=e206]
+              - paragraph [ref=e207]: Somos distribuidores autorizados con amplia experiencia en proyectos con Escalada Libre, ofreciendo productos para montañismo y escalada en México.
+              - link "Ver más" [ref=e208] [cursor=pointer]:
+                - /url: "#"
+            - generic [ref=e212]:
+              - img "SportLife CR" [ref=e213]
+              - paragraph [ref=e214]: Marca de ropa deportiva de alto rendimiento fabricada en Costa Rica. Proveedora oficial de uniformes del equipo nacional de escalada.
+              - link "Ver más" [ref=e215] [cursor=pointer]:
+                - /url: https://sportlifecr.com
+            - generic [ref=e219]:
+              - img "Tika Outdoor" [ref=e220]
+              - paragraph [ref=e221]: Importadora y distribuidora oficial de marcas como Petzl, La Sportiva y Mammut en Centroamérica.
+              - link "Ver más" [ref=e222] [cursor=pointer]:
+                - /url: https://tikaoutdoor.com
+            - generic [ref=e226]:
+              - img "Vértigo Cafés" [ref=e227]
+              - paragraph [ref=e228]: Cadena de cafeterías con temática de escalada presentes en San José, Heredia y Cartago. El punto de encuentro de la comunidad escaladora
+              - link "Ver más" [ref=e229] [cursor=pointer]:
+                - /url: https://vertigocafes.com
+          - img [ref=e231] [cursor=pointer]
+          - img [ref=e234] [cursor=pointer]
+        - generic [ref=e257]:
+          - heading "Otros patrocinadores" [level=2] [ref=e258]
+          - generic [ref=e259]:
+            - link "Ver más" [ref=e263] [cursor=pointer]:
+              - /url: /patrocinio
+            - link "Ver más" [ref=e267] [cursor=pointer]:
+              - /url: /patrocinio
+        - generic [ref=e270]:
+          - heading "Quienes nos apoyan" [level=2] [ref=e273]
+          - paragraph [ref=e274]: Trabajamos para preservar los entornos naturales donde practicamos la escalada, colaborando con organizaciones que promueven la conservación y la ciencia ciudadana. Fomentamos los principios de "no dejar rastro" y aplicamos estos valores en cada ascenso y travesía. Nos aseguramos de minimizar nuestro impacto, dejando cada ruta y campamento en mejores condiciones de las que encontramos, y transmitimos este compromiso a las futuras generaciones de montañistas y escaladores.
+        - generic [ref=e276]:
+          - img "Exposure" [ref=e278]
+          - img "ClimbWork" [ref=e280]
+          - img "Black Diamond" [ref=e282]
+        - generic [ref=e285]:
+          - img "Pico Norte Climbing" [ref=e286]
+          - img "Source Climbing" [ref=e287]
+          - img "Mad Rock" [ref=e288]
+          - img "Medi Lab" [ref=e289]
+          - img "Clínica Everest IPETH" [ref=e290]
+          - img "Hanuman Café" [ref=e291]
+          - img "Mountain Bites" [ref=e292]
+          - img "Monkey Hands" [ref=e293]
+          - img "La Cumbre Cotidiana AC" [ref=e294]
+          - img "Papelería Morelos" [ref=e295]
+          - img "ALTRAC Técnicos en Alturas" [ref=e296]
+        - generic [ref=e297]:
+          - heading "¿Dónde hemos trabajado?" [level=2] [ref=e299]
+          - img "Mapa de trabajo - Nuevo León" [ref=e301]
+        - generic [ref=e302]:
+          - img "Escalada en roca" [ref=e303]
+          - img "Escalada Libre" [ref=e305]
+        - generic [ref=e307]:
+          - heading "Escalada Libre en Números" [level=2] [ref=e311]
+          - generic [ref=e313]:
+            - generic [ref=e314]:
+              - generic [ref=e315]: "0"
+              - generic [ref=e316]:
+                - text: Actividades
+                - text: realizadas
+            - generic [ref=e317]:
+              - generic [ref=e318]: "0"
+              - generic [ref=e319]:
+                - text: Árboles
+                - text: sembrados
+            - generic [ref=e320]:
+              - generic [ref=e321]: "0"
+              - generic [ref=e322]:
+                - text: Rutas
+                - text: rehabilitadas
+            - generic [ref=e323]:
+              - generic [ref=e324]: "0"
+              - generic [ref=e325]:
+                - text: Bolts
+                - text: instalados
+            - generic [ref=e326]:
+              - generic [ref=e327]: "0"
+              - generic [ref=e328]:
+                - text: Señalamientos
+                - text: instalados
+          - generic [ref=e330]:
+            - generic [ref=e331]:
+              - generic [ref=e332]: "0"
+              - generic [ref=e333]: Voluntarios
+            - generic [ref=e334]:
+              - generic [ref=e335]: "0"
+              - generic [ref=e336]:
+                - text: Años de vida útil
+                - text: de una vía
+            - generic [ref=e337]:
+              - generic [ref=e338]: $0
+              - generic [ref=e339]:
+                - text: Costo por reequipado
+                - text: de rutas
+            - generic [ref=e340]:
+              - generic [ref=e341]: $0
+              - generic [ref=e342]: Monto total invertido
+        - generic [ref=e343]:
+          - generic [ref=e344]:
+            - heading "Cómo nos puedes apoyar" [level=2] [ref=e345]
+            - paragraph [ref=e346]: "Existen cuatro maneras en las que puedes apoyarnos:"
+          - generic [ref=e348]:
+            - button [ref=e349] [cursor=pointer]
+            - generic [ref=e350]: 01 / 04
+            - button [ref=e351] [cursor=pointer]
+          - generic [ref=e353]:
+            - generic [ref=e355]:
+              - img "Comprando nuestros productos" [ref=e358]
+              - generic [ref=e359]:
+                - heading "4. Comprando nuestros productos" [level=3] [ref=e360]
+                - paragraph [ref=e361]: Tambien nos puedes apoyar comprando productos de Escalada Libre.
+                - link "Ver productos" [ref=e362] [cursor=pointer]:
+                  - /url: /como-apoyar/productos
+            - generic [ref=e364]:
+              - img "Por paypal" [ref=e367]
+              - generic [ref=e368]:
+                - heading "1. Por paypal" [level=3] [ref=e369]
+                - paragraph [ref=e370]: Desde nuestro sitio web, puedes realizar tu donacion por medio de Paypal.
+                - link "Donar ahora" [ref=e371] [cursor=pointer]:
+                  - /url: /como-apoyar/paypal
+            - generic [ref=e373]:
+              - img "Transferencia interbancaria" [ref=e376]
+              - generic [ref=e377]:
+                - heading "2. Transferencia interbancaria" [level=3] [ref=e378]
+                - paragraph [ref=e379]: Puedes realizar transferencia con los datos que te compartimos.
+                - link "Ver datos de transferencia" [ref=e380] [cursor=pointer]:
+                  - /url: /como-apoyar/transferencia
+            - generic [ref=e382]:
+              - img "Gyms" [ref=e385]
+              - generic [ref=e386]:
+                - heading "3. Gyms" [level=3] [ref=e387]
+                - paragraph [ref=e388]: Puedes acudir a cualquiera de los gimnasios que nos apoyan.
+                - link "Ver listado de gimnasios" [ref=e389] [cursor=pointer]:
+                  - /url: /como-apoyar/gyms
+        - generic [ref=e391]:
+          - generic [ref=e392]:
+            - heading "Nuestro team" [level=2] [ref=e393]
+            - link "CONOCE TODO NUESTRO TEAM" [ref=e394] [cursor=pointer]:
+              - /url: /nosotros
+          - generic [ref=e395]:
+            - generic [ref=e396]:
+              - img "Carlos Ortiz" [ref=e398]
+              - generic [ref=e399]:
+                - heading "Carlos Ortiz" [level=3] [ref=e400]
+                - paragraph [ref=e401]: Presidente de la asociación.
+                - paragraph [ref=e402]: Escalador desde los 13 años de edad. Abogado especialista en derecho internacional ambiental.
+            - generic [ref=e403]:
+              - img "Sebastián Landeros" [ref=e405]
+              - generic [ref=e406]:
+                - heading "Sebastián Landeros" [level=3] [ref=e407]
+                - paragraph [ref=e408]: Vicepresidente de la asociación.
+                - paragraph [ref=e409]: Hemos realizado brigadas de limpiezas en zonas pocos accesibles, eliminando la basura que afecta a nuestras sierras.
+        - generic [ref=e412]:
+          - generic [ref=e413]:
+            - generic [ref=e414]:
+              - paragraph [ref=e415]: NEWSLETTER
+              - heading "Recibe noticias de Escalada Libre a tu correo" [level=3] [ref=e416]
+            - generic [ref=e417]:
+              - textbox "Escribe tu correo" [ref=e418]
+              - button "Suscribir" [ref=e419] [cursor=pointer]
+          - link "ASPECT PRO" [ref=e420] [cursor=pointer]:
+            - /url: /patrocinio
+            - img "ASPECT PRO" [ref=e421]
+          - link "patrocinio" [ref=e422] [cursor=pointer]:
+            - /url: /patrocinio
+            - img "patrocinio" [ref=e423]
+        - generic [ref=e426]:
+          - img "Escalada Libre A.C." [ref=e428]
+          - generic [ref=e429]:
+            - heading "¡GRACIAS POR TU APOYO!" [level=2] [ref=e430]:
+              - text: ¡GRACIAS POR
+              - text: TU APOYO!
+            - link "Donar ahora" [ref=e431] [cursor=pointer]:
+              - /url: /como-apoyar
+    - contentinfo [ref=e432]:
+      - generic [ref=e434]:
+        - separator [ref=e435]
+        - generic [ref=e436]:
+          - generic [ref=e437]:
+            - link "Home" [ref=e438] [cursor=pointer]:
+              - /url: /
+            - link "Nosotros" [ref=e439] [cursor=pointer]:
+              - /url: /nosotros
+          - generic [ref=e440]:
+            - link "Actividades" [ref=e441] [cursor=pointer]:
+              - /url: /actividades
+            - link "Historia" [ref=e442] [cursor=pointer]:
+              - /url: /historia
+          - generic [ref=e443]:
+            - link "Cómo apoyar" [ref=e444] [cursor=pointer]:
+              - /url: /como-apoyar
+            - link "Blog" [ref=e445] [cursor=pointer]:
+              - /url: /blog
+          - generic [ref=e446]:
+            - link "Transparencia" [ref=e447] [cursor=pointer]:
+              - /url: /transparencia
+            - link "Contacto" [ref=e448] [cursor=pointer]:
+              - /url: /contacto
+        - separator [ref=e449]
+      - img "Sierra Madre Occidental" [ref=e451]
+  - generic:
+    - img
+  - generic [ref=e452]:
+    - button "Toggle Nuxt DevTools" [ref=e453] [cursor=pointer]:
+      - img [ref=e454]
+    - generic "Page load time" [ref=e457]:
+      - generic [ref=e458]: "118"
+      - generic [ref=e459]: ms
+    - button "Toggle Component Inspector" [ref=e461] [cursor=pointer]:
+      - img [ref=e462]

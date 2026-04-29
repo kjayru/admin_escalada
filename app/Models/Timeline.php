@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Slimani\MediaManager\Models\File as MediaFile;
 
 class Timeline extends Model
 {
@@ -28,7 +29,12 @@ class Timeline extends Model
 
     public function media(): BelongsTo
     {
-        return $this->belongsTo(Media::class);
+        return $this->belongsTo(LegacyMedia::class);
+    }
+
+    public function featuredFile(): BelongsTo
+    {
+        return $this->belongsTo(MediaFile::class, 'media_id');
     }
 
     public function scopePublished($query)

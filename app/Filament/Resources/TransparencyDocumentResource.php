@@ -2,10 +2,26 @@
 
 namespace App\Filament\Resources;
 
+use Filament\Schemas\Schema;
+use Filament\Schemas\Components\Section;
+use Filament\Forms\Components\TextInput;
+use Filament\Schemas\Components\Utilities\Set;
+use Filament\Forms\Components\Select;
+use Filament\Forms\Components\DateTimePicker;
+use Filament\Forms\Components\Textarea;
+use Slimani\MediaManager\Form\MediaPicker;
+use Filament\Tables\Columns\TextColumn;
+use Filament\Tables\Filters\SelectFilter;
+use Filament\Actions\EditAction;
+use Filament\Actions\DeleteAction;
+use Filament\Actions\BulkActionGroup;
+use Filament\Actions\DeleteBulkAction;
+use App\Filament\Resources\TransparencyDocumentResource\Pages\ListTransparencyDocuments;
+use App\Filament\Resources\TransparencyDocumentResource\Pages\CreateTransparencyDocument;
+use App\Filament\Resources\TransparencyDocumentResource\Pages\EditTransparencyDocument;
 use App\Filament\Resources\TransparencyDocumentResource\Pages;
 use App\Models\TransparencyDocument;
 use Filament\Forms;
-use Filament\Forms\Form;
 use Filament\Resources\Resource;
 use Filament\Tables;
 use Filament\Tables\Table;
@@ -15,9 +31,9 @@ class TransparencyDocumentResource extends Resource
 {
     protected static ?string $model = TransparencyDocument::class;
 
-    protected static ?string $navigationIcon = 'heroicon-o-document-chart-bar';
+    protected static string | \BackedEnum | null $navigationIcon = 'heroicon-o-document-chart-bar';
 
-    protected static ?string $navigationGroup = 'Contenido';
+    protected static string | \UnitEnum | null $navigationGroup = 'Contenido';
 
     protected static ?string $modelLabel = 'Documento de Transparencia';
 
@@ -25,31 +41,31 @@ class TransparencyDocumentResource extends Resource
 
     protected static ?int $navigationSort = 4;
 
-    public static function form(Form $form): Form
+    public static function form(Schema $schema): Schema
     {
-        return $form
-            ->schema([
-                Forms\Components\Section::make('Información')
+        return $schema
+            ->components([
+                Section::make('Información')
                     ->schema([
-                        Forms\Components\TextInput::make('title')
+                        TextInput::make('title')
                             ->label('Título')
                             ->required()
                             ->maxLength(255)
                             ->live(onBlur: true)
-                            ->afterStateUpdated(fn ($state, Forms\Set $set) => $set('slug', Str::slug($state))),
-                        Forms\Components\TextInput::make('slug')
+                            ->afterStateUpdated(fn ($state, Set $set) => $set('slug', Str::slug($state))),
+                        TextInput::make('slug')
                             ->label('Slug')
                             ->required()
                             ->maxLength(255)
                             ->unique(ignoreRecord: true),
-                        Forms\Components\TextInput::make('year')
+                        TextInput::make('year')
                             ->label('Año')
                             ->required()
                             ->numeric()
                             ->default(date('Y'))
                             ->minValue(2000)
                             ->maxValue(2100),
-                        Forms\Components\Select::make('type')
+                        Select::make('type')
                             ->label('Tipo de Documento')
                             ->options([
                                 'asambleas' => 'Asambleas',
@@ -57,30 +73,29 @@ class TransparencyDocumentResource extends Resource
                                 'estados'   => 'Estados de cuenta',
                             ])
                             ->required(),
-                        Forms\Components\Select::make('status')
+                        Select::make('status')
                             ->label('Estado')
                             ->options(['draft' => 'Borrador', 'published' => 'Publicado'])
                             ->required()
                             ->default('draft')
                             ->live()
-                            ->afterStateUpdated(function ($state, Forms\Set $set) {
+                            ->afterStateUpdated(function ($state, Set $set) {
                                 if ($state === 'published') {
                                     $set('published_at', now()->toDateTimeString());
                                 }
                             }),
-                        Forms\Components\DateTimePicker::make('published_at')
+                        DateTimePicker::make('published_at')
                             ->label('Fecha de Publicación'),
                     ])->columns(3),
 
-                Forms\Components\Section::make('Archivo')
+                Section::make('Archivo')
                     ->schema([
-                        Forms\Components\Select::make('media_id')
-                            ->label('Archivo')
-                            ->relationship('media', 'file_name')
-                            ->searchable()
-                            ->required()
-                            ->helperText('Selecciona el PDF desde Biblioteca de Medios'),
-                        Forms\Components\Textarea::make('description')
+                        MediaPicker::make('media_id')
+                            ->label('Archivo PDF')
+                            ->acceptedFileTypes(['application/pdf'])
+                            ->nullable()
+                            ->helperText('Selecciona el PDF desde la Biblioteca de Medios'),
+                        Textarea::make('description')
                             ->label('Descripción')
                             ->rows(3)
                             ->columnSpanFull(),
@@ -92,17 +107,17 @@ class TransparencyDocumentResource extends Resource
     {
         return $table
             ->columns([
-                Tables\Columns\TextColumn::make('title')
+                TextColumn::make('title')
                     ->label('Título')
                     ->searchable()
                     ->sortable()
                     ->limit(50),
-                Tables\Columns\TextColumn::make('year')
+                TextColumn::make('year')
                     ->label('Año')
                     ->sortable()
                     ->badge()
                     ->color('primary'),
-                Tables\Columns\TextColumn::make('type')
+                TextColumn::make('type')
                     ->label('Tipo')
                     ->badge()
                     ->formatStateUsing(fn ($state) => match($state) {
@@ -112,39 +127,39 @@ class TransparencyDocumentResource extends Resource
                         default     => ucfirst($state),
                     })
                     ->color('warning'),
-                Tables\Columns\TextColumn::make('status')
+                TextColumn::make('status')
                     ->label('Estado')
                     ->badge()
                     ->color(fn ($state) => $state === 'published' ? 'success' : 'gray'),
-                Tables\Columns\TextColumn::make('published_at')
+                TextColumn::make('published_at')
                     ->label('Publicado')
                     ->dateTime('d/m/Y')
                     ->sortable(),
-                Tables\Columns\TextColumn::make('updated_at')
+                TextColumn::make('updated_at')
                     ->label('Actualizado')
                     ->since()
                     ->sortable()
                     ->toggleable(),
             ])
             ->filters([
-                Tables\Filters\SelectFilter::make('type')
+                SelectFilter::make('type')
                     ->label('Tipo')
                     ->options([
                         'asambleas' => 'Asambleas',
                         'reportes'  => 'Reportes',
                         'estados'   => 'Estados de cuenta',
                     ]),
-                Tables\Filters\SelectFilter::make('status')
+                SelectFilter::make('status')
                     ->label('Estado')
                     ->options(['draft' => 'Borrador', 'published' => 'Publicado']),
             ])
-            ->actions([
-                Tables\Actions\EditAction::make(),
-                Tables\Actions\DeleteAction::make(),
+            ->recordActions([
+                EditAction::make(),
+                DeleteAction::make(),
             ])
-            ->bulkActions([
-                Tables\Actions\BulkActionGroup::make([
-                    Tables\Actions\DeleteBulkAction::make(),
+            ->toolbarActions([
+                BulkActionGroup::make([
+                    DeleteBulkAction::make(),
                 ]),
             ])
             ->defaultSort('year', 'desc');
@@ -155,9 +170,9 @@ class TransparencyDocumentResource extends Resource
     public static function getPages(): array
     {
         return [
-            'index'  => Pages\ListTransparencyDocuments::route('/'),
-            'create' => Pages\CreateTransparencyDocument::route('/create'),
-            'edit'   => Pages\EditTransparencyDocument::route('/{record}/edit'),
+            'index'  => ListTransparencyDocuments::route('/'),
+            'create' => CreateTransparencyDocument::route('/create'),
+            'edit'   => EditTransparencyDocument::route('/{record}/edit'),
         ];
     }
 }

@@ -20,9 +20,9 @@ class SponsorPlacementResource extends JsonResource
             'title'      => $this->title,
             'body'       => $this->body,
             'banner'     => [
-                'id'  => $this->bannerMedia?->id,
-                'url' => $this->bannerMedia?->url ?? null,
-                'alt' => $this->bannerMedia?->alt ?? $this->title,
+                'id'  => $this->bannerFile?->id,
+                'url' => $this->bannerFile?->getUrl() ?? null,
+                'alt' => $this->bannerFile?->alt ?? $this->title,
             ],
             'link_url'   => $this->link_url,
             'sort_order' => $this->sort_order,

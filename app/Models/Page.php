@@ -5,6 +5,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Relations\MorphMany;
 use Illuminate\Database\Eloquent\Relations\MorphToMany;
 
 class Page extends Model
@@ -25,9 +26,9 @@ class Page extends Model
         'published_at' => 'datetime',
     ];
 
-    public function sections(): HasMany
+    public function sections(): MorphMany
     {
-        return $this->hasMany(PageSection::class)->orderBy('sort_order');
+        return $this->morphMany(PageSection::class, 'contentable')->orderBy('sort_order');
     }
 
     public function creator(): BelongsTo
@@ -42,7 +43,7 @@ class Page extends Model
 
     public function media(): MorphToMany
     {
-        return $this->morphToMany(Media::class, 'mediable', 'mediables')
+        return $this->morphToMany(Media::class, 'mediable', 'legacy_mediables', null, 'media_id')
             ->withPivot('collection', 'sort_order')
             ->orderBy('sort_order');
     }

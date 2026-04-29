@@ -2,10 +2,32 @@
 
 namespace App\Filament\Resources;
 
+use Filament\Schemas\Schema;
+use Filament\Schemas\Components\Section;
+use Filament\Forms\Components\TextInput;
+use Filament\Schemas\Components\Utilities\Set;
+use Filament\Forms\Components\Select;
+use Filament\Forms\Components\Textarea;
+use Filament\Forms\Components\RichEditor;
+use Filament\Forms\Components\Toggle;
+use Filament\Forms\Components\DateTimePicker;
+use Filament\Schemas\Components\Utilities\Get;
+use Slimani\MediaManager\Form\MediaPicker;
+use App\Filament\Schemas\ContentBlockSchema;
+use Filament\Tables\Columns\IconColumn;
+use Filament\Tables\Columns\TextColumn;
+use Filament\Tables\Filters\SelectFilter;
+use Filament\Actions\ViewAction;
+use Filament\Actions\EditAction;
+use Filament\Actions\DeleteAction;
+use Filament\Actions\BulkActionGroup;
+use Filament\Actions\DeleteBulkAction;
+use App\Filament\Resources\BlogPostResource\Pages\ListBlogPosts;
+use App\Filament\Resources\BlogPostResource\Pages\CreateBlogPost;
+use App\Filament\Resources\BlogPostResource\Pages\EditBlogPost;
 use App\Filament\Resources\BlogPostResource\Pages;
 use App\Models\BlogPost;
 use Filament\Forms;
-use Filament\Forms\Form;
 use Filament\Resources\Resource;
 use Filament\Tables;
 use Filament\Tables\Table;
@@ -15,9 +37,9 @@ class BlogPostResource extends Resource
 {
     protected static ?string $model = BlogPost::class;
 
-    protected static ?string $navigationIcon = 'heroicon-o-newspaper';
+    protected static string | \BackedEnum | null $navigationIcon = 'heroicon-o-newspaper';
 
-    protected static ?string $navigationGroup = 'Contenido';
+    protected static string | \UnitEnum | null $navigationGroup = 'Contenido';
 
     protected static ?string $modelLabel = 'Entrada del Blog';
 
@@ -25,25 +47,39 @@ class BlogPostResource extends Resource
 
     protected static ?int $navigationSort = 2;
 
-    public static function form(Form $form): Form
+    public static function form(Schema $schema): Schema
     {
-        return $form
-            ->schema([
-                Forms\Components\Section::make('Contenido Principal')
+        return $schema
+            ->components([
+                Section::make('Modo de Edición')
                     ->schema([
-                        Forms\Components\TextInput::make('title')
+                        Select::make('content_mode')
+                            ->label('Modo de Contenido')
+                            ->options([
+                                'classic' => 'Clásico (Editor de Texto)',
+                                'blocks'  => 'Bloques (Constructor Visual)',
+                            ])
+                            ->default('classic')
+                            ->required()
+                            ->live()
+                            ->helperText('Elige cómo editar el contenido de este post.'),
+                    ]),
+
+                Section::make('Contenido Principal')
+                    ->schema([
+                        TextInput::make('title')
                             ->label('Título')
                             ->required()
                             ->maxLength(255)
                             ->live(onBlur: true)
-                            ->afterStateUpdated(fn ($state, Forms\Set $set) => $set('slug', Str::slug($state))),
-                        Forms\Components\TextInput::make('slug')
+                            ->afterStateUpdated(fn ($state, Set $set) => $set('slug', Str::slug($state))),
+                        TextInput::make('slug')
                             ->label('Slug')
                             ->required()
                             ->maxLength(255)
                             ->unique(ignoreRecord: true)
                             ->helperText('URL amigable generada automáticamente'),
-                        Forms\Components\Select::make('category')
+                        Select::make('category')
                             ->label('Categoría')
                             ->options([
                                 'blog' => 'Blog',
@@ -52,41 +88,46 @@ class BlogPostResource extends Resource
                             ])
                             ->required()
                             ->default('blog'),
-                        Forms\Components\TextInput::make('author_name')
+                        TextInput::make('author_name')
                             ->label('Autor')
                             ->maxLength(255)
                             ->placeholder('Escalada Libre'),
-                        Forms\Components\Textarea::make('excerpt')
+                        Textarea::make('excerpt')
                             ->label('Resumen')
                             ->rows(3)
                             ->maxLength(500)
                             ->helperText('Descripción corta para listados y SEO')
                             ->columnSpanFull(),
-                        Forms\Components\RichEditor::make('body')
+                        RichEditor::make('body')
                             ->label('Contenido')
-                            ->required()
+                            ->required(false)
                             ->fileAttachmentsDisk('public')
                             ->fileAttachmentsDirectory('blog')
-                            ->columnSpanFull(),
+                            ->columnSpanFull()
+                            ->visible(fn (Get $get): bool => $get('content_mode') !== 'blocks'),
                     ])->columns(3),
 
-                Forms\Components\Section::make('Imagen Destacada')
+                Section::make('Bloques de Contenido')
                     ->schema([
-                        Forms\Components\Select::make('featured_media_id')
+                        ContentBlockSchema::repeater(),
+                    ])
+                    ->visible(fn (Get $get): bool => $get('content_mode') === 'blocks'),
+
+                Section::make('Imagen Destacada')
+                    ->schema([
+                        MediaPicker::make('featured_media_id')
                             ->label('Imagen Destacada')
-                            ->relationship('featuredMedia', 'file_name')
-                            ->searchable()
                             ->nullable()
-                            ->helperText('Selecciona una imagen de la biblioteca de medios'),
+                            ->helperText('Selecciona una imagen de la Biblioteca de Medios'),
                     ]),
 
-                Forms\Components\Section::make('Publicación')
+                Section::make('Publicación')
                     ->schema([
-                        Forms\Components\Toggle::make('is_featured')
+                        Toggle::make('is_featured')
                             ->label('Destacado en Home')
                             ->helperText('Los posts destacados aparecen primero en la página de inicio')
                             ->columnSpanFull(),
-                        Forms\Components\Select::make('status')
+                        Select::make('status')
                             ->label('Estado')
                             ->options([
                                 'draft'     => 'Borrador',
@@ -95,23 +136,23 @@ class BlogPostResource extends Resource
                             ->required()
                             ->default('draft')
                             ->live()
-                            ->afterStateUpdated(function ($state, Forms\Set $set) {
+                            ->afterStateUpdated(function ($state, Set $set) {
                                 if ($state === 'published') {
                                     $set('published_at', now()->toDateTimeString());
                                 }
                             }),
-                        Forms\Components\DateTimePicker::make('published_at')
+                        DateTimePicker::make('published_at')
                             ->label('Fecha de Publicación')
                             ->nullable(),
                     ])->columns(2),
 
-                Forms\Components\Section::make('SEO')
+                Section::make('SEO')
                     ->schema([
-                        Forms\Components\TextInput::make('seo_title')
+                        TextInput::make('seo_title')
                             ->label('Título SEO')
                             ->maxLength(60)
                             ->helperText('Máx. 60 caracteres'),
-                        Forms\Components\Textarea::make('seo_description')
+                        Textarea::make('seo_description')
                             ->label('Descripción SEO')
                             ->rows(2)
                             ->maxLength(160)
@@ -124,17 +165,17 @@ class BlogPostResource extends Resource
     {
         return $table
             ->columns([
-                Tables\Columns\IconColumn::make('is_featured')
+                IconColumn::make('is_featured')
                     ->label('Destacado')
                     ->boolean()
                     ->sortable()
                     ->toggleable(),
-                Tables\Columns\TextColumn::make('title')
+                TextColumn::make('title')
                     ->label('Título')
                     ->searchable()
                     ->sortable()
                     ->limit(50),
-                Tables\Columns\TextColumn::make('category')
+                TextColumn::make('category')
                     ->label('Categoría')
                     ->badge()
                     ->colors([
@@ -145,12 +186,12 @@ class BlogPostResource extends Resource
                     ->formatStateUsing(fn (string $state): string => ucfirst($state))
                     ->sortable()
                     ->searchable(),
-                Tables\Columns\TextColumn::make('author_name')
+                TextColumn::make('author_name')
                     ->label('Autor')
                     ->searchable()
                     ->default('Escalada Libre')
                     ->toggleable(),
-                Tables\Columns\TextColumn::make('status')
+                TextColumn::make('status')
                     ->label('Estado')
                     ->badge()
                     ->color(fn (string $state): string => match ($state) {
@@ -158,30 +199,30 @@ class BlogPostResource extends Resource
                         'draft'     => 'warning',
                         default     => 'gray',
                     }),
-                Tables\Columns\TextColumn::make('published_at')
+                TextColumn::make('published_at')
                     ->label('Publicado')
                     ->dateTime('d/m/Y')
                     ->sortable(),
-                Tables\Columns\TextColumn::make('approved_comments_count')
+                TextColumn::make('approved_comments_count')
                     ->label('Comentarios')
                     ->counts('approvedComments')
                     ->badge()
                     ->color('primary')
                     ->toggleable(),
-                Tables\Columns\TextColumn::make('updated_at')
+                TextColumn::make('updated_at')
                     ->label('Actualizado')
                     ->since()
                     ->sortable()
                     ->toggleable(),
             ])
             ->filters([
-                Tables\Filters\SelectFilter::make('status')
+                SelectFilter::make('status')
                     ->label('Estado')
                     ->options([
                         'draft'     => 'Borrador',
                         'published' => 'Publicado',
                     ]),
-                Tables\Filters\SelectFilter::make('category')
+                SelectFilter::make('category')
                     ->label('Categoría')
                     ->options([
                         'blog' => 'Blog',
@@ -189,14 +230,14 @@ class BlogPostResource extends Resource
                         'noticias' => 'Noticias',
                     ]),
             ])
-            ->actions([
-                Tables\Actions\ViewAction::make(),
-                Tables\Actions\EditAction::make(),
-                Tables\Actions\DeleteAction::make(),
+            ->recordActions([
+                ViewAction::make(),
+                EditAction::make(),
+                DeleteAction::make(),
             ])
-            ->bulkActions([
-                Tables\Actions\BulkActionGroup::make([
-                    Tables\Actions\DeleteBulkAction::make(),
+            ->toolbarActions([
+                BulkActionGroup::make([
+                    DeleteBulkAction::make(),
                 ]),
             ])
             ->defaultSort('is_featured', 'desc');
@@ -210,9 +251,9 @@ class BlogPostResource extends Resource
     public static function getPages(): array
     {
         return [
-            'index'  => Pages\ListBlogPosts::route('/'),
-            'create' => Pages\CreateBlogPost::route('/create'),
-            'edit'   => Pages\EditBlogPost::route('/{record}/edit'),
+            'index'  => ListBlogPosts::route('/'),
+            'create' => CreateBlogPost::route('/create'),
+            'edit'   => EditBlogPost::route('/{record}/edit'),
         ];
     }
 }

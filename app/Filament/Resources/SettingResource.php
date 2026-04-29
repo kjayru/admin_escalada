@@ -2,23 +2,37 @@
 
 namespace App\Filament\Resources;
 
+use Filament\Schemas\Schema;
+use Filament\Schemas\Components\Section;
+use Filament\Forms\Components\Select;
+use Filament\Forms\Components\TextInput;
+use Filament\Tables\Columns\TextColumn;
+use Filament\Tables\Columns\TextInputColumn;
+use Filament\Tables\Filters\SelectFilter;
+use Filament\Actions\Action;
+use Filament\Actions\EditAction;
+use Filament\Actions\DeleteAction;
+use Filament\Actions\BulkActionGroup;
+use Filament\Actions\DeleteBulkAction;
+use Filament\Tables\Grouping\Group;
+use App\Filament\Resources\SettingResource\Pages\ListSettings;
+use App\Filament\Resources\SettingResource\Pages\CreateSetting;
+use App\Filament\Resources\SettingResource\Pages\EditSetting;
 use App\Filament\Resources\SettingResource\Pages;
 use App\Models\SiteSetting;
 use Filament\Forms;
-use Filament\Forms\Form;
 use Filament\Resources\Resource;
 use Filament\Tables;
 use Filament\Tables\Table;
-use Filament\Tables\Actions\Action;
 use Filament\Notifications\Notification;
 
 class SettingResource extends Resource
 {
     protected static ?string $model = SiteSetting::class;
 
-    protected static ?string $navigationIcon = 'heroicon-o-cog-6-tooth';
+    protected static string | \BackedEnum | null $navigationIcon = 'heroicon-o-cog-6-tooth';
 
-    protected static ?string $navigationGroup = 'Configuración';
+    protected static string | \UnitEnum | null $navigationGroup = 'Configuración';
 
     protected static ?string $modelLabel = 'Configuración';
 
@@ -26,13 +40,13 @@ class SettingResource extends Resource
 
     protected static ?int $navigationSort = 1;
 
-    public static function form(Form $form): Form
+    public static function form(Schema $schema): Schema
     {
-        return $form
-            ->schema([
-                Forms\Components\Section::make('Datos')
+        return $schema
+            ->components([
+                Section::make('Datos')
                     ->schema([
-                        Forms\Components\Select::make('group')
+                        Select::make('group')
                             ->label('Grupo')
                             ->options([
                                 'stats'      => 'Estadísticas',
@@ -44,13 +58,13 @@ class SettingResource extends Resource
                             ])
                             ->required()
                             ->native(false),
-                        Forms\Components\TextInput::make('key')
+                        TextInput::make('key')
                             ->label('Clave')
                             ->required()
                             ->unique(ignoreRecord: true)
                             ->helperText('Ej: stat.actividades, site.nombre')
                             ->maxLength(255),
-                        Forms\Components\TextInput::make('value')
+                        TextInput::make('value')
                             ->label('Valor')
                             ->required()
                             ->maxLength(500),
@@ -63,7 +77,7 @@ class SettingResource extends Resource
     {
         return $table
             ->columns([
-                Tables\Columns\TextColumn::make('group')
+                TextColumn::make('group')
                     ->label('Grupo')
                     ->badge()
                     ->color(fn (string $state): string => match ($state) {
@@ -77,23 +91,23 @@ class SettingResource extends Resource
                     })
                     ->sortable()
                     ->searchable(),
-                Tables\Columns\TextColumn::make('key')
+                TextColumn::make('key')
                     ->label('Clave')
                     ->searchable()
                     ->copyable()
                     ->copyMessage('¡Copiado!'),
-                Tables\Columns\TextInputColumn::make('value')
+                TextInputColumn::make('value')
                     ->label('Valor')
                     ->searchable()
                     ->rules(['max:500']),
-                Tables\Columns\TextColumn::make('updated_at')
+                TextColumn::make('updated_at')
                     ->label('Actualizado')
                     ->since()
                     ->sortable()
                     ->toggleable(),
             ])
             ->filters([
-                Tables\Filters\SelectFilter::make('group')
+                SelectFilter::make('group')
                     ->label('Grupo')
                     ->options([
                         'stats'      => 'Estadísticas',
@@ -146,18 +160,18 @@ class SettingResource extends Resource
                             ->send();
                     }),
             ])
-            ->actions([
-                Tables\Actions\EditAction::make(),
-                Tables\Actions\DeleteAction::make(),
+            ->recordActions([
+                EditAction::make(),
+                DeleteAction::make(),
             ])
-            ->bulkActions([
-                Tables\Actions\BulkActionGroup::make([
-                    Tables\Actions\DeleteBulkAction::make(),
+            ->toolbarActions([
+                BulkActionGroup::make([
+                    DeleteBulkAction::make(),
                 ]),
             ])
             ->defaultSort('group')
             ->groups([
-                Tables\Grouping\Group::make('group')
+                Group::make('group')
                     ->label('Grupo')
                     ->collapsible(),
             ])
@@ -172,9 +186,9 @@ class SettingResource extends Resource
     public static function getPages(): array
     {
         return [
-            'index'  => Pages\ListSettings::route('/'),
-            'create' => Pages\CreateSetting::route('/create'),
-            'edit'   => Pages\EditSetting::route('/{record}/edit'),
+            'index'  => ListSettings::route('/'),
+            'create' => CreateSetting::route('/create'),
+            'edit'   => EditSetting::route('/{record}/edit'),
         ];
     }
 }

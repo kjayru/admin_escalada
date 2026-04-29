@@ -2,6 +2,7 @@
 
 namespace App\Filament\Resources\SupportMethodResource\Pages;
 
+use Filament\Actions\Action;
 use App\Filament\Resources\SupportMethodResource;
 use Filament\Actions;
 use Filament\Resources\Pages\EditRecord;
@@ -14,7 +15,7 @@ class EditSupportMethod extends EditRecord
     protected function getHeaderActions(): array
     {
         return [
-            Actions\Action::make('back')
+            Action::make('back')
                 ->label('← Volver al listado')
                 ->url(SupportMethodResource::getUrl('index'))
                 ->color('gray'),

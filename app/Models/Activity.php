@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Support\Facades\Storage;
 
 class Activity extends Model
 {
@@ -11,6 +12,7 @@ class Activity extends Model
         'name',
         'year',
         'media_id',
+        'pdf_path',
         'status',
         'published_at',
         'order',
@@ -24,7 +26,15 @@ class Activity extends Model
 
     public function media(): BelongsTo
     {
-        return $this->belongsTo(Media::class);
+        return $this->belongsTo(LegacyMedia::class);
+    }
+
+    public function getPdfUrlAttribute(): ?string
+    {
+        if (!$this->pdf_path) {
+            return null;
+        }
+        return Storage::disk('public')->url($this->pdf_path);
     }
 
     public function scopePublished($query)

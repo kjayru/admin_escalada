@@ -12,7 +12,7 @@ class SponsorPlacementController extends Controller
 {
     public function index(Request $request): AnonymousResourceCollection
     {
-        $query = SponsorPlacement::with(['sponsor.logo', 'bannerMedia'])
+        $query = SponsorPlacement::with(['sponsor.logo', 'bannerFile'])
             ->active()
             ->orderBy('sort_order');
 

@@ -28,7 +28,13 @@ class PageController extends Controller
     {
         $page = Page::where('slug', $slug)
             ->where('status', 'published')
-            ->with(['sections.items', 'sections.featuredMedia', 'sections.media', 'media'])
+            ->with([
+                'sections.items',
+                'sections.featuredMedia',
+                'sections.featuredFile.media',
+                'sections.media',
+                'sections.galleryFiles.media',
+            ])
             ->firstOrFail();
 
         return new PageResource($page);

@@ -30,7 +30,7 @@ class SupportCampaignResource extends JsonResource
                         : ($method->settings ?? []);
 
                     // Imagen: primero media subida, luego settings[image], luego null
-                    $imageUrl = $method->media?->url
+                    $imageUrl = $method->media?->getUrl()
                         ?? $settings['image']
                         ?? null;
 

@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Slimani\MediaManager\Models\File as SlimaniFile;
 
 class SponsorPlacement extends Model
 {
@@ -33,12 +34,17 @@ class SponsorPlacement extends Model
 
     public function banner(): BelongsTo
     {
-        return $this->belongsTo(Media::class, 'banner_media_id');
+        return $this->belongsTo(LegacyMedia::class, 'banner_media_id');
     }
 
     public function bannerMedia(): BelongsTo
     {
-        return $this->belongsTo(Media::class, 'banner_media_id');
+        return $this->belongsTo(LegacyMedia::class, 'banner_media_id');
+    }
+
+    public function bannerFile(): BelongsTo
+    {
+        return $this->belongsTo(SlimaniFile::class, 'banner_media_id');
     }
 
     public function scopeActive($query)

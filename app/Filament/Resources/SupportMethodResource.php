@@ -2,11 +2,21 @@
 
 namespace App\Filament\Resources;
 
+use Filament\Schemas\Schema;
+use Filament\Schemas\Components\Section;
+use Filament\Forms\Components\Placeholder;
+use Filament\Forms\Components\TextInput;
+use Filament\Forms\Components\Textarea;
+use Filament\Forms\Components\Select;
+use Filament\Tables\Columns\TextColumn;
+use Filament\Tables\Columns\IconColumn;
+use Filament\Actions\EditAction;
+use App\Filament\Resources\SupportMethodResource\Pages\ListSupportMethods;
+use App\Filament\Resources\SupportMethodResource\Pages\EditSupportMethod;
 use App\Filament\Resources\SupportMethodResource\Pages;
-use App\Models\Media;
 use App\Models\SupportMethod;
+use Slimani\MediaManager\Form\MediaPicker;
 use Filament\Forms;
-use Filament\Forms\Form;
 use Filament\Resources\Resource;
 use Filament\Tables;
 use Filament\Tables\Table;
@@ -16,9 +26,9 @@ class SupportMethodResource extends Resource
 {
     protected static ?string $model = SupportMethod::class;
 
-    protected static ?string $navigationIcon = 'heroicon-o-heart';
+    protected static string | \BackedEnum | null $navigationIcon = 'heroicon-o-heart';
 
-    protected static ?string $navigationGroup = 'Cómo Apoyar';
+    protected static string | \UnitEnum | null $navigationGroup = 'Cómo Apoyar';
 
     protected static ?string $modelLabel = 'Bloque de apoyo';
 
@@ -34,7 +44,7 @@ class SupportMethodResource extends Resource
             ->orderBy('sort_order');
     }
 
-    public static function form(Form $form): Form
+    public static function form(Schema $schema): Schema
     {
         $typeLabels = [
             'paypal'        => 'PayPal',
@@ -45,37 +55,48 @@ class SupportMethodResource extends Resource
             'gym_partner'   => 'Socio Gimnasio',
         ];
 
-        return $form
-            ->schema([
-                Forms\Components\Section::make('Tipo de bloque')
+        return $schema
+            ->components([
+                Section::make('Tipo de bloque')
                     ->schema([
-                        Forms\Components\Placeholder::make('type_label')
+                        Placeholder::make('type_label')
                             ->label('Tipo')
                             ->content(fn ($record) => $typeLabels[$record?->type] ?? ucfirst($record?->type ?? '-')),
                     ])
                     ->columns(1),
 
-                Forms\Components\Section::make('Contenido')
+                Section::make('Contenido')
                     ->schema([
-                        Forms\Components\TextInput::make('title')
+                        TextInput::make('title')
                             ->label('Título del bloque')
                             ->required()
                             ->maxLength(255),
-                        Forms\Components\Textarea::make('body')
+                        Textarea::make('body')
                             ->label('Descripción')
                             ->rows(4)
                             ->maxLength(1000),
                     ])
                     ->columns(1),
 
-                Forms\Components\Section::make('Imagen')
+                Section::make('Botón de acción')
                     ->schema([
-                        Forms\Components\Select::make('media_id')
+                        TextInput::make('settings.button_label')
+                            ->label('Texto del botón')
+                            ->placeholder('Ej: Donar ahora')
+                            ->maxLength(100),
+                        TextInput::make('settings.button_url')
+                            ->label('URL del botón')
+                            ->placeholder('Ej: /como-apoyar/paypal')
+                            ->maxLength(500),
+                    ])
+                    ->columns(2),
+
+                Section::make('Imagen')
+                    ->schema([
+                        MediaPicker::make('media_id')
                             ->label('Imagen del bloque')
-                            ->options(fn () => Media::orderBy('name')->pluck('name', 'id'))
-                            ->searchable()
                             ->nullable()
-                            ->helperText('Selecciona una imagen de la biblioteca de medios, o deja vacío para usar la imagen predeterminada.'),
+                            ->helperText('Selecciona una imagen de la Biblioteca de Medios, o deja vacío para usar la imagen predeterminada.'),
                     ])
                     ->columns(1),
             ]);
@@ -94,31 +115,31 @@ class SupportMethodResource extends Resource
 
         return $table
             ->columns([
-                Tables\Columns\TextColumn::make('sort_order')
+                TextColumn::make('sort_order')
                     ->label('#')
                     ->sortable()
                     ->width(50),
-                Tables\Columns\TextColumn::make('type')
+                TextColumn::make('type')
                     ->label('Tipo')
                     ->formatStateUsing(fn ($state) => $typeLabels[$state] ?? ucfirst($state))
                     ->badge()
                     ->color('warning'),
-                Tables\Columns\TextColumn::make('title')
+                TextColumn::make('title')
                     ->label('Título')
                     ->searchable(),
-                Tables\Columns\TextColumn::make('body')
+                TextColumn::make('body')
                     ->label('Descripción')
                     ->limit(60)
                     ->wrap(),
-                Tables\Columns\IconColumn::make('is_active')
+                IconColumn::make('is_active')
                     ->label('Activo')
                     ->boolean(),
             ])
-            ->actions([
-                Tables\Actions\EditAction::make(),
+            ->recordActions([
+                EditAction::make(),
             ])
             // Sin acciones masivas ni botón de eliminar
-            ->bulkActions([])
+            ->toolbarActions([])
             ->reorderable('sort_order')
             ->defaultSort('sort_order');
     }
@@ -126,8 +147,8 @@ class SupportMethodResource extends Resource
     public static function getPages(): array
     {
         return [
-            'index' => Pages\ListSupportMethods::route('/'),
-            'edit'  => Pages\EditSupportMethod::route('/{record}/edit'),
+            'index' => ListSupportMethods::route('/'),
+            'edit'  => EditSupportMethod::route('/{record}/edit'),
         ];
     }
 }
