@@ -58,7 +58,7 @@ class AdminPanelProvider extends PanelProvider
                 Authenticate::class,
             ])
             ->assets([
-                Css::make('media-manager-compiled')
+                Css::make('media-manager-compiled', public_path('css/media-manager-compiled.css'))
                     ->relativePublicPath('css/media-manager-compiled.css'),
             ])
             ->plugin(
