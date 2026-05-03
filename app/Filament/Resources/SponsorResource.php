@@ -44,7 +44,7 @@ class SponsorResource extends Resource
     {
         return $schema
             ->components([
-                // ── Información básica ──────────────────────────────────────
+                // ── 1 & 5. Información básica ────────────────────────────────
                 Section::make('Información del Patrocinador')
                     ->schema([
                         TextInput::make('name')
@@ -60,39 +60,65 @@ class SponsorResource extends Resource
                             ->unique(ignoreRecord: true)
                             ->helperText('Ej: climb-work → /patrocinador/climb-work'),
                         Textarea::make('tagline')
-                            ->label('Tagline')
+                            ->label('Tagline (texto debajo del logo en slider)')
                             ->rows(2)
                             ->maxLength(300)
                             ->placeholder('Vinculamos el mundo de la joyería con las montañas.')
                             ->columnSpanFull(),
                         Textarea::make('description')
-                            ->label('Descripción (cuerpo del artículo)')
-                            ->rows(5)
-                            ->maxLength(2000)
+                            ->label('Texto extenso (landing del patrocinador)')
+                            ->rows(6)
+                            ->maxLength(5000)
                             ->columnSpanFull(),
                         Select::make('status')
                             ->label('Estado')
                             ->options(['active' => 'Activo', 'inactive' => 'Inactivo'])
                             ->required()
                             ->default('active'),
+                        TextInput::make('website_url')
+                            ->label('Sitio web')
+                            ->url()
+                            ->maxLength(255)
+                            ->placeholder('https://www.patrocinador.com'),
+                        TextInput::make('buy_url')
+                            ->label('URL botón "Comprar aquí"')
+                            ->url()
+                            ->maxLength(255)
+                            ->placeholder('https://tienda.patrocinador.com/producto')
+                            ->helperText('URL a la que apunta el botón "Comprar aquí" en el landing'),
                     ])->columns(2),
 
-                // ── Logo e imágenes ──────────────────────────────────────────
-                Section::make('Logo e imágenes')
+                // ── 1. Logo para boxes rectangulares ────────────────────────
+                Section::make('Logos')
+                    ->description('Logos del patrocinador para diferentes secciones del sitio.')
                     ->schema([
                         MediaPicker::make('logo_media_id')
-                            ->label('Logo del patrocinador')
+                            ->label('1. Logo para boxes rectangulares')
                             ->nullable()
-                            ->helperText('Imagen del logo que aparece en la cabecera y en el slider de la Home'),
-                        MediaPicker::make('slide_image_media_id')
-                            ->label('Imagen de fondo (Slider Home)')
+                            ->helperText('Aparece en la fila de logos de la Home y en el landing del patrocinador (cabecera)'),
+                        MediaPicker::make('circle_logo_media_id')
+                            ->label('2. Logo circular para el slider')
                             ->nullable()
-                            ->helperText('Imagen de fondo que aparece en el slider de patrocinadores en la Home'),
+                            ->helperText('Se recorta en círculo en el slider de patrocinadores de la Home'),
+                        MediaPicker::make('section_logo_media_id')
+                            ->label('5. Logo de la sección (cabecera del landing)')
+                            ->nullable()
+                            ->helperText('Logo que aparece en la parte superior del landing del patrocinador. Si no se define, se usa el Logo general.'),
                     ])->columns(2),
 
-                // ── Galería del slider ───────────────────────────────────────
-                Section::make('Galería del slider (hasta 4 imágenes)')
-                    ->description('Estas imágenes aparecen en el slider de la página del patrocinador.')
+                // ── 4. Fondo del slider ──────────────────────────────────────
+                Section::make('Fondo del slider de patrocinadores (Home)')
+                    ->description('Imagen de fondo que aparece detrás del logo y el texto en el slider de la Home.')
+                    ->schema([
+                        MediaPicker::make('slide_image_media_id')
+                            ->label('4. Imagen de fondo del slider')
+                            ->nullable()
+                            ->columnSpanFull(),
+                    ]),
+
+                // ── 6 & 7. Galería principal ─────────────────────────────────
+                Section::make('Galería de imágenes (landing del patrocinador)')
+                    ->description('Imágenes del slider principal debajo del logo en el landing. La imagen destacada aparece en el box "¿Te gustó este producto?".')
                     ->schema([
                         MediaPicker::make('gallery_1_media_id')
                             ->label('Imagen 1 (principal)')
@@ -106,6 +132,11 @@ class SponsorResource extends Resource
                         MediaPicker::make('gallery_4_media_id')
                             ->label('Imagen 4')
                             ->nullable(),
+                        MediaPicker::make('highlight_media_id')
+                            ->label('7. Imagen destacada para box "¿Te gustó este producto?"')
+                            ->nullable()
+                            ->helperText('Si no se selecciona, se usa la Imagen 1 de la galería')
+                            ->columnSpanFull(),
                     ])->columns(2),
 
                 // ── Tarjeta del representante ────────────────────────────────

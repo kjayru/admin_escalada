@@ -48,7 +48,7 @@ class Product extends Model
 
     public function media(): MorphToMany
     {
-        return $this->morphToMany(Media::class, 'mediable', 'mediables')
+        return $this->morphToMany(LegacyMedia::class, 'mediable', 'legacy_mediables', 'mediable_id', 'media_id')
             ->withPivot('collection', 'sort_order')
             ->orderBy('sort_order');
     }

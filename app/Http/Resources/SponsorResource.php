@@ -46,12 +46,21 @@ class SponsorResource extends JsonResource
             'tagline'     => $this->tagline,
             'description' => $this->description,
             'website_url' => $this->website_url,
+            'buy_url'     => $this->buy_url,
 
             // -- Imágenes --
             'logo' => $this->mediaItem(
                 $this->whenLoaded('logoFile', fn() => $this->logoFile),
                 $this->whenLoaded('logo', fn() => $this->logo),
                 "https://picsum.photos/seed/{$this->slug}-logo/400/200"
+            ),
+            'circle_logo' => $this->mediaItem(
+                $this->whenLoaded('circleLogoFile', fn() => $this->circleLogoFile),
+                null,
+            ),
+            'section_logo' => $this->mediaItem(
+                $this->whenLoaded('sectionLogoFile', fn() => $this->sectionLogoFile),
+                null,
             ),
             'slide_image' => $this->mediaItem(
                 $this->whenLoaded('slideImageFile', fn() => $this->slideImageFile),
@@ -63,6 +72,10 @@ class SponsorResource extends JsonResource
                 $this->gallery3File || $this->gallery3 ? $this->mediaItem($this->gallery3File, $this->gallery3) : null,
                 $this->gallery4File || $this->gallery4 ? $this->mediaItem($this->gallery4File, $this->gallery4) : null,
             ])),
+            'highlight_image' => $this->mediaItem(
+                $this->whenLoaded('highlightFile', fn() => $this->highlightFile),
+                null,
+            ),
 
             // -- Tarjeta de representante --
             'contact' => [

@@ -78,6 +78,50 @@ class SupportMethodResource extends Resource
                     ])
                     ->columns(1),
 
+                Section::make('Configuración PayPal')
+                    ->schema([
+                        TextInput::make('settings.paypal_link')
+                            ->label('Enlace de donación PayPal')
+                            ->placeholder('https://www.paypal.com/donate?hosted_button_id=...')
+                            ->url()
+                            ->maxLength(500)
+                            ->helperText('URL de PayPal a donde se redirige al donante.'),
+                        TextInput::make('settings.suggested_amount')
+                            ->label('Monto sugerido (USD)')
+                            ->numeric()
+                            ->minValue(1)
+                            ->placeholder('Ej: 25')
+                            ->helperText('Monto predeterminado que aparece en el campo "Cantidad a donar".'),
+                    ])
+                    ->columns(2)
+                    ->visible(fn ($record) => $record?->type === 'paypal'),
+
+                Section::make('Configuración Transferencia')
+                    ->schema([
+                        TextInput::make('settings.bank')
+                            ->label('Nombre del banco')
+                            ->placeholder('Ej: BANCOMER')
+                            ->maxLength(100),
+                        TextInput::make('settings.account')
+                            ->label('Número de cuenta')
+                            ->placeholder('Ej: 0120869686')
+                            ->maxLength(50),
+                        TextInput::make('settings.clabe')
+                            ->label('CLABE interbancaria')
+                            ->placeholder('Ej: 012 580 00120869686 2')
+                            ->maxLength(50),
+                        TextInput::make('settings.iban')
+                            ->label('IBAN (internacional)')
+                            ->placeholder('Ej: MX00 0000 0000 0000 0000 00')
+                            ->maxLength(50),
+                        TextInput::make('settings.name')
+                            ->label('Nombre del beneficiario')
+                            ->placeholder('Ej: Escalada Libre México AC.')
+                            ->maxLength(150),
+                    ])
+                    ->columns(2)
+                    ->visible(fn ($record) => in_array($record?->type, ['transfer', 'bank_transfer'])),
+
                 Section::make('Botón de acción')
                     ->schema([
                         TextInput::make('settings.button_label')

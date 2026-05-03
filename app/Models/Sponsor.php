@@ -15,12 +15,16 @@ class Sponsor extends Model
         'description',
         'tagline',
         'website_url',
+        'buy_url',
         'logo_media_id',
+        'circle_logo_media_id',
+        'section_logo_media_id',
         'slide_image_media_id',
         'gallery_1_media_id',
         'gallery_2_media_id',
         'gallery_3_media_id',
         'gallery_4_media_id',
+        'highlight_media_id',
         'contact_name',
         'contact_title',
         'contact_text',
@@ -39,6 +43,16 @@ class Sponsor extends Model
     public function logoFile(): BelongsTo
     {
         return $this->belongsTo(MediaFile::class, 'logo_media_id');
+    }
+
+    public function circleLogoFile(): BelongsTo
+    {
+        return $this->belongsTo(MediaFile::class, 'circle_logo_media_id');
+    }
+
+    public function sectionLogoFile(): BelongsTo
+    {
+        return $this->belongsTo(MediaFile::class, 'section_logo_media_id');
     }
 
     public function slideImage(): BelongsTo
@@ -89,6 +103,11 @@ class Sponsor extends Model
     public function gallery4File(): BelongsTo
     {
         return $this->belongsTo(MediaFile::class, 'gallery_4_media_id');
+    }
+
+    public function highlightFile(): BelongsTo
+    {
+        return $this->belongsTo(MediaFile::class, 'highlight_media_id');
     }
 
     public function contactMedia(): BelongsTo

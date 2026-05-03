@@ -15,7 +15,7 @@ class SponsorController extends Controller
     public function index(Request $request)
     {
         $sponsors = Sponsor::active()
-            ->with(['logo', 'slideImage', 'gallery1', 'gallery2', 'gallery3', 'gallery4', 'contactMedia', 'logoFile', 'slideImageFile', 'gallery1File', 'gallery2File', 'gallery3File', 'gallery4File', 'contactMediaFile'])
+            ->with(['logo', 'slideImage', 'gallery1', 'gallery2', 'gallery3', 'gallery4', 'contactMedia', 'logoFile', 'circleLogoFile', 'sectionLogoFile', 'slideImageFile', 'gallery1File', 'gallery2File', 'gallery3File', 'gallery4File', 'highlightFile', 'contactMediaFile'])
             ->orderBy('name', 'asc')
             ->get();
 
@@ -29,7 +29,7 @@ class SponsorController extends Controller
     {
         $sponsor = Sponsor::where('slug', $slug)
             ->active()
-            ->with(['logo', 'slideImage', 'gallery1', 'gallery2', 'gallery3', 'gallery4', 'contactMedia', 'logoFile', 'slideImageFile', 'gallery1File', 'gallery2File', 'gallery3File', 'gallery4File', 'contactMediaFile'])
+            ->with(['logo', 'slideImage', 'gallery1', 'gallery2', 'gallery3', 'gallery4', 'contactMedia', 'logoFile', 'circleLogoFile', 'sectionLogoFile', 'slideImageFile', 'gallery1File', 'gallery2File', 'gallery3File', 'gallery4File', 'highlightFile', 'contactMediaFile'])
             ->firstOrFail();
 
         return new SponsorResource($sponsor);

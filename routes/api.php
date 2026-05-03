@@ -3,6 +3,7 @@
 use App\Http\Controllers\Api\V1\ActivityController;
 use App\Http\Controllers\Api\V1\BlogPostController;
 use App\Http\Controllers\Api\V1\ContactController;
+use App\Http\Controllers\Api\V1\GymController;
 use App\Http\Controllers\Api\V1\MemberGroupController;
 use App\Http\Controllers\Api\V1\MenuController;
 use App\Http\Controllers\Api\V1\PageController;
@@ -76,5 +77,8 @@ Route::prefix('v1')->group(function () {
 
     // Member Groups (Asociación)
     Route::get('/member-groups', [MemberGroupController::class, 'index']);
+
+    // Gyms (Cómo Apoyar)
+    Route::get('/gyms', [GymController::class, 'index']);
 });
 
