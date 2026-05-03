@@ -33,6 +33,7 @@ class ContentBlockSchema
                         'timeline' => 'Línea de Tiempo',
                         'cta'      => 'Call to Action',
                         'split'    => 'Split (Texto + Imagen)',
+                        'join'     => 'Únete al equipo',
                         'map'      => 'Mapa',
                     ])
                     ->required(),
@@ -51,10 +52,81 @@ class ContentBlockSchema
                     ->rule('nullable')
                     ->columnSpanFull()
                     ->afterStateHydrated(function (MediaPicker $component, mixed $state): void {
-                        // Sanitize: if state ended up as an object (e.g. LocalFilesystemAdapter),
-                        // reset to null to prevent str_starts_with TypeError on PHP 8.4+
+                        // Load from record attribute if Livewire snapshot has blank state
+                        if (blank($state)) {
+                            $record = $component->getRecord();
+                            if ($record) {
+                                $state = $record->getAttribute($component->getName());
+                            }
+                        }
+
+                        // Non-scalar/non-array objects → clear
                         if (! is_null($state) && ! is_scalar($state) && ! is_array($state)) {
                             $component->state(null);
+                            return;
+                        }
+
+                        // Scalar (int/string) → pass through state() so FileUploadStateCast::set()
+                        // wraps it as {uuid=>'86'}, enabling FilePond's getUploadedFiles() to work.
+                        if (is_scalar($state) && ! blank($state)) {
+                            $component->state((string) $state);
+                            return;
+                        }
+
+                        // Array → extract first non-empty scalar value and pass through state()
+                        if (is_array($state) && filled($state)) {
+                            $val = array_values(array_filter(array_map(
+                                fn($v) => is_scalar($v) ? (string) $v : null,
+                                $state
+                            )))[0] ?? null;
+                            if ($val) {
+                                $component->state($val);
+                                return;
+                            }
+                        }
+
+                        $component->state(null);
+                    })
+                    ->dehydrateStateUsing(function (MediaPicker $component, $state) {
+                        // $state can be null here because Schema::getState() calls validate() which
+                        // runs pruneStateToMatchKeys() using only validated fields as template.
+                        // Since MediaPicker.getValidationRules() = [], featured_media_id is absent
+                        // from the validated template and gets pruned out. dehydrateStateUsing then
+                        // receives null from Arr::get($prunedState, statePath) → FileUploadStateCast::get(null).
+                        //
+                        // Fix: fall back to getRawState() which reads directly from $livewire->data,
+                        // bypassing the pruning. getRawState() reflects intentional changes (clear/select)
+                        // because removeUploadedFile/MediaPicker updates $livewire->data directly.
+                        $source = filled($state) ? $state : $component->getRawState();
+                        $values = array_values(
+                            array_filter(array_map(
+                                fn($v) => is_scalar($v) ? (string) $v : null,
+                                (array) ($source ?? [])
+                            ))
+                        );
+                        return $values[0] ?? null;
+                    })
+                    ->saveRelationshipsUsing(function (MediaPicker $component, $state): void {
+                        // Safety net: saveRelationshipsUsing fires because isSaved=true by default.
+                        // The Repeater's save (via $item->getState) now correctly uses dehydrateStateUsing
+                        // with getRawState() fallback. This override ensures the value is also correct
+                        // if saveRelationships runs independently (e.g. for new records).
+                        $record = $component->getRecord();
+                        if (! $record) {
+                            return;
+                        }
+                        $source = filled($state) ? $state : $component->getRawState();
+                        $values = array_values(
+                            array_filter(array_map(
+                                fn($v) => is_scalar($v) ? (string) $v : null,
+                                (array) ($source ?? [])
+                            ))
+                        );
+                        $id = $values[0] ?? null;
+                        $name = $component->getName();
+                        if ($record->{$name} != $id) {
+                            $record->{$name} = $id;
+                            $record->save();
                         }
                     }),
                 KeyValue::make('settings')

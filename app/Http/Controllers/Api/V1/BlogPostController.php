@@ -46,7 +46,7 @@ class BlogPostController extends Controller
     {
         $post = BlogPost::where('slug', $slug)
             ->where('status', 'published')
-            ->with(['featuredMedia', 'featuredFile', 'approvedComments', 'media'])
+            ->with(['featuredMedia', 'featuredFile', 'approvedComments'])
             ->firstOrFail();
 
         if ($post->content_mode === 'blocks') {

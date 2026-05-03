@@ -6,7 +6,6 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\MorphMany;
-use Illuminate\Database\Eloquent\Relations\MorphToMany;
 use Slimani\MediaManager\Models\File as MediaFile;
 
 class BlogPost extends Model
@@ -65,12 +64,5 @@ class BlogPost extends Model
         return $this->hasMany(BlogComment::class, 'post_id')
             ->where('status', 'approved')
             ->latest();
-    }
-
-    public function media(): MorphToMany
-    {
-        return $this->morphToMany(Media::class, 'mediable', 'mediables')
-            ->withPivot('collection', 'sort_order')
-            ->orderBy('sort_order');
     }
 }

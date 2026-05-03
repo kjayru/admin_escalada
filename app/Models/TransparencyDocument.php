@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Slimani\MediaManager\Models\File as MediaFile;
 
 class TransparencyDocument extends Model
 {
@@ -25,7 +26,7 @@ class TransparencyDocument extends Model
 
     public function media(): BelongsTo
     {
-        return $this->belongsTo(LegacyMedia::class);
+        return $this->belongsTo(MediaFile::class, 'media_id');
     }
 
     public function scopePublished($query)

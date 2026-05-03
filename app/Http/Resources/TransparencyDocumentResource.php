@@ -23,8 +23,8 @@ class TransparencyDocumentResource extends JsonResource
             'year' => $this->year,
             'file' => $this->media ? [
                 'id' => $this->media->id,
-                'url' => $this->media->url,
-                'file_name' => $this->media->file_name,
+                'url' => $this->media->getUrl(),
+                'file_name' => $this->media->name,
                 'mime_type' => $this->media->mime_type,
                 'size' => $this->media->size,
             ] : null,
