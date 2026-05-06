@@ -15,7 +15,7 @@ class TimelineController extends Controller
     public function index(Request $request)
     {
         $query = Timeline::published()
-            ->with(['featuredFile.media', 'media'])
+            ->with(['featuredFile', 'media'])
             ->orderBy('year', 'desc')
             ->orderBy('month', 'desc')
             ->orderBy('order', 'asc');
@@ -36,7 +36,7 @@ class TimelineController extends Controller
     {
         $timeline = Timeline::where('id', $id)
             ->published()
-            ->with(['featuredFile.media', 'media'])
+            ->with(['featuredFile', 'media'])
             ->firstOrFail();
 
         return new TimelineResource($timeline);

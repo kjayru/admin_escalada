@@ -50,7 +50,12 @@ class BlogPostController extends Controller
             ->firstOrFail();
 
         if ($post->content_mode === 'blocks') {
-            $post->load(['sections.items', 'sections.featuredMedia']);
+            $post->load([
+                'sections.items',
+                'sections.featuredMedia',
+                'sections.featuredFile',
+                'sections.mobileImage',
+            ]);
         }
 
         return new BlogPostResource($post);

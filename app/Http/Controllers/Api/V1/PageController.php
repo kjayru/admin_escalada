@@ -31,10 +31,10 @@ class PageController extends Controller
             ->with([
                 'sections.items',
                 'sections.featuredMedia',
-                'sections.featuredFile.media',
-                'sections.mobileImage.media',
+                'sections.featuredFile',
+                'sections.mobileImage',
                 'sections.media',
-                'sections.galleryFiles.media',
+                'sections.galleryFiles',
             ])
             ->firstOrFail();
 
