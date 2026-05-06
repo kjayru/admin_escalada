@@ -129,6 +129,68 @@ class ContentBlockSchema
                             $record->save();
                         }
                     }),
+                MediaPicker::make('mobile_image_id')
+                    ->label('Imagen para móviles')
+                    ->helperText('Imagen de fondo que se mostrará en dispositivos móviles')
+                    ->nullable()
+                    ->rule('nullable')
+                    ->columnSpanFull()
+                    ->afterStateHydrated(function (MediaPicker $component, mixed $state): void {
+                        if (blank($state)) {
+                            $record = $component->getRecord();
+                            if ($record) {
+                                $state = $record->getAttribute($component->getName());
+                            }
+                        }
+                        if (! is_null($state) && ! is_scalar($state) && ! is_array($state)) {
+                            $component->state(null);
+                            return;
+                        }
+                        if (is_scalar($state) && ! blank($state)) {
+                            $component->state((string) $state);
+                            return;
+                        }
+                        if (is_array($state) && filled($state)) {
+                            $val = array_values(array_filter(array_map(
+                                fn($v) => is_scalar($v) ? (string) $v : null,
+                                $state
+                            )))[0] ?? null;
+                            if ($val) {
+                                $component->state($val);
+                                return;
+                            }
+                        }
+                        $component->state(null);
+                    })
+                    ->dehydrateStateUsing(function (MediaPicker $component, $state) {
+                        $source = filled($state) ? $state : $component->getRawState();
+                        $values = array_values(
+                            array_filter(array_map(
+                                fn($v) => is_scalar($v) ? (string) $v : null,
+                                (array) ($source ?? [])
+                            ))
+                        );
+                        return $values[0] ?? null;
+                    })
+                    ->saveRelationshipsUsing(function (MediaPicker $component, $state): void {
+                        $record = $component->getRecord();
+                        if (! $record) {
+                            return;
+                        }
+                        $source = filled($state) ? $state : $component->getRawState();
+                        $values = array_values(
+                            array_filter(array_map(
+                                fn($v) => is_scalar($v) ? (string) $v : null,
+                                (array) ($source ?? [])
+                            ))
+                        );
+                        $id = $values[0] ?? null;
+                        $name = $component->getName();
+                        if ($record->{$name} != $id) {
+                            $record->{$name} = $id;
+                            $record->save();
+                        }
+                    }),
                 KeyValue::make('settings')
                     ->label('Configuraciones')
                     ->helperText('Configuraciones adicionales en formato JSON')

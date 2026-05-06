@@ -35,6 +35,14 @@ class PageSectionResource extends JsonResource
                     'file_name' => $this->featuredMedia->file_name,
                     'alt'       => $this->featuredMedia->alt,
                 ] : null),
+            'mobile_image' => $this->mobileImage
+                ? [
+                    'id'        => $this->mobileImage->id,
+                    'url'       => $this->mobileImage->getUrl(),
+                    'file_name' => $this->mobileImage->name,
+                    'alt'       => $this->mobileImage->alt_text,
+                ]
+                : null,
             'items' => $this->whenLoaded('items', function () {
                 return $this->items->map(function ($item) {
                     $settings = $item->settings;

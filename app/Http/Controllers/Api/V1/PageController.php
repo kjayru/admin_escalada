@@ -32,6 +32,7 @@ class PageController extends Controller
                 'sections.items',
                 'sections.featuredMedia',
                 'sections.featuredFile.media',
+                'sections.mobileImage.media',
                 'sections.media',
                 'sections.galleryFiles.media',
             ])

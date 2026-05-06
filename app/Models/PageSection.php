@@ -22,6 +22,7 @@ class PageSection extends Model
         'body',
         'settings',
         'featured_media_id',
+        'mobile_image_id',
         'status',
     ];
 
@@ -48,6 +49,11 @@ class PageSection extends Model
     public function featuredFile(): BelongsTo
     {
         return $this->belongsTo(MediaFile::class, 'featured_media_id');
+    }
+
+    public function mobileImage(): BelongsTo
+    {
+        return $this->belongsTo(MediaFile::class, 'mobile_image_id');
     }
 
     public function items(): HasMany
