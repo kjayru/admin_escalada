@@ -80,7 +80,8 @@ class SponsorPlacementResource extends Resource
                     ->schema([
                         MediaPicker::make('banner_media_id')
                             ->label('Banner / Imagen')
-                            ->nullable(),
+                            ->nullable()
+                            ->dehydrated(fn ($state) => filled($state)),
                         TextInput::make('link_url')
                             ->label('URL de Enlace')
                             ->maxLength(255),
