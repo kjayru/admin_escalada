@@ -8,6 +8,7 @@ use Filament\Forms\Components\Select;
 use Filament\Forms\Components\TextInput;
 use Filament\Forms\Components\Toggle;
 use Filament\Forms\Components\Hidden;
+use Slimani\MediaManager\Form\MediaPicker;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Columns\IconColumn;
 use Filament\Actions\EditAction;
@@ -57,6 +58,67 @@ class LogoRowResource extends Resource
                         TextInput::make('link_url')
                             ->label('URL de enlace (opcional)')
                             ->maxLength(255),
+                        MediaPicker::make('banner_media_id')
+                            ->label('Logo')
+                            ->helperText('Sube el logo que se mostrará en la fila de patrocinadores del home')
+                            ->nullable()
+                            ->rule('nullable')
+                            ->columnSpanFull()
+                            ->afterStateHydrated(function (MediaPicker $component, mixed $state): void {
+                                if (blank($state)) {
+                                    $record = $component->getRecord();
+                                    if ($record) {
+                                        $state = $record->getAttribute($component->getName());
+                                    }
+                                }
+                                if (! is_null($state) && ! is_scalar($state) && ! is_array($state)) {
+                                    $component->state(null);
+                                    return;
+                                }
+                                if (is_scalar($state) && ! blank($state)) {
+                                    $component->state((string) $state);
+                                    return;
+                                }
+                                if (is_array($state) && filled($state)) {
+                                    $val = array_values(array_filter(array_map(
+                                        fn($v) => is_scalar($v) ? (string) $v : null,
+                                        $state
+                                    )))[0] ?? null;
+                                    if ($val) {
+                                        $component->state($val);
+                                        return;
+                                    }
+                                }
+                                $component->state(null);
+                            })
+                            ->dehydrateStateUsing(function (MediaPicker $component, $state) {
+                                $source = filled($state) ? $state : $component->getRawState();
+                                $values = array_values(
+                                    array_filter(array_map(
+                                        fn($v) => is_scalar($v) ? (string) $v : null,
+                                        (array) ($source ?? [])
+                                    ))
+                                );
+                                return $values[0] ?? null;
+                            })
+                            ->saveRelationshipsUsing(function (MediaPicker $component, $state): void {
+                                $record = $component->getRecord();
+                                if (! $record) {
+                                    return;
+                                }
+                                $source = filled($state) ? $state : $component->getRawState();
+                                $values = array_values(
+                                    array_filter(array_map(
+                                        fn($v) => is_scalar($v) ? (string) $v : null,
+                                        (array) ($source ?? [])
+                                    ))
+                                );
+                                $id = $values[0] ?? null;
+                                if ($record->banner_media_id != $id) {
+                                    $record->banner_media_id = $id;
+                                    $record->save();
+                                }
+                            }),
                     ])->columns(2),
 
                 Section::make('Visibilidad')
