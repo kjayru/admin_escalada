@@ -59,6 +59,14 @@ class PageSectionResource extends JsonResource
                         'link_label' => $item->link_label,
                         'sort_order' => $item->sort_order,
                         'settings' => $settings,
+                        'featured_media' => $item->relationLoaded('featuredFile') && $item->featuredFile
+                            ? [
+                                'id'        => $item->featuredFile->id,
+                                'url'       => $item->featuredFile->getUrl(),
+                                'file_name' => $item->featuredFile->name,
+                                'alt'       => $item->featuredFile->alt_text,
+                            ]
+                            : null,
                     ];
                 });
             }),

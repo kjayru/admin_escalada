@@ -7,6 +7,7 @@ use Filament\Forms\Components\KeyValue;
 use Filament\Forms\Components\Repeater;
 use Filament\Forms\Components\RichEditor;
 use Filament\Forms\Components\Select;
+use Filament\Forms\Components\Textarea;
 use Filament\Forms\Components\TextInput;
 use Filament\Schemas\Components\Utilities\Get;
 use Filament\Schemas\Components\Section;
@@ -35,6 +36,7 @@ class ContentBlockSchema
                         'timeline' => 'Línea de Tiempo',
                         'cta'      => 'Call to Action',
                         'featured' => 'Sección Destacada (Número)',
+                        'slider'   => 'Slider (Como apoyar)',
                         'split'    => 'Split (Texto + Imagen)',
                         'join'     => 'Únete al equipo',
                         'map'      => 'Mapa',
@@ -258,8 +260,8 @@ class ContentBlockSchema
                 KeyValue::make('settings')
                     ->label('Configuraciones')
                     ->helperText('Configuraciones adicionales en formato JSON')
-                    ->visible(fn (Get $get): bool => $get('type') !== 'featured')
-                    ->dehydrated(fn (Get $get): bool => $get('type') !== 'featured')
+                    ->visible(fn (Get $get): bool => ! in_array($get('type'), ['featured', 'slider']))
+                    ->dehydrated(fn (Get $get): bool => ! in_array($get('type'), ['featured', 'slider']))
                     ->afterStateHydrated(function (KeyValue $component, mixed $state): void {
                         if (is_string($state)) {
                             $decoded = json_decode($state, true);
@@ -276,13 +278,88 @@ class ContentBlockSchema
                         }
                     }),
                 Repeater::make('items')
-                    ->label('Ítems / Bullets')
+                    ->label(fn (Get $get): string => $get('type') === 'slider' ? 'Slides' : 'Ítems / Bullets')
                     ->relationship()
                     ->schema([
+                        MediaPicker::make('featured_media_id')
+                            ->label('Imagen del slide')
+                            ->nullable()
+                            ->rule('nullable')
+                            ->columnSpanFull()
+                            ->visible(fn (Get $get): bool => $get('../../type') === 'slider')
+                            ->dehydrated(fn (Get $get): bool => $get('../../type') === 'slider')
+                            ->afterStateHydrated(function (MediaPicker $component, mixed $state): void {
+                                if (blank($state)) {
+                                    $record = $component->getRecord();
+                                    if ($record) {
+                                        $state = $record->getAttribute($component->getName());
+                                    }
+                                }
+                                if (! is_null($state) && ! is_scalar($state) && ! is_array($state)) {
+                                    $component->state(null);
+                                    return;
+                                }
+                                if (is_scalar($state) && ! blank($state)) {
+                                    $component->state((string) $state);
+                                    return;
+                                }
+                                if (is_array($state) && filled($state)) {
+                                    $val = array_values(array_filter(array_map(
+                                        fn($v) => is_scalar($v) ? (string) $v : null,
+                                        $state
+                                    )))[0] ?? null;
+                                    if ($val) {
+                                        $component->state($val);
+                                        return;
+                                    }
+                                }
+                                $component->state(null);
+                            })
+                            ->dehydrateStateUsing(function (MediaPicker $component, $state) {
+                                $source = filled($state) ? $state : $component->getRawState();
+                                $values = array_values(
+                                    array_filter(array_map(
+                                        fn($v) => is_scalar($v) ? (string) $v : null,
+                                        (array) ($source ?? [])
+                                    ))
+                                );
+                                return $values[0] ?? null;
+                            })
+                            ->saveRelationshipsUsing(function (MediaPicker $component, $state): void {
+                                $record = $component->getRecord();
+                                if (! $record) {
+                                    return;
+                                }
+                                $source = filled($state) ? $state : $component->getRawState();
+                                $values = array_values(
+                                    array_filter(array_map(
+                                        fn($v) => is_scalar($v) ? (string) $v : null,
+                                        (array) ($source ?? [])
+                                    ))
+                                );
+                                $id = $values[0] ?? null;
+                                $name = $component->getName();
+                                if ($record->{$name} != $id) {
+                                    $record->{$name} = $id;
+                                    $record->save();
+                                }
+                            }),
                         TextInput::make('title')
-                            ->label('Texto')
-                            ->required()
-                            ->maxLength(500),
+                            ->label(fn (Get $get): string => $get('../../type') === 'slider' ? 'Título' : 'Texto')
+                            ->maxLength(500)
+                            ->columnSpanFull(),
+                        RichEditor::make('body')
+                            ->label('Descripción del slide')
+                            ->columnSpanFull()
+                            ->visible(fn (Get $get): bool => $get('../../type') === 'slider'),
+                        TextInput::make('link_label')
+                            ->label('Nombre del botón')
+                            ->maxLength(255)
+                            ->visible(fn (Get $get): bool => $get('../../type') === 'slider'),
+                        TextInput::make('link_url')
+                            ->label('URL del botón')
+                            ->maxLength(500)
+                            ->visible(fn (Get $get): bool => $get('../../type') === 'slider'),
                         TextInput::make('sort_order')
                             ->label('Orden')
                             ->numeric()
@@ -293,7 +370,7 @@ class ContentBlockSchema
                     ->reorderable('sort_order')
                     ->collapsible()
                     ->collapsed()
-                    ->addActionLabel('Agregar ítem')
+                    ->addActionLabel(fn (Get $get): string => $get('type') === 'slider' ? 'Agregar slide' : 'Agregar ítem')
                     ->columnSpanFull(),
                 MediaPicker::make('galleryFiles')
                     ->label('Imágenes del mosaico (solo tipo gallery)')

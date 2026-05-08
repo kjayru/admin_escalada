@@ -5,6 +5,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\MorphToMany;
+use Slimani\MediaManager\Models\File as MediaFile;
 
 class SectionItem extends Model
 {
@@ -16,6 +17,7 @@ class SectionItem extends Model
         'link_label',
         'sort_order',
         'settings',
+        'featured_media_id',
     ];
 
     protected $casts = [
@@ -25,6 +27,11 @@ class SectionItem extends Model
     public function section(): BelongsTo
     {
         return $this->belongsTo(PageSection::class, 'section_id');
+    }
+
+    public function featuredFile(): BelongsTo
+    {
+        return $this->belongsTo(MediaFile::class, 'featured_media_id');
     }
 
     public function media(): MorphToMany

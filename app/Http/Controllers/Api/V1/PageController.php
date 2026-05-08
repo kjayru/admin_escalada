@@ -29,7 +29,7 @@ class PageController extends Controller
         $page = Page::where('slug', $slug)
             ->where('status', 'published')
             ->with([
-                'sections.items',
+                'sections.items.featuredFile',
                 'sections.featuredMedia',
                 'sections.featuredFile',
                 'sections.mobileImage',
