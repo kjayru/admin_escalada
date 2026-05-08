@@ -8,6 +8,7 @@ use Filament\Forms\Components\RichEditor;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\TextInput;
 use Filament\Schemas\Components\Utilities\Get;
+use Filament\Schemas\Components\Section;
 use Slimani\MediaManager\Form\MediaPicker;
 
 class ContentBlockSchema
@@ -32,11 +33,39 @@ class ContentBlockSchema
                         'cards'    => 'Tarjetas',
                         'timeline' => 'Línea de Tiempo',
                         'cta'      => 'Call to Action',
+                        'featured' => 'Sección Destacada (Número)',
                         'split'    => 'Split (Texto + Imagen)',
                         'join'     => 'Únete al equipo',
                         'map'      => 'Mapa',
                     ])
-                    ->required(),
+                    ->required()
+                    ->live(),
+                // ── Campos exclusivos del tipo "Sección Destacada (Número)" ──────────
+                Section::make('Configuración de Sección Destacada')
+                    ->schema([
+                        TextInput::make('settings.number')
+                            ->label('Número decorativo (ej: 01)')
+                            ->maxLength(10)
+                            ->helperText('Número grande que aparece de fondo, ej: 01, 02, 03'),
+                        TextInput::make('settings.tag')
+                            ->label('Texto amarillo (ej: NOSOTROS)')
+                            ->maxLength(80)
+                            ->helperText('Etiqueta en mayúsculas que aparece sobre el título'),
+                        TextInput::make('settings.link_url')
+                            ->label('URL del "Ver más"')
+                            ->maxLength(500)
+                            ->helperText('Ruta interna (/nosotros) o URL externa (https://...)'),
+                        Select::make('settings.image_position')
+                            ->label('Posición de la imagen')
+                            ->options([
+                                'right' => 'Derecha (texto a la izquierda)',
+                                'left'  => 'Izquierda (texto a la derecha)',
+                            ])
+                            ->default('right')
+                            ->helperText('Determina en qué lado se muestra la imagen en escritorio'),
+                    ])
+                    ->columns(2)
+                    ->visible(fn (Get $get): bool => $get('type') === 'featured'),
                 TextInput::make('heading')
                     ->label('Encabezado')
                     ->maxLength(255),
