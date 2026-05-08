@@ -2,6 +2,7 @@
 
 namespace App\Filament\Schemas;
 
+use Filament\Forms\Components\Hidden;
 use Filament\Forms\Components\KeyValue;
 use Filament\Forms\Components\Repeater;
 use Filament\Forms\Components\RichEditor;
@@ -41,31 +42,65 @@ class ContentBlockSchema
                     ->required()
                     ->live(),
                 // ── Campos exclusivos del tipo "Sección Destacada (Número)" ──────────
+                // IMPORTANTE: No usar settings.X como state path — conflicto con
+                // KeyValueStateCast que convierte settings a formato pairs [{key,value}].
+                // Usamos state paths independientes (settings_number, etc.) y guardamos
+                // via el mutador featuredSettingsData en el modelo PageSection.
                 Section::make('Configuración de Sección Destacada')
                     ->schema([
-                        TextInput::make('settings.number')
+                        TextInput::make('settings_number')
                             ->label('Número decorativo (ej: 01)')
                             ->maxLength(10)
-                            ->helperText('Número grande que aparece de fondo, ej: 01, 02, 03'),
-                        TextInput::make('settings.tag')
+                            ->helperText('Número grande que aparece de fondo, ej: 01, 02, 03')
+                            ->dehydrated(false)
+                            ->afterStateHydrated(function ($component) {
+                                $record = $component->getRecord();
+                                $component->state($record?->settings['number'] ?? null);
+                            }),
+                        TextInput::make('settings_tag')
                             ->label('Texto amarillo (ej: NOSOTROS)')
                             ->maxLength(80)
-                            ->helperText('Etiqueta en mayúsculas que aparece sobre el título'),
-                        TextInput::make('settings.link_url')
+                            ->helperText('Etiqueta en mayúsculas que aparece sobre el título')
+                            ->dehydrated(false)
+                            ->afterStateHydrated(function ($component) {
+                                $record = $component->getRecord();
+                                $component->state($record?->settings['tag'] ?? null);
+                            }),
+                        TextInput::make('settings_link_url')
                             ->label('URL del "Ver más"')
                             ->maxLength(500)
-                            ->helperText('Ruta interna (/nosotros) o URL externa (https://...)'),
-                        Select::make('settings.image_position')
+                            ->helperText('Ruta interna (/nosotros) o URL externa (https://...)')
+                            ->dehydrated(false)
+                            ->afterStateHydrated(function ($component) {
+                                $record = $component->getRecord();
+                                $component->state($record?->settings['link_url'] ?? null);
+                            }),
+                        Select::make('settings_image_position')
                             ->label('Posición de la imagen')
                             ->options([
                                 'right' => 'Derecha (texto a la izquierda)',
                                 'left'  => 'Izquierda (texto a la derecha)',
                             ])
                             ->default('right')
-                            ->helperText('Determina en qué lado se muestra la imagen en escritorio'),
+                            ->helperText('Determina en qué lado se muestra la imagen en escritorio')
+                            ->dehydrated(false)
+                            ->afterStateHydrated(function ($component) {
+                                $record = $component->getRecord();
+                                $component->state($record?->settings['image_position'] ?? 'right');
+                            }),
                     ])
                     ->columns(2)
                     ->visible(fn (Get $get): bool => $get('type') === 'featured'),
+                // Campo virtual que recoge los 4 campos featured y los guarda en settings
+                // via el mutador PageSection::setFeaturedSettingsDataAttribute()
+                Hidden::make('featured_settings_data')
+                    ->dehydrated(fn (Get $get): bool => $get('type') === 'featured')
+                    ->dehydrateStateUsing(fn (Get $get): array => [
+                        'number'         => $get('settings_number'),
+                        'tag'            => $get('settings_tag'),
+                        'link_url'       => $get('settings_link_url'),
+                        'image_position' => $get('settings_image_position') ?? 'right',
+                    ]),
                 TextInput::make('heading')
                     ->label('Encabezado')
                     ->maxLength(255),
@@ -223,10 +258,21 @@ class ContentBlockSchema
                 KeyValue::make('settings')
                     ->label('Configuraciones')
                     ->helperText('Configuraciones adicionales en formato JSON')
+                    ->visible(fn (Get $get): bool => $get('type') !== 'featured')
+                    ->dehydrated(fn (Get $get): bool => $get('type') !== 'featured')
                     ->afterStateHydrated(function (KeyValue $component, mixed $state): void {
                         if (is_string($state)) {
                             $decoded = json_decode($state, true);
                             $component->state(is_array($decoded) ? $decoded : []);
+                        } elseif (is_array($state)) {
+                            // When model cast already decoded the JSON to a PHP array,
+                            // we must still call $component->state() so Filament's KeyValue
+                            // processes it into the format Alpine expects (JS array, not object).
+                            // Without this, the raw PHP assoc array becomes a JS object and
+                            // Alpine's key-value.js crashes with "Alpine.raw(...).map is not a function".
+                            $component->state($state);
+                        } else {
+                            $component->state([]);
                         }
                     }),
                 Repeater::make('items')

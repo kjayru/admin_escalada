@@ -24,6 +24,7 @@ class PageSection extends Model
         'featured_media_id',
         'mobile_image_id',
         'status',
+        'featured_settings_data', // virtual: Filament lo redirige a settings via mutador
     ];
 
     protected $casts = [
@@ -73,5 +74,15 @@ class PageSection extends Model
         return $this->morphToMany(MediaFile::class, 'attachable', 'media_attachments', null, 'media_file_id')
             ->withPivot('collection', 'sort_order')
             ->orderByPivot('sort_order');
+    }
+
+    /**
+     * Mutador virtual para Filament: recibe los settings del bloque "featured"
+     * (number, tag, link_url, image_position) y los guarda en la columna settings.
+     * No genera columna en la BD — solo redirige al atributo settings.
+     */
+    public function setFeaturedSettingsDataAttribute(array $value): void
+    {
+        $this->settings = $value;
     }
 }
