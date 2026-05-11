@@ -25,6 +25,7 @@ class PageSection extends Model
         'mobile_image_id',
         'status',
         'featured_settings_data', // virtual: Filament lo redirige a settings via mutador
+        'map_settings_data',      // virtual: igual para tipo 'map'
     ];
 
     protected $casts = [
@@ -84,5 +85,16 @@ class PageSection extends Model
     public function setFeaturedSettingsDataAttribute(array $value): void
     {
         $this->settings = $value;
+    }
+
+    /**
+     * Mutador virtual para Filament: recibe los labels del bloque "map"
+     * (key, label_1, label_2, label_3) y los guarda en la columna settings.
+     * No genera columna en la BD — solo redirige al atributo settings.
+     */
+    public function setMapSettingsDataAttribute(array $value): void
+    {
+        $existing = $this->settings ?? [];
+        $this->settings = array_merge($existing, array_filter($value, fn($v) => $v !== null && $v !== ''));
     }
 }
