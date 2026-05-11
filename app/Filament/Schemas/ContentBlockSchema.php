@@ -103,49 +103,6 @@ class ContentBlockSchema
                         'link_url'       => $get('settings_link_url'),
                         'image_position' => $get('settings_image_position') ?? 'right',
                     ]),
-                // ── Campos exclusivos del tipo "Mapa" ────────────────────────────────
-                Section::make('Configuración de Mapa')
-                    ->schema([
-                        TextInput::make('settings_map_label_1')
-                            ->label('Etiqueta 1 (derecha superior)')
-                            ->maxLength(120)
-                            ->helperText('Ej: Potrero Chico, Hidalgo N.L., México')
-                            ->dehydrated(false)
-                            ->afterStateHydrated(function ($component) {
-                                $record = $component->getRecord();
-                                $component->state($record?->settings['label_1'] ?? null);
-                            }),
-                        TextInput::make('settings_map_label_2')
-                            ->label('Etiqueta 2 (izquierda central)')
-                            ->maxLength(120)
-                            ->helperText('Ej: La Huasteca, Santa Catarina, N.L., México')
-                            ->dehydrated(false)
-                            ->afterStateHydrated(function ($component) {
-                                $record = $component->getRecord();
-                                $component->state($record?->settings['label_2'] ?? null);
-                            }),
-                        TextInput::make('settings_map_label_3')
-                            ->label('Etiqueta 3 (derecha inferior)')
-                            ->maxLength(120)
-                            ->helperText('Ej: El Salto, Ciénega de Gonzalez, N.L., México')
-                            ->dehydrated(false)
-                            ->afterStateHydrated(function ($component) {
-                                $record = $component->getRecord();
-                                $component->state($record?->settings['label_3'] ?? null);
-                            }),
-                    ])
-                    ->columns(1)
-                    ->visible(fn (Get $get): bool => $get('type') === 'map'),
-                // Campo virtual que recoge los labels del mapa y los guarda en settings
-                // via el mutador PageSection::setMapSettingsDataAttribute()
-                Hidden::make('map_settings_data')
-                    ->dehydrated(fn (Get $get): bool => $get('type') === 'map')
-                    ->dehydrateStateUsing(fn (Get $get): array => [
-                        'key'     => 'mapa',
-                        'label_1' => $get('settings_map_label_1'),
-                        'label_2' => $get('settings_map_label_2'),
-                        'label_3' => $get('settings_map_label_3'),
-                    ]),
                 TextInput::make('heading')
                     ->label('Encabezado')
                     ->maxLength(255),
@@ -303,8 +260,8 @@ class ContentBlockSchema
                 KeyValue::make('settings')
                     ->label('Configuraciones')
                     ->helperText('Configuraciones adicionales en formato JSON')
-                    ->visible(fn (Get $get): bool => ! in_array($get('type'), ['featured', 'slider', 'map']))
-                    ->dehydrated(fn (Get $get): bool => ! in_array($get('type'), ['featured', 'slider', 'map']))
+                    ->visible(fn (Get $get): bool => ! in_array($get('type'), ['featured', 'slider']))
+                    ->dehydrated(fn (Get $get): bool => ! in_array($get('type'), ['featured', 'slider']))
                     ->afterStateHydrated(function (KeyValue $component, mixed $state): void {
                         if (is_string($state)) {
                             $decoded = json_decode($state, true);
