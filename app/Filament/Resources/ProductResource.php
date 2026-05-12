@@ -22,6 +22,7 @@ use App\Filament\Resources\ProductResource\Pages\CreateProduct;
 use App\Filament\Resources\ProductResource\Pages\EditProduct;
 use App\Filament\Resources\ProductResource\Pages;
 use App\Models\Product;
+use App\Models\ProductCategory;
 use Filament\Forms;
 use Filament\Resources\Resource;
 use Filament\Tables;
@@ -61,9 +62,10 @@ class ProductResource extends Resource
                             ->unique(ignoreRecord: true),
                         Select::make('category_id')
                             ->label('Categoría')
-                            ->relationship('category', 'name')
+                            ->options(fn () => ProductCategory::pluck('name', 'id'))
                             ->searchable()
-                            ->nullable(),
+                            ->nullable()
+                            ->preload(),
                         Select::make('status')
                             ->label('Estado')
                             ->options(['draft' => 'Borrador', 'published' => 'Publicado', 'out_of_stock' => 'Sin Stock'])
