@@ -31,6 +31,7 @@ class ContentBlockSchema
                     ->options([
                         'hero'     => 'Hero',
                         'text'     => 'Texto',
+                        'video'    => 'Video',
                         'gallery'  => 'Galería',
                         'cards'    => 'Tarjetas',
                         'timeline' => 'Línea de Tiempo',
@@ -201,6 +202,132 @@ class ContentBlockSchema
                     ->nullable()
                     ->rule('nullable')
                     ->columnSpanFull()
+                    ->afterStateHydrated(function (MediaPicker $component, mixed $state): void {
+                        if (blank($state)) {
+                            $record = $component->getRecord();
+                            if ($record) {
+                                $state = $record->getAttribute($component->getName());
+                            }
+                        }
+                        if (! is_null($state) && ! is_scalar($state) && ! is_array($state)) {
+                            $component->state(null);
+                            return;
+                        }
+                        if (is_scalar($state) && ! blank($state)) {
+                            $component->state((string) $state);
+                            return;
+                        }
+                        if (is_array($state) && filled($state)) {
+                            $val = array_values(array_filter(array_map(
+                                fn($v) => is_scalar($v) ? (string) $v : null,
+                                $state
+                            )))[0] ?? null;
+                            if ($val) {
+                                $component->state($val);
+                                return;
+                            }
+                        }
+                        $component->state(null);
+                    })
+                    ->dehydrateStateUsing(function (MediaPicker $component, $state) {
+                        $source = filled($state) ? $state : $component->getRawState();
+                        $values = array_values(
+                            array_filter(array_map(
+                                fn($v) => is_scalar($v) ? (string) $v : null,
+                                (array) ($source ?? [])
+                            ))
+                        );
+                        return $values[0] ?? null;
+                    })
+                    ->saveRelationshipsUsing(function (MediaPicker $component, $state): void {
+                        $record = $component->getRecord();
+                        if (! $record) {
+                            return;
+                        }
+                        $source = filled($state) ? $state : $component->getRawState();
+                        $values = array_values(
+                            array_filter(array_map(
+                                fn($v) => is_scalar($v) ? (string) $v : null,
+                                (array) ($source ?? [])
+                            ))
+                        );
+                        $id = $values[0] ?? null;
+                        $name = $component->getName();
+                        if ($record->{$name} != $id) {
+                            $record->{$name} = $id;
+                            $record->save();
+                        }
+                    }),
+                MediaPicker::make('video_file_id')
+                    ->label('Archivo de video')
+                    ->helperText('Sube el archivo de video (MP4, WebM, MOV). Máximo 100MB.')
+                    ->nullable()
+                    ->rule('nullable')
+                    ->columnSpanFull()
+                    ->visible(fn (Get $get) => $get('type') === 'video')
+                    ->afterStateHydrated(function (MediaPicker $component, mixed $state): void {
+                        if (blank($state)) {
+                            $record = $component->getRecord();
+                            if ($record) {
+                                $state = $record->getAttribute($component->getName());
+                            }
+                        }
+                        if (! is_null($state) && ! is_scalar($state) && ! is_array($state)) {
+                            $component->state(null);
+                            return;
+                        }
+                        if (is_scalar($state) && ! blank($state)) {
+                            $component->state((string) $state);
+                            return;
+                        }
+                        if (is_array($state) && filled($state)) {
+                            $val = array_values(array_filter(array_map(
+                                fn($v) => is_scalar($v) ? (string) $v : null,
+                                $state
+                            )))[0] ?? null;
+                            if ($val) {
+                                $component->state($val);
+                                return;
+                            }
+                        }
+                        $component->state(null);
+                    })
+                    ->dehydrateStateUsing(function (MediaPicker $component, $state) {
+                        $source = filled($state) ? $state : $component->getRawState();
+                        $values = array_values(
+                            array_filter(array_map(
+                                fn($v) => is_scalar($v) ? (string) $v : null,
+                                (array) ($source ?? [])
+                            ))
+                        );
+                        return $values[0] ?? null;
+                    })
+                    ->saveRelationshipsUsing(function (MediaPicker $component, $state): void {
+                        $record = $component->getRecord();
+                        if (! $record) {
+                            return;
+                        }
+                        $source = filled($state) ? $state : $component->getRawState();
+                        $values = array_values(
+                            array_filter(array_map(
+                                fn($v) => is_scalar($v) ? (string) $v : null,
+                                (array) ($source ?? [])
+                            ))
+                        );
+                        $id = $values[0] ?? null;
+                        $name = $component->getName();
+                        if ($record->{$name} != $id) {
+                            $record->{$name} = $id;
+                            $record->save();
+                        }
+                    }),
+                MediaPicker::make('video_poster_id')
+                    ->label('Imagen de portada del video (opcional)')
+                    ->helperText('Imagen que se muestra antes de reproducir el video')
+                    ->nullable()
+                    ->rule('nullable')
+                    ->columnSpanFull()
+                    ->visible(fn (Get $get) => $get('type') === 'video')
                     ->afterStateHydrated(function (MediaPicker $component, mixed $state): void {
                         if (blank($state)) {
                             $record = $component->getRecord();

@@ -14,6 +14,40 @@ class PageSectionResource extends JsonResource
      */
     public function toArray(Request $request): array
     {
+        // Helper para convertir URLs de storage para acceso desde el frontend
+        $proxyUrl = function ($file) use ($request) {
+            if (!$file) {
+                return null;
+            }
+            
+            // Si es un MediaFile de Slimani, obtener el primer media de Spatie
+            if ($file instanceof \Slimani\MediaManager\Models\File) {
+                $spatieMedia = $file->getFirstMedia();
+                if (!$spatieMedia) {
+                    return null;
+                }
+                $url = $spatieMedia->getUrl();
+            } else {
+                // Es un Spatie Media directamente
+                $url = $file->getUrl();
+            }
+            
+            // En desarrollo, reemplazar la URL del API por la URL del frontend
+            // para que los archivos se sirvan a través del proxy de Nuxt
+            if (app()->environment('local', 'development')) {
+                // Si el request viene con un header X-Frontend-Base, usar esa URL
+                $frontendBase = $request->header('X-Frontend-Base');
+                
+                if ($frontendBase && str_contains($url, '/storage/')) {
+                    // Extraer la parte después de /storage/
+                    $storagePath = substr($url, strpos($url, '/storage/') + 9);
+                    $url = rtrim($frontendBase, '/') . '/api-proxy/storage/' . $storagePath;
+                }
+            }
+            
+            return $url;
+        };
+
         return [
             'id' => $this->id,
             'type' => $this->type,
@@ -41,6 +75,23 @@ class PageSectionResource extends JsonResource
                     'url'       => $this->mobileImage->getUrl(),
                     'file_name' => $this->mobileImage->name,
                     'alt'       => $this->mobileImage->alt_text,
+                ]
+                : null,
+            'video_file' => $this->videoFile
+                ? [
+                    'id'        => $this->videoFile->id,
+                    'url'       => $proxyUrl($this->videoFile),
+                    'file_name' => $this->videoFile->name,
+                    'mime_type' => $this->videoFile->mime_type,
+                    'size'      => $this->videoFile->size,
+                ]
+                : null,
+            'video_poster' => $this->videoPoster
+                ? [
+                    'id'        => $this->videoPoster->id,
+                    'url'       => $proxyUrl($this->videoPoster),
+                    'file_name' => $this->videoPoster->name,
+                    'alt'       => $this->videoPoster->alt_text,
                 ]
                 : null,
             'items' => $this->whenLoaded('items', function () {

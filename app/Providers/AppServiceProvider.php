@@ -54,5 +54,8 @@ class AppServiceProvider extends ServiceProvider
                 return null;
             }
         });
+
+        // Register observer for MediaFile to trigger video conversion
+        File::observe(\App\Observers\MediaFileObserver::class);
     }
 }

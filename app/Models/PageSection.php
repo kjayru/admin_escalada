@@ -23,6 +23,8 @@ class PageSection extends Model
         'settings',
         'featured_media_id',
         'mobile_image_id',
+        'video_file_id',
+        'video_poster_id',
         'status',
         'featured_settings_data', // virtual: Filament lo redirige a settings via mutador
     ];
@@ -55,6 +57,16 @@ class PageSection extends Model
     public function mobileImage(): BelongsTo
     {
         return $this->belongsTo(MediaFile::class, 'mobile_image_id');
+    }
+
+    public function videoFile(): BelongsTo
+    {
+        return $this->belongsTo(MediaFile::class, 'video_file_id');
+    }
+
+    public function videoPoster(): BelongsTo
+    {
+        return $this->belongsTo(MediaFile::class, 'video_poster_id');
     }
 
     public function items(): HasMany

@@ -55,6 +55,8 @@ class BlogPostController extends Controller
                 'sections.featuredMedia',
                 'sections.featuredFile',
                 'sections.mobileImage',
+                'sections.videoFile',
+                'sections.videoPoster',
             ]);
         }
 

@@ -12,7 +12,7 @@ return [
      * The maximum file size of an item in bytes.
      * Adding a larger file will result in an exception.
      */
-    'max_file_size' => 1024 * 1024 * 10, // 10MB
+    'max_file_size' => 1024 * 1024 * 100, // 100MB
 
     /*
      * This queue connection will be used to generate derived and responsive images.
@@ -169,7 +169,8 @@ return [
         Spatie\MediaLibrary\Conversions\ImageGenerators\Avif::class,
         Spatie\MediaLibrary\Conversions\ImageGenerators\Pdf::class,
         Spatie\MediaLibrary\Conversions\ImageGenerators\Svg::class,
-        Spatie\MediaLibrary\Conversions\ImageGenerators\Video::class,
+        // Video generator deshabilitado - usamos nuestro Job de conversión
+        // Spatie\MediaLibrary\Conversions\ImageGenerators\Video::class,
     ],
 
     /*
@@ -189,8 +190,8 @@ return [
      * thumbnails and have installed the php-ffmpeg/php-ffmpeg composer
      * dependency.
      */
-    'ffmpeg_path' => env('FFMPEG_PATH', '/usr/bin/ffmpeg'),
-    'ffprobe_path' => env('FFPROBE_PATH', '/usr/bin/ffprobe'),
+    'ffmpeg_path' => env('FFMPEG_PATH', '/usr/local/bin/ffmpeg'),
+    'ffprobe_path' => env('FFPROBE_PATH', '/usr/local/bin/ffprobe'),
 
     /*
      * The timeout (in seconds) that will be used when generating video
