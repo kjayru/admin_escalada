@@ -65,7 +65,7 @@ class ProductResource extends JsonResource
             'featured_media' => $this->mediaItem(
                 $this->whenLoaded('featuredFile', fn() => $this->featuredFile),
                 $this->whenLoaded('featuredMedia', fn() => $this->featuredMedia),
-                "https://picsum.photos/seed/{$this->slug}/800/600"
+                null
             ),
             'gallery' => MediaResource::collection($this->whenLoaded('media')),
             'created_at' => $this->created_at?->toIso8601String(),
