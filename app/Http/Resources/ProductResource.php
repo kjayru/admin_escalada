@@ -12,6 +12,36 @@ class ProductResource extends JsonResource
      *
      * @return array<string, mixed>
      */
+    private function mediaItem($fileRelation, $legacyRelation, ?string $fallback = null): array
+    {
+        // Prefer Slimani/Spatie file (saved by MediaPicker)
+        if ($fileRelation && !($fileRelation instanceof \Illuminate\Http\Resources\MissingValue)) {
+            $spatieMedia = $fileRelation->getFirstMedia();
+            $url = $spatieMedia?->getUrl();
+            if ($url) {
+                return [
+                    'id'  => $fileRelation->id,
+                    'url' => $url,
+                    'alt' => $fileRelation->alt_text ?? '',
+                ];
+            }
+        }
+        // Fallback to legacy media
+        if ($legacyRelation && !($legacyRelation instanceof \Illuminate\Http\Resources\MissingValue)) {
+            return [
+                'id'  => $legacyRelation->id,
+                'url' => $legacyRelation->url ?? '',
+                'alt' => $legacyRelation->alt ?? '',
+            ];
+        }
+        // Ultimate fallback
+        return [
+            'id'  => null,
+            'url' => $fallback ?? '',
+            'alt' => '',
+        ];
+    }
+
     public function toArray(Request $request): array
     {
         return [
@@ -32,11 +62,11 @@ class ProductResource extends JsonResource
                 'id' => $this->publisher->id,
                 'name' => $this->publisher->name,
             ] : null,
-            'featured_media' => [
-                'id'  => $this->featuredMedia?->id,
-                'url' => $this->featuredMedia?->url ?? "https://picsum.photos/seed/{$this->slug}/800/600",
-                'alt' => $this->featuredMedia?->alt ?? $this->name,
-            ],
+            'featured_media' => $this->mediaItem(
+                $this->whenLoaded('featuredFile', fn() => $this->featuredFile),
+                $this->whenLoaded('featuredMedia', fn() => $this->featuredMedia),
+                "https://picsum.photos/seed/{$this->slug}/800/600"
+            ),
             'gallery' => MediaResource::collection($this->whenLoaded('media')),
             'created_at' => $this->created_at?->toIso8601String(),
             'updated_at' => $this->updated_at?->toIso8601String(),

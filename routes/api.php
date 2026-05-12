@@ -7,6 +7,7 @@ use App\Http\Controllers\Api\V1\GymController;
 use App\Http\Controllers\Api\V1\MemberGroupController;
 use App\Http\Controllers\Api\V1\MenuController;
 use App\Http\Controllers\Api\V1\PageController;
+use App\Http\Controllers\Api\V1\PayPalController;
 use App\Http\Controllers\Api\V1\ProductCategoryController;
 use App\Http\Controllers\Api\V1\ProductController;
 use App\Http\Controllers\Api\V1\SettingController;
@@ -80,5 +81,10 @@ Route::prefix('v1')->group(function () {
 
     // Gyms (Cómo Apoyar)
     Route::get('/gyms', [GymController::class, 'index']);
+
+    // PayPal
+    Route::post('/paypal/orders', [PayPalController::class, 'createOrder']);
+    Route::post('/paypal/orders/{orderId}/capture', [PayPalController::class, 'captureOrder']);
+    Route::get('/paypal/orders/{orderId}', [PayPalController::class, 'getOrder']);
 });
 

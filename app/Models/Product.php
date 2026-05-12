@@ -6,6 +6,7 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\MorphToMany;
+use Slimani\MediaManager\Models\File as MediaFile;
 
 class Product extends Model
 {
@@ -39,6 +40,12 @@ class Product extends Model
     public function featuredMedia(): BelongsTo
     {
         return $this->belongsTo(LegacyMedia::class, 'featured_media_id');
+    }
+
+    /** Imagen destacada desde el nuevo sistema slimani/filament-media-manager */
+    public function featuredFile(): BelongsTo
+    {
+        return $this->belongsTo(MediaFile::class, 'featured_media_id');
     }
 
     public function inquiries(): HasMany
