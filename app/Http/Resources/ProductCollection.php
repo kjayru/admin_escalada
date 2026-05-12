@@ -12,15 +12,45 @@ class ProductCollection extends ResourceCollection
      *
      * @return array<int|string, mixed>
      */
-    private static function picsum(string $seed, int $w, int $h): string
+    private function mediaItem($fileRelation, $legacyRelation): array
     {
-        return "https://picsum.photos/seed/{$seed}/{$w}/{$h}";
+        // Prefer Slimani/Spatie file (saved by MediaPicker)
+        if ($fileRelation) {
+            $spatieMedia = $fileRelation->getFirstMedia();
+            $url = $spatieMedia?->getUrl();
+            if ($url) {
+                return [
+                    'id'  => $fileRelation->id,
+                    'url' => $url,
+                    'alt' => $fileRelation->alt_text ?? '',
+                ];
+            }
+        }
+        // Fallback to legacy media
+        if ($legacyRelation) {
+            return [
+                'id'  => $legacyRelation->id,
+                'url' => $legacyRelation->url ?? '',
+                'alt' => $legacyRelation->alt ?? '',
+            ];
+        }
+        // No media
+        return [
+            'id'  => null,
+            'url' => null,
+            'alt' => '',
+        ];
     }
 
     public function toArray(Request $request): array
     {
         return [
             'data' => $this->collection->map(function ($product) {
+                $featuredMedia = $this->mediaItem(
+                    $product->featuredFile ?? null,
+                    $product->featuredMedia ?? null
+                );
+
                 return [
                     'id'       => $product->id,
                     'slug'     => $product->slug,
@@ -34,11 +64,7 @@ class ProductCollection extends ResourceCollection
                         'name' => $product->category?->name,
                         'slug' => $product->category?->slug,
                     ],
-                    'featured_media' => [
-                        'url'       => $product->featuredMedia?->url ?? self::picsum($product->slug, 800, 600),
-                        'alt'       => $product->featuredMedia?->alt ?? $product->name,
-                        'thumbnail' => $product->featuredMedia?->url ?? self::picsum($product->slug, 400, 300),
-                    ],
+                    'featured_media' => $featuredMedia,
                     'created_at' => $product->created_at?->toIso8601String(),
                 ];
             }),
