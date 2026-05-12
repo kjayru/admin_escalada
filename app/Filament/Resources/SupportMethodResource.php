@@ -7,6 +7,7 @@ use Filament\Schemas\Components\Section;
 use Filament\Forms\Components\Placeholder;
 use Filament\Forms\Components\TextInput;
 use Filament\Forms\Components\Textarea;
+use Filament\Forms\Components\RichEditor;
 use Filament\Forms\Components\Select;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Columns\IconColumn;
@@ -71,10 +72,19 @@ class SupportMethodResource extends Resource
                             ->label('Título del bloque')
                             ->required()
                             ->maxLength(255),
-                        Textarea::make('body')
+                        RichEditor::make('body')
                             ->label('Descripción')
-                            ->rows(4)
-                            ->maxLength(1000),
+                            ->toolbarButtons([
+                                'bold',
+                                'italic',
+                                'link',
+                                'bulletList',
+                                'orderedList',
+                                'h2',
+                                'h3',
+                            ])
+                            ->maxLength(5000)
+                            ->helperText('Usa el editor para dar formato al texto: negritas, listas, enlaces, etc.'),
                     ])
                     ->columns(1),
 
