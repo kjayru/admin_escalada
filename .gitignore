@@ -24,7 +24,8 @@
 /storage/framework/testing/*
 /storage/framework/views/*
 /storage/logs/*
-/storage/media-library/
+/storage/media-library/*
+/storage/media-library/temp/*
 /vendor
 Homestead.json
 Homestead.yaml
