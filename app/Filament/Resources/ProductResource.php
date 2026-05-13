@@ -87,7 +87,7 @@ class ProductResource extends Resource
                             ->nullable(),
                         TextInput::make('currency')
                             ->label('Moneda')
-                            ->default('USD')
+                            ->default('MX')
                             ->maxLength(10),
                         MediaPicker::make('featured_media_id')
                             ->label('Imagen Destacada')
