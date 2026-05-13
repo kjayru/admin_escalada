@@ -1,0 +1,112 @@
+/**
+ * Estilos personalizados para Media Manager
+ * Reduce el tamaño de las tarjetas para un diseño más compacto
+ */
+
+/* Grid con tamaño moderado */
+.fi-schemas > div > div > div:has(.fi-media-item) {
+    display: grid !important;
+    gap: 0.75rem !important;
+    grid-template-columns: repeat(3, minmax(0, 1fr)) !important;
+}
+
+@media (min-width: 640px) {
+    .fi-schemas > div > div > div:has(.fi-media-item) {
+        grid-template-columns: repeat(4, minmax(0, 1fr)) !important;
+    }
+}
+
+@media (min-width: 768px) {
+    .fi-schemas > div > div > div:has(.fi-media-item) {
+        grid-template-columns: repeat(5, minmax(0, 1fr)) !important;
+    }
+}
+
+@media (min-width: 1024px) {
+    .fi-schemas > div > div > div:has(.fi-media-item) {
+        grid-template-columns: repeat(6, minmax(0, 1fr)) !important;
+    }
+}
+
+@media (min-width: 1280px) {
+    .fi-schemas > div > div > div:has(.fi-media-item) {
+        grid-template-columns: repeat(8, minmax(0, 1fr)) !important;
+    }
+}
+
+/* Tarjetas con tamaño normal */
+.fi-media-item {
+    max-width: 180px !important;
+}
+
+/* Contenedor thumbnail tamaño normal */
+.fi-media-item-thumbnail-container {
+    height: 140px !important;
+    width: 140px !important;
+    aspect-ratio: 1 / 1 !important;
+}
+
+/* Iconos de carpeta en thumbnail */
+.fi-media-item-folder-icon {
+    width: 3.5rem !important;
+    height: 3.5rem !important;
+}
+
+/* Área de info más compacta */
+.fi-media-item-info {
+    padding: 0.5rem !important;
+}
+
+.fi-media-item-info h4 {
+    font-size: 0.75rem !important;
+    line-height: 1rem !important;
+    gap: 0.25rem !important;
+}
+
+/* Icono al lado del nombre: exactamente 10px */
+.fi-media-item-info h4 svg {
+    width: 10px !important;
+    height: 10px !important;
+    min-width: 10px !important;
+    min-height: 10px !important;
+}
+
+.fi-media-item-info > div > div {
+    font-size: 0.7rem !important;
+    margin-top: 0.25rem !important;
+}
+
+/* Badge de selección */
+.fi-media-item-selection-badge {
+    width: 1.75rem !important;
+    height: 1.75rem !important;
+    top: 0.375rem !important;
+    right: 0.375rem !important;
+}
+
+.fi-media-item-selection-button {
+    width: 1.5rem !important;
+    height: 1.5rem !important;
+    padding: 0.25rem !important;
+}
+
+.fi-media-item-selection-button svg {
+    width: 1rem !important;
+    height: 1rem !important;
+}
+
+/* Contador en carpetas */
+.fi-media-item-folder-icon + div span {
+    font-size: 0.7rem !important;
+    padding: 0.25rem 0.5rem !important;
+    bottom: 0.5rem !important;
+}
+
+/* Border-radius */
+.fi-media-item {
+    border-radius: 0.75rem !important;
+}
+
+.fi-media-item-thumbnail-container {
+    border-radius: 0.75rem 0.75rem 0 0 !important;
+}

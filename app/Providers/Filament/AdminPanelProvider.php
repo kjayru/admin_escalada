@@ -90,6 +90,8 @@ class AdminPanelProvider extends PanelProvider
             ->assets([
                 Css::make('media-manager-compiled', public_path('css/media-manager-compiled.css'))
                     ->relativePublicPath('css/media-manager-compiled.css'),
+                Css::make('media-manager-custom', public_path('css/media-manager-custom.css'))
+                    ->relativePublicPath('css/media-manager-custom.css'),
             ])
             ->plugin(
                 MediaManagerPlugin::make()
