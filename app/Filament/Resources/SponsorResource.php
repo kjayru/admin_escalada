@@ -95,15 +95,15 @@ class SponsorResource extends Resource
                         MediaPicker::make('logo_media_id')
                             ->label('1. Logo para boxes rectangulares')
                             ->nullable()
-                            ->helperText('Aparece en la fila de logos de la Home y en el landing del patrocinador (cabecera)'),
+                            ->helperText('Dimensiones recomendadas: 600×400 px (horizontal) o 400×600 px (vertical). Aparece en boxes de 547px altura en la Home.'),
                         MediaPicker::make('circle_logo_media_id')
                             ->label('2. Logo circular para el slider')
                             ->nullable()
-                            ->helperText('Se recorta en círculo en el slider de patrocinadores de la Home'),
+                            ->helperText('Dimensiones recomendadas: 256×256 px (cuadrado). Se mostrará a 256px de ancho en el slider de la Home.'),
                         MediaPicker::make('section_logo_media_id')
                             ->label('5. Logo de la sección (cabecera del landing)')
                             ->nullable()
-                            ->helperText('Logo que aparece en la parte superior del landing del patrocinador. Si no se define, se usa el Logo general.'),
+                            ->helperText('Dimensiones recomendadas: ancho variable × 94px altura. Aparece centrado en la parte superior del landing.'),
                     ])->columns(2),
 
                 // ── 4. Fondo del slider ──────────────────────────────────────
@@ -113,6 +113,7 @@ class SponsorResource extends Resource
                         MediaPicker::make('slide_image_media_id')
                             ->label('4. Imagen de fondo del slider')
                             ->nullable()
+                            ->helperText('Dimensiones recomendadas: 1920×1080 px o superior. Formato panorámico para hero/slider full width.')
                             ->columnSpanFull(),
                     ]),
 
@@ -122,20 +123,24 @@ class SponsorResource extends Resource
                     ->schema([
                         MediaPicker::make('gallery_1_media_id')
                             ->label('Imagen 1 (principal)')
-                            ->nullable(),
+                            ->nullable()
+                            ->helperText('Dimensiones recomendadas: 1127×670 px. Imagen principal del slider de producto.'),
                         MediaPicker::make('gallery_2_media_id')
                             ->label('Imagen 2')
-                            ->nullable(),
+                            ->nullable()
+                            ->helperText('Dimensiones recomendadas: 1127×670 px. Segunda imagen del slider.'),
                         MediaPicker::make('gallery_3_media_id')
                             ->label('Imagen 3')
-                            ->nullable(),
+                            ->nullable()
+                            ->helperText('Dimensiones recomendadas: 1127×670 px. Tercera imagen del slider.'),
                         MediaPicker::make('gallery_4_media_id')
                             ->label('Imagen 4')
-                            ->nullable(),
+                            ->nullable()
+                            ->helperText('Dimensiones recomendadas: 1127×670 px. Cuarta imagen del slider.'),
                         MediaPicker::make('highlight_media_id')
                             ->label('7. Imagen destacada para box "¿Te gustó este producto?"')
                             ->nullable()
-                            ->helperText('Si no se selecciona, se usa la Imagen 1 de la galería')
+                            ->helperText('Dimensiones recomendadas: 220×220 px (cuadrado). Se mostrará circular. Si no se define, usa la Imagen 1.')
                             ->columnSpanFull(),
                     ])->columns(2),
 
