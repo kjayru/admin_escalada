@@ -163,11 +163,6 @@ class BlogPostResource extends Resource
     {
         return $table
             ->columns([
-                IconColumn::make('is_featured')
-                    ->label('Destacado')
-                    ->boolean()
-                    ->sortable()
-                    ->toggleable(),
                 TextColumn::make('title')
                     ->label('Título')
                     ->searchable()

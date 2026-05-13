@@ -138,7 +138,7 @@ class ProductResource extends Resource
                     ->color('primary'),
                 TextColumn::make('price')
                     ->label('Precio')
-                    ->money('usd')
+                    ->formatStateUsing(fn ($state) => number_format((float) $state, 2) . ' MXN')
                     ->sortable(),
                 TextColumn::make('status')
                     ->label('Estado')
