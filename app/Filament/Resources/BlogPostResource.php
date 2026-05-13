@@ -27,6 +27,7 @@ use App\Filament\Resources\BlogPostResource\Pages\CreateBlogPost;
 use App\Filament\Resources\BlogPostResource\Pages\EditBlogPost;
 use App\Filament\Resources\BlogPostResource\Pages;
 use App\Models\BlogPost;
+use App\Models\BlogCategory;
 use Filament\Forms;
 use Filament\Resources\Resource;
 use Filament\Tables;
@@ -81,13 +82,10 @@ class BlogPostResource extends Resource
                             ->helperText('URL amigable generada automáticamente'),
                         Select::make('category')
                             ->label('Categoría')
-                            ->options([
-                                'blog' => 'Blog',
-                                'eventos' => 'Eventos',
-                                'noticias' => 'Noticias',
-                            ])
+                            ->options(fn () => BlogCategory::orderBy('sort_order')->pluck('name', 'slug')->toArray())
                             ->required()
-                            ->default('blog'),
+                            ->default('blog')
+                            ->searchable(),
                         TextInput::make('author_name')
                             ->label('Autor')
                             ->maxLength(255)
@@ -224,11 +222,7 @@ class BlogPostResource extends Resource
                     ]),
                 SelectFilter::make('category')
                     ->label('Categoría')
-                    ->options([
-                        'blog' => 'Blog',
-                        'eventos' => 'Eventos',
-                        'noticias' => 'Noticias',
-                    ]),
+                    ->options(fn () => BlogCategory::orderBy('sort_order')->pluck('name', 'slug')->toArray()),
             ])
             ->recordActions([
                 ViewAction::make(),
