@@ -97,7 +97,7 @@ class SupportMethodResource extends Resource
                             ->maxLength(500)
                             ->helperText('URL de PayPal a donde se redirige al donante.'),
                         TextInput::make('settings.suggested_amount')
-                            ->label('Monto sugerido (USD)')
+                            ->label('Monto sugerido (MXN)')
                             ->numeric()
                             ->minValue(1)
                             ->placeholder('Ej: 25')
