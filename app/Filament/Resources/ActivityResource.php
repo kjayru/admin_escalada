@@ -68,16 +68,16 @@ class ActivityResource extends Resource
                             ->helperText('Orden de aparición dentro del año (menor = primero)'),
                     ])->columns(2),
 
-                Section::make('Archivo PDF')
+                Section::make('Archivo')
                     ->schema([
                         FileUpload::make('pdf_path')
-                            ->label('Archivo PDF')
+                            ->label('Archivo')
                             ->disk('public')
                             ->directory('activities/pdfs')
-                            ->acceptedFileTypes(['application/pdf'])
+                            ->acceptedFileTypes(['application/pdf', 'image/jpeg', 'image/jpg', 'image/png'])
                             ->maxSize(20480)
                             ->downloadable()
-                            ->helperText('Sube el PDF de la actividad (máx. 20 MB)'),
+                            ->helperText('Sube el PDF o imagen de la actividad (máx. 20 MB)'),
                     ]),
 
                 Section::make('Publicación')
@@ -161,7 +161,7 @@ class ActivityResource extends Resource
                     DeleteBulkAction::make(),
                 ]),
             ])
-            ->defaultSort('year', 'desc');
+            ->defaultSort('created_at', 'desc');
     }
 
     public static function getRelations(): array
