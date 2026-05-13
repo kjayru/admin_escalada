@@ -119,46 +119,6 @@ class SettingResource extends Resource
                     ]),
             ])
             ->headerActions([
-                Action::make('seed_stats')
-                    ->label('Inicializar Estadísticas')
-                    ->icon('heroicon-o-arrow-down-tray')
-                    ->color('warning')
-                    ->requiresConfirmation()
-                    ->modalHeading('Inicializar estadísticas predeterminadas')
-                    ->modalDescription('Esto creará las claves de estadísticas que aún no existan. No sobreescribirá valores existentes.')
-                    ->action(function () {
-                        $defaults = [
-                            'stat.actividades'      => '74',
-                            'stat.arboles'          => '500',
-                            'stat.rutas'            => '93',
-                            'stat.bolts'            => '1110',
-                            'stat.senalizaciones'   => '15',
-                            'stat.voluntarios'      => '300',
-                            'stat.anos_util'        => '30',
-                            'stat.costo_reequipado' => '$3700',
-                            'stat.monto_invertido'  => '$400,000',
-                        ];
-
-                        $created = 0;
-                        foreach ($defaults as $key => $value) {
-                            $exists = SiteSetting::where('key', $key)->exists();
-                            if (! $exists) {
-                                SiteSetting::create([
-                                    'key'   => $key,
-                                    'value' => $value,
-                                    'group' => 'stats',
-                                ]);
-                                $created++;
-                            }
-                        }
-
-                        Notification::make()
-                            ->title($created > 0
-                                ? "{$created} estadísticas inicializadas correctamente."
-                                : 'Todas las estadísticas ya existen.')
-                            ->success()
-                            ->send();
-                    }),
             ])
             ->recordActions([
                 EditAction::make(),
