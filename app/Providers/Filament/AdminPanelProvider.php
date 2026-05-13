@@ -30,6 +30,20 @@ class AdminPanelProvider extends PanelProvider
     public function boot(): void
     {
         FilamentView::registerRenderHook(
+            PanelsRenderHook::PAGE_END,
+            function (): string {
+                $component = \Livewire\Livewire::current();
+                if (
+                    $component instanceof \Filament\Resources\Pages\CreateRecord ||
+                    $component instanceof \Filament\Resources\Pages\EditRecord
+                ) {
+                    return '<p class="text-sm text-gray-400 dark:text-gray-500 px-6 pb-4 pt-2">* Campos requeridos</p>';
+                }
+                return '';
+            },
+        );
+
+        FilamentView::registerRenderHook(
             PanelsRenderHook::HEAD_END,
             fn (): string => Blade::render('
                 <link rel="apple-touch-icon" sizes="57x57" href="{{ asset("apple-icon-57x57.png") }}">
