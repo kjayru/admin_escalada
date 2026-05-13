@@ -14,7 +14,7 @@ class ListTransparencyDocuments extends ListRecords
     protected function getHeaderActions(): array
     {
         return [
-            CreateAction::make(),
+            CreateAction::make()->label('Nuevo documento de transparencia'),
         ];
     }
 }

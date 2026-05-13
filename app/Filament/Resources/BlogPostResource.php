@@ -201,12 +201,6 @@ class BlogPostResource extends Resource
                     ->label('Publicado')
                     ->dateTime('d/m/Y')
                     ->sortable(),
-                TextColumn::make('approved_comments_count')
-                    ->label('Comentarios')
-                    ->counts('approvedComments')
-                    ->badge()
-                    ->color('primary')
-                    ->toggleable(),
                 TextColumn::make('updated_at')
                     ->label('Actualizado')
                     ->since()
