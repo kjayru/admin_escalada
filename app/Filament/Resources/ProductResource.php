@@ -143,6 +143,12 @@ class ProductResource extends Resource
                 TextColumn::make('status')
                     ->label('Estado')
                     ->badge()
+                    ->formatStateUsing(fn ($state) => match($state) {
+                        'published'    => 'Publicado',
+                        'draft'        => 'Borrador',
+                        'out_of_stock' => 'Sin Stock',
+                        default        => ucfirst($state),
+                    })
                     ->color(fn ($state) => match($state) {
                         'published'    => 'success',
                         'out_of_stock' => 'danger',
