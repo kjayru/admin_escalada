@@ -54,6 +54,7 @@ class LogoRowResource extends Resource
                             ->label('Patrocinador')
                             ->relationship('sponsor', 'name')
                             ->searchable()
+                            ->preload()
                             ->required(),
                         TextInput::make('link_url')
                             ->label('URL de enlace (opcional)')
