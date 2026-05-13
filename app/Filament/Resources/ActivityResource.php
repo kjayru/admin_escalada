@@ -40,6 +40,8 @@ class ActivityResource extends Resource
 
     protected static ?string $pluralModelLabel = 'Actividades';
 
+    protected static ?string $navigationLabel = 'Actividades — Cronología';
+
     protected static ?int $navigationSort = 5;
 
     public static function form(Schema $schema): Schema

@@ -37,6 +37,8 @@ class MemberGroupResource extends Resource
 
     protected static ?string $pluralModelLabel = 'Asociación — Grupos';
 
+    protected static ?string $navigationLabel = 'Nosotros — Miembros';
+
     protected static ?int $navigationSort = 10;
 
     public static function form(Schema $schema): Schema

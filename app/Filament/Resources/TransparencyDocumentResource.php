@@ -39,6 +39,8 @@ class TransparencyDocumentResource extends Resource
 
     protected static ?string $pluralModelLabel = 'Documentos de Transparencia';
 
+    protected static ?string $navigationLabel = 'Transparencia — Documentos';
+
     protected static ?int $navigationSort = 4;
 
     public static function form(Schema $schema): Schema
