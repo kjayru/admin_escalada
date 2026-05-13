@@ -52,6 +52,7 @@ class SponsorPlacementResource extends Resource
                             ->label('Patrocinador')
                             ->relationship('sponsor', 'name')
                             ->searchable()
+                            ->preload()
                             ->required(),
                         Select::make('placement')
                             ->label('Ubicación')
