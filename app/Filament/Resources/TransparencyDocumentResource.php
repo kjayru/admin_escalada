@@ -97,6 +97,11 @@ class TransparencyDocumentResource extends Resource
                             ->acceptedFileTypes(['application/pdf'])
                             ->nullable()
                             ->helperText('Selecciona el PDF desde la Biblioteca de Medios'),
+                        MediaPicker::make('image_media_id')
+                            ->label('Imagen de portada')
+                            ->acceptedFileTypes(['image/jpeg', 'image/png', 'image/webp', 'image/gif'])
+                            ->nullable()
+                            ->helperText('Imagen opcional para mostrar como portada del documento'),
                         Textarea::make('description')
                             ->label('Descripción')
                             ->rows(3)

@@ -15,6 +15,7 @@ class TransparencyDocument extends Model
         'type',
         'description',
         'media_id',
+        'image_media_id',
         'published_at',
         'status',
     ];
@@ -27,6 +28,11 @@ class TransparencyDocument extends Model
     public function media(): BelongsTo
     {
         return $this->belongsTo(MediaFile::class, 'media_id');
+    }
+
+    public function imageMedia(): BelongsTo
+    {
+        return $this->belongsTo(MediaFile::class, 'image_media_id');
     }
 
     public function scopePublished($query)
