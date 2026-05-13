@@ -67,7 +67,33 @@ class ProductResource extends JsonResource
                 $this->whenLoaded('featuredMedia', fn() => $this->featuredMedia),
                 null
             ),
-            'gallery' => MediaResource::collection($this->whenLoaded('media')),
+            'gallery' => $this->whenLoaded('galleryFiles', function() {
+                $gallery = collect();
+                
+                // Add images from galleryFiles relationship (pivot table)
+                $pivotImages = $this->galleryFiles->map(function($file) {
+                    $spatieMedia = $file->getFirstMedia();
+                    $url = $spatieMedia?->getUrl();
+                    return [
+                        'id' => $file->id,
+                        'url' => $url ?? '',
+                        'alt' => $file->alt_text ?? '',
+                    ];
+                })->filter(fn($item) => !empty($item['url']));
+                $gallery = $gallery->merge($pivotImages);
+                
+                // Add images from Spatie media collection
+                $spatieImages = $this->getMedia('gallery')->map(function($media) {
+                    return [
+                        'id' => $media->id,
+                        'url' => $media->getUrl(),
+                        'alt' => $media->name ?? '',
+                    ];
+                });
+                $gallery = $gallery->merge($spatieImages);
+                
+                return $gallery->unique('id')->values();
+            }),
             'created_at' => $this->created_at?->toIso8601String(),
             'updated_at' => $this->updated_at?->toIso8601String(),
         ];

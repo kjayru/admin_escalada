@@ -10,6 +10,9 @@ use Filament\Forms\Components\Select;
 use Filament\Forms\Components\Hidden;
 use Filament\Forms\Components\Textarea;
 use Filament\Forms\Components\RichEditor;
+use Filament\Forms\Components\Repeater;
+use Filament\Forms\Components\View;
+use Filament\Forms\Components\SpatieMediaLibraryFileUpload;
 use Slimani\MediaManager\Form\MediaPicker;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Filters\SelectFilter;
@@ -90,6 +93,20 @@ class ProductResource extends Resource
                             ->label('Imagen Destacada')
                             ->nullable(),
                     ])->columns(3),
+
+                Section::make('Galería de Imágenes')
+                    ->description('Carga múltiples imágenes para el slider del producto')
+                    ->schema([
+                        SpatieMediaLibraryFileUpload::make('gallery')
+                            ->collection('gallery')
+                            ->multiple()
+                            ->maxFiles(10)
+                            ->reorderable()
+                            ->image()
+                            ->imageEditor()
+                            ->columnSpanFull()
+                            ->helperText('Las imágenes aparecerán en el orden que las organices aquí.'),
+                    ]),
 
                 Section::make('Descripción')
                     ->schema([

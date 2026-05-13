@@ -18,7 +18,7 @@ class ProductController extends Controller
     public function index(Request $request)
     {
         $query = Product::where('status', 'published')
-            ->with(['category', 'featuredFile', 'featuredMedia', 'publisher'])
+            ->with(['category', 'featuredFile', 'featuredMedia', 'publisher', 'galleryFiles'])
             ->orderBy('created_at', 'desc');
 
         if ($request->has('category_id')) {
@@ -45,7 +45,7 @@ class ProductController extends Controller
     {
         $product = Product::where('slug', $slug)
             ->where('status', 'published')
-            ->with(['category', 'featuredFile', 'featuredMedia', 'publisher', 'media'])
+            ->with(['category', 'featuredFile', 'featuredMedia', 'publisher', 'galleryFiles'])
             ->firstOrFail();
 
         return new ProductResource($product);

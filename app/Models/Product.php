@@ -4,12 +4,16 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\MorphToMany;
 use Slimani\MediaManager\Models\File as MediaFile;
+use Spatie\MediaLibrary\HasMedia;
+use Spatie\MediaLibrary\InteractsWithMedia;
 
-class Product extends Model
+class Product extends Model implements HasMedia
 {
+    use InteractsWithMedia;
     protected $fillable = [
         'category_id',
         'user_id',
@@ -21,11 +25,38 @@ class Product extends Model
         'currency',
         'featured_media_id',
         'status',
+        'gallery_ids', // Virtual field for Filament
+        'gallery_items', // Virtual field for Repeater
     ];
 
     protected $casts = [
         'price' => 'decimal:2',
+        'gallery_ids' => 'array',
     ];
+
+    protected static function booted(): void
+    {
+        static::saved(function (Product $product) {
+            // Handle gallery_items from Repeater
+            if (isset($product->attributes['gallery_items']) && is_array($product->attributes['gallery_items'])) {
+                $fileIds = collect($product->attributes['gallery_items'])
+                    ->pluck('file_id')
+                    ->filter()
+                    ->values();
+                
+                $syncData = $fileIds->mapWithKeys(fn($id, $index) => [$id => ['sort_order' => $index]])->toArray();
+                $product->galleryFiles()->sync($syncData);
+                unset($product->attributes['gallery_items']);
+            }
+            // Handle gallery_ids from MediaPicker multiple
+            elseif (isset($product->attributes['gallery_ids']) && is_array($product->attributes['gallery_ids'])) {
+                $galleryIds = $product->attributes['gallery_ids'];
+                $syncData = collect($galleryIds)->mapWithKeys(fn($id, $index) => [$id => ['sort_order' => $index]])->toArray();
+                $product->galleryFiles()->sync($syncData);
+                unset($product->attributes['gallery_ids']);
+            }
+        });
+    }
 
     public function category(): BelongsTo
     {
@@ -48,12 +79,21 @@ class Product extends Model
         return $this->belongsTo(MediaFile::class, 'featured_media_id');
     }
 
+    /** Galería de imágenes del producto (nueva tabla pivot) */
+    public function galleryFiles(): BelongsToMany
+    {
+        return $this->belongsToMany(MediaFile::class, 'product_gallery', 'product_id', 'file_id')
+            ->withPivot('sort_order')
+            ->withTimestamps()
+            ->orderBy('sort_order');
+    }
+
     public function inquiries(): HasMany
     {
         return $this->hasMany(ProductInquiry::class);
     }
 
-    public function media(): MorphToMany
+    public function legacyMedia(): MorphToMany
     {
         return $this->morphToMany(LegacyMedia::class, 'mediable', 'legacy_mediables', 'mediable_id', 'media_id')
             ->withPivot('collection', 'sort_order')
