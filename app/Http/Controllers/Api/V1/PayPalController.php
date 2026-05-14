@@ -141,8 +141,8 @@ class PayPalController extends Controller
 
         try {
             $response = Http::withToken($token)
-                ->withHeaders(['Content-Type' => 'application/json'])
-                ->post("{$this->baseUrl}/v2/checkout/orders/{$orderId}/capture", []);
+                ->withBody('{}', 'application/json')
+                ->post("{$this->baseUrl}/v2/checkout/orders/{$orderId}/capture");
 
             if ($response->successful()) {
                 $data = $response->json();
