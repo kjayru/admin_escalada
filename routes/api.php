@@ -86,5 +86,6 @@ Route::prefix('v1')->group(function () {
     Route::post('/paypal/orders', [PayPalController::class, 'createOrder']);
     Route::post('/paypal/orders/{orderId}/capture', [PayPalController::class, 'captureOrder']);
     Route::get('/paypal/orders/{orderId}', [PayPalController::class, 'getOrder']);
+    Route::get('/donations/count', [PayPalController::class, 'donationsCount']);
 });
 

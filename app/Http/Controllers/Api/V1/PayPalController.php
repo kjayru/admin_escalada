@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Api\V1;
 
 use App\Http\Controllers\Controller;
+use App\Models\Donation;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Log;
@@ -145,10 +146,26 @@ class PayPalController extends Controller
             if ($response->successful()) {
                 $data = $response->json();
 
-                // Aquí podrías guardar la transacción en la base de datos
+                // Guardar donación en la base de datos
+                try {
+                    $capture = $data['purchase_units'][0]['payments']['captures'][0] ?? null;
+                    Donation::create([
+                        'paypal_order_id' => $orderId,
+                        'payer_name'      => $data['payer']['name']['given_name'] ?? '',
+                        'payer_last_name' => $data['payer']['name']['surname'] ?? '',
+                        'payer_email'     => $data['payer']['email_address'] ?? '',
+                        'amount'          => $capture['amount']['value'] ?? 0,
+                        'currency'        => $capture['amount']['currency_code'] ?? 'USD',
+                        'status'          => $data['status'] ?? 'COMPLETED',
+                        'captured_at'     => now(),
+                    ]);
+                } catch (\Exception $e) {
+                    Log::error('PayPal: Error guardando donación en BD', ['message' => $e->getMessage()]);
+                }
+
                 Log::info('PayPal: Pago capturado exitosamente', [
-                    'order_id' => $orderId,
-                    'status' => $data['status'] ?? null,
+                    'order_id'    => $orderId,
+                    'status'      => $data['status'] ?? null,
                     'payer_email' => $data['payer']['email_address'] ?? null,
                 ]);
 
@@ -175,6 +192,15 @@ class PayPalController extends Controller
                 'error' => 'Error procesando la captura del pago',
             ], 500);
         }
+    }
+
+    /**
+     * Contar total de donaciones completadas
+     */
+    public function donationsCount()
+    {
+        $count = Donation::count();
+        return response()->json(['count' => $count]);
     }
 
     /**
