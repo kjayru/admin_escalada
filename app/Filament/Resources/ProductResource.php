@@ -12,7 +12,6 @@ use Filament\Forms\Components\Textarea;
 use Filament\Forms\Components\RichEditor;
 use Filament\Forms\Components\Repeater;
 use Filament\Forms\Components\View;
-use Filament\Forms\Components\SpatieMediaLibraryFileUpload;
 use Slimani\MediaManager\Form\MediaPicker;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Filters\SelectFilter;
@@ -97,13 +96,18 @@ class ProductResource extends Resource
                 Section::make('Galería de Imágenes')
                     ->description('Carga múltiples imágenes para el slider del producto')
                     ->schema([
-                        SpatieMediaLibraryFileUpload::make('gallery')
-                            ->collection('gallery')
+                        MediaPicker::make('gallery_ids')
+                            ->label('Gallery')
                             ->multiple()
-                            ->maxFiles(10)
-                            ->reorderable()
                             ->image()
-                            ->imageEditor()
+                            ->relationship('galleryFiles')
+                            ->saveRelationshipsUsing(function ($component, $state) {
+                                $record = $component->getRecord();
+                                if (!$record || !$record->exists) return;
+                                $ids = array_values(array_filter(array_map('strval', (array) $state)));
+                                $syncData = collect($ids)->mapWithKeys(fn($id, $index) => [$id => ['sort_order' => $index]])->toArray();
+                                $record->galleryFiles()->sync($syncData);
+                            })
                             ->columnSpanFull()
                             ->helperText('Las imágenes aparecerán en el orden que las organices aquí.'),
                     ]),
