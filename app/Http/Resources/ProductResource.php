@@ -84,9 +84,10 @@ class ProductResource extends JsonResource
                 
                 // Add images from Spatie media collection
                 $spatieImages = $this->getMedia('gallery')->map(function($media) {
+                    $url = $media->getUrl();
                     return [
                         'id' => $media->id,
-                        'url' => $media->getUrl(),
+                        'url' => str_starts_with($url, '/') ? url($url) : $url,
                         'alt' => $media->name ?? '',
                     ];
                 });
