@@ -3,6 +3,7 @@
 use App\Http\Controllers\Api\V1\ActivityController;
 use App\Http\Controllers\Api\V1\BlogPostController;
 use App\Http\Controllers\Api\V1\ContactController;
+use App\Http\Controllers\Api\V1\NewsletterController;
 use App\Http\Controllers\Api\V1\GymController;
 use App\Http\Controllers\Api\V1\MemberGroupController;
 use App\Http\Controllers\Api\V1\MenuController;
@@ -68,6 +69,9 @@ Route::prefix('v1')->group(function () {
     
     // Contact
     Route::post('/contact', [ContactController::class, 'store']);
+
+    // Newsletter
+    Route::post('/newsletter/subscribe', [NewsletterController::class, 'subscribe']);
     
     // Menus
     Route::get('/menus/{location}', [MenuController::class, 'show']);
