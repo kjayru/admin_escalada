@@ -121,10 +121,6 @@ class BlogPostResource extends Resource
 
                 Section::make('Publicación')
                     ->schema([
-                        Toggle::make('is_featured')
-                            ->label('Destacado en Home')
-                            ->helperText('Los posts destacados aparecen primero en la página de inicio')
-                            ->columnSpanFull(),
                         Select::make('status')
                             ->label('Estado')
                             ->options([
