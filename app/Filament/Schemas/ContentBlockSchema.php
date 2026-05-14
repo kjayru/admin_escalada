@@ -119,40 +119,17 @@ class ContentBlockSchema
                     ->rule('nullable')
                     ->columnSpanFull()
                     ->afterStateHydrated(function (MediaPicker $component, mixed $state): void {
-                        // Load from record attribute if Livewire snapshot has blank state
-                        if (blank($state)) {
-                            $record = $component->getRecord();
-                            if ($record) {
-                                $state = $record->getAttribute($component->getName());
-                            }
-                        }
-
-                        // Non-scalar/non-array objects → clear
-                        if (! is_null($state) && ! is_scalar($state) && ! is_array($state)) {
-                            $component->state(null);
+                        // Solo intervenimos cuando el estado es blank (carga inicial desde BD).
+                        // Los estados no-blank provienen de FilePond tras una selección del usuario
+                        // y no deben ser sobreescritos para evitar que la selección desaparezca.
+                        if (! blank($state)) {
                             return;
                         }
-
-                        // Scalar (int/string) → pass through state() so FileUploadStateCast::set()
-                        // wraps it as {uuid=>'86'}, enabling FilePond's getUploadedFiles() to work.
-                        if (is_scalar($state) && ! blank($state)) {
-                            $component->state((string) $state);
-                            return;
+                        $record = $component->getRecord();
+                        $id = $record?->getAttribute($component->getName());
+                        if (is_scalar($id) && ! blank($id)) {
+                            $component->state((string) $id);
                         }
-
-                        // Array → extract first non-empty scalar value and pass through state()
-                        if (is_array($state) && filled($state)) {
-                            $val = array_values(array_filter(array_map(
-                                fn($v) => is_scalar($v) ? (string) $v : null,
-                                $state
-                            )))[0] ?? null;
-                            if ($val) {
-                                $component->state($val);
-                                return;
-                            }
-                        }
-
-                        $component->state(null);
                     })
                     ->dehydrateStateUsing(function (MediaPicker $component, $state) {
                         // $state can be null here because Schema::getState() calls validate() which
@@ -203,31 +180,14 @@ class ContentBlockSchema
                     ->rule('nullable')
                     ->columnSpanFull()
                     ->afterStateHydrated(function (MediaPicker $component, mixed $state): void {
-                        if (blank($state)) {
-                            $record = $component->getRecord();
-                            if ($record) {
-                                $state = $record->getAttribute($component->getName());
-                            }
-                        }
-                        if (! is_null($state) && ! is_scalar($state) && ! is_array($state)) {
-                            $component->state(null);
+                        if (! blank($state)) {
                             return;
                         }
-                        if (is_scalar($state) && ! blank($state)) {
-                            $component->state((string) $state);
-                            return;
+                        $record = $component->getRecord();
+                        $id = $record?->getAttribute($component->getName());
+                        if (is_scalar($id) && ! blank($id)) {
+                            $component->state((string) $id);
                         }
-                        if (is_array($state) && filled($state)) {
-                            $val = array_values(array_filter(array_map(
-                                fn($v) => is_scalar($v) ? (string) $v : null,
-                                $state
-                            )))[0] ?? null;
-                            if ($val) {
-                                $component->state($val);
-                                return;
-                            }
-                        }
-                        $component->state(null);
                     })
                     ->dehydrateStateUsing(function (MediaPicker $component, $state) {
                         $source = filled($state) ? $state : $component->getRawState();
@@ -266,31 +226,14 @@ class ContentBlockSchema
                     ->columnSpanFull()
                     ->visible(fn (Get $get) => $get('type') === 'video')
                     ->afterStateHydrated(function (MediaPicker $component, mixed $state): void {
-                        if (blank($state)) {
-                            $record = $component->getRecord();
-                            if ($record) {
-                                $state = $record->getAttribute($component->getName());
-                            }
-                        }
-                        if (! is_null($state) && ! is_scalar($state) && ! is_array($state)) {
-                            $component->state(null);
+                        if (! blank($state)) {
                             return;
                         }
-                        if (is_scalar($state) && ! blank($state)) {
-                            $component->state((string) $state);
-                            return;
+                        $record = $component->getRecord();
+                        $id = $record?->getAttribute($component->getName());
+                        if (is_scalar($id) && ! blank($id)) {
+                            $component->state((string) $id);
                         }
-                        if (is_array($state) && filled($state)) {
-                            $val = array_values(array_filter(array_map(
-                                fn($v) => is_scalar($v) ? (string) $v : null,
-                                $state
-                            )))[0] ?? null;
-                            if ($val) {
-                                $component->state($val);
-                                return;
-                            }
-                        }
-                        $component->state(null);
                     })
                     ->dehydrateStateUsing(function (MediaPicker $component, $state) {
                         $source = filled($state) ? $state : $component->getRawState();
@@ -329,31 +272,14 @@ class ContentBlockSchema
                     ->columnSpanFull()
                     ->visible(fn (Get $get) => $get('type') === 'video')
                     ->afterStateHydrated(function (MediaPicker $component, mixed $state): void {
-                        if (blank($state)) {
-                            $record = $component->getRecord();
-                            if ($record) {
-                                $state = $record->getAttribute($component->getName());
-                            }
-                        }
-                        if (! is_null($state) && ! is_scalar($state) && ! is_array($state)) {
-                            $component->state(null);
+                        if (! blank($state)) {
                             return;
                         }
-                        if (is_scalar($state) && ! blank($state)) {
-                            $component->state((string) $state);
-                            return;
+                        $record = $component->getRecord();
+                        $id = $record?->getAttribute($component->getName());
+                        if (is_scalar($id) && ! blank($id)) {
+                            $component->state((string) $id);
                         }
-                        if (is_array($state) && filled($state)) {
-                            $val = array_values(array_filter(array_map(
-                                fn($v) => is_scalar($v) ? (string) $v : null,
-                                $state
-                            )))[0] ?? null;
-                            if ($val) {
-                                $component->state($val);
-                                return;
-                            }
-                        }
-                        $component->state(null);
                     })
                     ->dehydrateStateUsing(function (MediaPicker $component, $state) {
                         $source = filled($state) ? $state : $component->getRawState();
@@ -416,31 +342,14 @@ class ContentBlockSchema
                             ->visible(fn (Get $get): bool => $get('../../type') === 'slider')
                             ->dehydrated(fn (Get $get): bool => $get('../../type') === 'slider')
                             ->afterStateHydrated(function (MediaPicker $component, mixed $state): void {
-                                if (blank($state)) {
-                                    $record = $component->getRecord();
-                                    if ($record) {
-                                        $state = $record->getAttribute($component->getName());
-                                    }
-                                }
-                                if (! is_null($state) && ! is_scalar($state) && ! is_array($state)) {
-                                    $component->state(null);
+                                if (! blank($state)) {
                                     return;
                                 }
-                                if (is_scalar($state) && ! blank($state)) {
-                                    $component->state((string) $state);
-                                    return;
+                                $record = $component->getRecord();
+                                $id = $record?->getAttribute($component->getName());
+                                if (is_scalar($id) && ! blank($id)) {
+                                    $component->state((string) $id);
                                 }
-                                if (is_array($state) && filled($state)) {
-                                    $val = array_values(array_filter(array_map(
-                                        fn($v) => is_scalar($v) ? (string) $v : null,
-                                        $state
-                                    )))[0] ?? null;
-                                    if ($val) {
-                                        $component->state($val);
-                                        return;
-                                    }
-                                }
-                                $component->state(null);
                             })
                             ->dehydrateStateUsing(function (MediaPicker $component, $state) {
                                 $source = filled($state) ? $state : $component->getRawState();
