@@ -14,6 +14,7 @@ use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Columns\IconColumn;
 use Filament\Tables\Filters\SelectFilter;
 use Filament\Tables\Filters\TernaryFilter;
+use Filament\Actions\Action;
 use Filament\Actions\EditAction;
 use Filament\Actions\DeleteAction;
 use Filament\Actions\BulkActionGroup;
@@ -91,9 +92,21 @@ class SponsorPlacementResource extends Resource
                 Section::make('Visibilidad')
                     ->schema([
                         DateTimePicker::make('start_at')
-                            ->label('Inicio'),
+                            ->label('Inicio')
+                            ->suffixAction(
+                                Action::make('clear_start_at')
+                                    ->icon('heroicon-o-x-mark')
+                                    ->tooltip('Limpiar fecha')
+                                    ->action(fn ($set) => $set('start_at', null))
+                            ),
                         DateTimePicker::make('end_at')
-                            ->label('Fin'),
+                            ->label('Fin')
+                            ->suffixAction(
+                                Action::make('clear_end_at')
+                                    ->icon('heroicon-o-x-mark')
+                                    ->tooltip('Limpiar fecha')
+                                    ->action(fn ($set) => $set('end_at', null))
+                            ),
                         TextInput::make('sort_order')
                             ->label('Orden')
                             ->numeric()
