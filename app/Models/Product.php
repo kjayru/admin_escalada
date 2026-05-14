@@ -25,13 +25,11 @@ class Product extends Model implements HasMedia
         'currency',
         'featured_media_id',
         'status',
-        'gallery_ids', // Virtual field for Filament
-        'gallery_items', // Virtual field for Repeater
+        'gallery_items', // Virtual field for Repeater (legacy)
     ];
 
     protected $casts = [
         'price' => 'decimal:2',
-        'gallery_ids' => 'array',
     ];
 
     protected static function booted(): void
