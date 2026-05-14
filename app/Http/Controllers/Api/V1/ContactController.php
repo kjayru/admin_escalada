@@ -17,6 +17,7 @@ class ContactController extends Controller
         $validator = Validator::make($request->all(), [
             'name' => 'required|string|max:255',
             'email' => 'required|email|max:255',
+            'phone' => 'nullable|string|max:50',
             'subject' => 'nullable|string|max:255',
             'message' => 'required|string|max:5000',
         ]);
@@ -31,6 +32,7 @@ class ContactController extends Controller
         ContactMessage::create([
             'name' => $request->name,
             'email' => $request->email,
+            'phone' => $request->phone,
             'subject' => $request->subject,
             'message' => $request->message,
         ]);
