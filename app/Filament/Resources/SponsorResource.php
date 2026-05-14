@@ -10,6 +10,7 @@ use Filament\Forms\Components\Textarea;
 use Filament\Forms\Components\Select;
 use Slimani\MediaManager\Form\MediaPicker;
 use Filament\Tables\Columns\TextColumn;
+use Filament\Tables\Columns\IconColumn;
 use Filament\Tables\Filters\SelectFilter;
 use Filament\Actions\EditAction;
 use Filament\Actions\DeleteAction;
@@ -205,6 +206,14 @@ class SponsorResource extends Resource
                     ->url(fn ($record) => $record->website_url)
                     ->openUrlInNewTab()
                     ->toggleable(),
+                IconColumn::make('slide_image_media_id')
+                    ->label('En slider')
+                    ->boolean()
+                    ->getStateUsing(fn ($record) => !is_null($record->slide_image_media_id))
+                    ->trueIcon('heroicon-o-check-circle')
+                    ->falseIcon('heroicon-o-x-circle')
+                    ->trueColor('success')
+                    ->falseColor('gray'),
                 TextColumn::make('status')
                     ->label('Estado')
                     ->badge()

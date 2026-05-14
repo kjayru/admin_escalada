@@ -163,7 +163,7 @@ class SponsorPlacementResource extends Resource
                     DeleteBulkAction::make(),
                 ]),
             ])
-            ->defaultSort('sort_order');
+            ->defaultSort('id', 'desc');
     }
 
     public static function getRelations(): array { return []; }
