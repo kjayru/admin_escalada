@@ -131,6 +131,8 @@ class PayPalController extends Controller
      */
     public function captureOrder(Request $request, string $orderId)
     {
+        $formData = $request->only(['nombre', 'apellido', 'correo', 'cantidad']);
+
         $token = $this->getAccessToken();
 
         if (!$token) {
@@ -152,11 +154,11 @@ class PayPalController extends Controller
                     $capture = $data['purchase_units'][0]['payments']['captures'][0] ?? null;
                     Donation::create([
                         'paypal_order_id' => $orderId,
-                        'payer_name'      => $data['payer']['name']['given_name'] ?? '',
-                        'payer_last_name' => $data['payer']['name']['surname'] ?? '',
-                        'payer_email'     => $data['payer']['email_address'] ?? '',
-                        'amount'          => $capture['amount']['value'] ?? 0,
-                        'currency'        => $capture['amount']['currency_code'] ?? 'USD',
+                        'payer_name'      => $formData['nombre'] ?? $data['payer']['name']['given_name'] ?? '',
+                        'payer_last_name' => $formData['apellido'] ?? $data['payer']['name']['surname'] ?? '',
+                        'payer_email'     => $formData['correo'] ?? $data['payer']['email_address'] ?? '',
+                        'amount'          => isset($formData['cantidad']) ? (float) $formData['cantidad'] : ($capture['amount']['value'] ?? 0),
+                        'currency'        => $capture['amount']['currency_code'] ?? env('PAYPAL_CURRENCY', 'MXN'),
                         'status'          => $data['status'] ?? 'COMPLETED',
                         'captured_at'     => now(),
                     ]);
