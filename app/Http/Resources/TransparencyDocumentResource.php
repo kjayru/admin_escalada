@@ -28,6 +28,13 @@ class TransparencyDocumentResource extends JsonResource
                 'mime_type' => $this->media->mime_type,
                 'size' => $this->media->size,
             ] : null,
+            'image' => $this->imageMedia ? [
+                'id' => $this->imageMedia->id,
+                'url' => $this->imageMedia->getUrl(),
+                'file_name' => $this->imageMedia->name,
+                'mime_type' => $this->imageMedia->mime_type,
+                'size' => $this->imageMedia->size,
+            ] : null,
             'published_at' => $this->published_at?->toIso8601String(),
             'updated_at' => $this->updated_at?->toIso8601String(),
         ];

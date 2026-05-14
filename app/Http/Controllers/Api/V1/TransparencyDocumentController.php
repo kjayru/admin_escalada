@@ -15,7 +15,7 @@ class TransparencyDocumentController extends Controller
     public function index(Request $request)
     {
         $query = TransparencyDocument::published()
-            ->with(['media'])
+            ->with(['media', 'imageMedia'])
             ->orderBy('published_at', 'desc');
 
         if ($request->has('type')) {
@@ -38,7 +38,7 @@ class TransparencyDocumentController extends Controller
     {
         $document = TransparencyDocument::where('slug', $slug)
             ->published()
-            ->with(['media'])
+            ->with(['media', 'imageMedia'])
             ->firstOrFail();
 
         return new TransparencyDocumentResource($document);
