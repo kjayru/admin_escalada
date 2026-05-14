@@ -80,7 +80,7 @@ class PayPalController extends Controller
                     'purchase_units' => [
                         [
                             'amount' => [
-                                'currency_code' => 'USD',
+                                'currency_code' => env('PAYPAL_CURRENCY', 'MXN'),
                                 'value' => number_format($validated['amount'], 2, '.', ''),
                             ],
                             'description' => 'Donación a Escalada Libre Costa Rica',
