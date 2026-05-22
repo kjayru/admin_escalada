@@ -3,10 +3,12 @@
 namespace App\Http\Controllers\Api\V1;
 
 use App\Http\Controllers\Controller;
+use App\Mail\DonationConfirmation;
 use App\Models\Donation;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Mail;
 
 class PayPalController extends Controller
 {
@@ -152,16 +154,34 @@ class PayPalController extends Controller
                 // Guardar donación en la base de datos
                 try {
                     $capture = $data['purchase_units'][0]['payments']['captures'][0] ?? null;
+                    $payerEmail    = $formData['correo'] ?? $data['payer']['email_address'] ?? '';
+                    $payerName     = trim(($formData['nombre'] ?? $data['payer']['name']['given_name'] ?? '') . ' ' . ($formData['apellido'] ?? $data['payer']['name']['surname'] ?? ''));
+                    $donatedAmount = isset($formData['cantidad']) ? (float) $formData['cantidad'] : ($capture['amount']['value'] ?? 0);
+                    $currency      = $capture['amount']['currency_code'] ?? env('PAYPAL_CURRENCY', 'MXN');
+
                     Donation::create([
                         'paypal_order_id' => $orderId,
                         'payer_name'      => $formData['nombre'] ?? $data['payer']['name']['given_name'] ?? '',
                         'payer_last_name' => $formData['apellido'] ?? $data['payer']['name']['surname'] ?? '',
-                        'payer_email'     => $formData['correo'] ?? $data['payer']['email_address'] ?? '',
-                        'amount'          => isset($formData['cantidad']) ? (float) $formData['cantidad'] : ($capture['amount']['value'] ?? 0),
-                        'currency'        => $capture['amount']['currency_code'] ?? env('PAYPAL_CURRENCY', 'MXN'),
+                        'payer_email'     => $payerEmail,
+                        'amount'          => $donatedAmount,
+                        'currency'        => $currency,
                         'status'          => $data['status'] ?? 'COMPLETED',
                         'captured_at'     => now(),
                     ]);
+
+                    // Enviar email de confirmación al donador
+                    if ($payerEmail) {
+                        try {
+                            Mail::to($payerEmail)->send(new DonationConfirmation(
+                                donorName: $payerName,
+                                amount:    number_format($donatedAmount, 2, '.', ''),
+                                currency:  $currency,
+                            ));
+                        } catch (\Exception $e) {
+                            Log::error('PayPal: Error enviando email de confirmación', ['message' => $e->getMessage()]);
+                        }
+                    }
                 } catch (\Exception $e) {
                     Log::error('PayPal: Error guardando donación en BD', ['message' => $e->getMessage()]);
                 }

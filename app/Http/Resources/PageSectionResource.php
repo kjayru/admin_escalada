@@ -55,7 +55,7 @@ class PageSectionResource extends JsonResource
             'subheading' => $this->subheading,
             'body' => $this->body,
             'sort_order' => $this->sort_order,
-            'settings' => $this->settings,
+            'settings' => $this->normalizeSettings($this->settings),
             'featured_media' => $this->featuredFile
                 ? [
                     'id'        => $this->featuredFile->id,
@@ -156,5 +156,35 @@ class PageSectionResource extends JsonResource
                 }
             ),
         ];
+    }
+
+    /**
+     * Normaliza el campo settings independientemente del formato en que Filament lo guardó.
+     *
+     * Filament's KeyValue puede persistir en dos formatos:
+     *   - Plano:  {"fecha":"Junio 2022"}
+     *   - Pairs:  [{"key":"fecha","value":"Junio 2022"}]
+     *
+     * Ambos se convierten al formato plano para que el frontend siempre pueda
+     * acceder a los valores como settings.fecha, settings.background, etc.
+     */
+    private function normalizeSettings(mixed $settings): array|null
+    {
+        if (!is_array($settings)) {
+            return $settings;
+        }
+
+        // Pairs format: array secuencial donde cada elemento tiene {key, value}
+        if (isset($settings[0]) && is_array($settings[0]) && array_key_exists('key', $settings[0])) {
+            $settings = collect($settings)->pluck('value', 'key')->toArray();
+        }
+
+        // Trim keys: previene typos con espacios ("fecha " → "fecha")
+        $trimmed = [];
+        foreach ($settings as $key => $value) {
+            $trimmed[trim((string) $key)] = $value;
+        }
+
+        return $trimmed;
     }
 }
