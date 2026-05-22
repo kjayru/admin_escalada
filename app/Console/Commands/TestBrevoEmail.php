@@ -10,9 +10,13 @@ class TestBrevoEmail extends Command
     protected $signature = 'mail:test-brevo
                             {email? : Dirección de destino (default: MAIL_FROM_ADDRESS)}
                             {--from= : Email remitente (default: noreply@escaladalibre.org)}
-                            {--name= : Nombre remitente (default: APP_NAME)}';
+                            {--name= : Nombre remitente (default: APP_NAME)}
+                            {--type=generic : Tipo de email: generic | donation}
+                            {--donor= : Nombre del donador (solo con --type=donation)}
+                            {--amount=100.00 : Monto de prueba (solo con --type=donation)}
+                            {--currency=MXN : Moneda (solo con --type=donation)}';
 
-    protected $description = 'Envía un email de prueba usando la API de Brevo (BREVO_KEY)';
+    protected $description = 'Envía un email de prueba usando la API de Brevo (BREVO_KEY). Tipos: generic, donation';
 
     public function handle(): int
     {
@@ -26,24 +30,28 @@ class TestBrevoEmail extends Command
         $toEmail   = $this->argument('email') ?? env('MAIL_FROM_ADDRESS', 'test@example.com');
         $fromEmail = $this->option('from')    ?? 'noreply@escaladalibre.org';
         $fromName  = $this->option('name')    ?? config('app.name', 'Escalada PRO');
+        $type      = $this->option('type');
 
-        $this->info("Enviando email de prueba...");
+        $this->info("Enviando email de prueba ({$type})...");
         $this->line("  De      : {$fromName} <{$fromEmail}>");
         $this->line("  Para    : {$toEmail}");
         $this->line("  Entorno : " . app()->environment());
 
-        $payload = [
-            'sender'      => ['name' => $fromName, 'email' => $fromEmail],
-            'to'          => [['email' => $toEmail]],
-            'subject'     => '[TEST] Email de prueba — ' . config('app.name') . ' (' . now()->toDateTimeString() . ')',
-            'htmlContent' => $this->buildHtml($fromName),
-        ];
+        [$subject, $htmlContent] = match ($type) {
+            'donation' => $this->buildDonationEmail(),
+            default    => $this->buildGenericEmail($fromName),
+        };
 
         $response = Http::withHeaders([
             'api-key'      => $apiKey,
             'Content-Type' => 'application/json',
             'Accept'       => 'application/json',
-        ])->post('https://api.brevo.com/v3/smtp/email', $payload);
+        ])->post('https://api.brevo.com/v3/smtp/email', [
+            'sender'      => ['name' => $fromName, 'email' => $fromEmail],
+            'to'          => [['email' => $toEmail]],
+            'subject'     => $subject,
+            'htmlContent' => $htmlContent,
+        ]);
 
         if ($response->successful()) {
             $messageId = $response->json('messageId') ?? 'N/A';
@@ -58,13 +66,32 @@ class TestBrevoEmail extends Command
         return self::FAILURE;
     }
 
-    private function buildHtml(string $appName): string
+    /** @return array{string, string} [subject, htmlContent] */
+    private function buildDonationEmail(): array
+    {
+        $donorName = $this->option('donor')    ?? 'Donador de Prueba';
+        $amount    = $this->option('amount')   ?? '100.00';
+        $currency  = $this->option('currency') ?? 'MXN';
+
+        $subject = '[TEST] ¡Tu donación fue exitosa! — Escalada Libre A.C.';
+        $html    = view('emails.donation-confirmation', [
+            'donorName' => $donorName,
+            'amount'    => $amount,
+            'currency'  => $currency,
+        ])->render();
+
+        return [$subject, $html];
+    }
+
+    /** @return array{string, string} [subject, htmlContent] */
+    private function buildGenericEmail(string $appName): array
     {
         $env  = app()->environment();
         $date = now()->format('d/m/Y H:i:s');
         $url  = config('app.url');
 
-        return <<<HTML
+        $subject = '[TEST] Email de prueba — ' . $appName . ' (' . $date . ')';
+        $html    = <<<HTML
 <!DOCTYPE html>
 <html lang="es">
 <head>
@@ -122,5 +149,7 @@ class TestBrevoEmail extends Command
 </body>
 </html>
 HTML;
+
+        return [$subject, $html];
     }
 }

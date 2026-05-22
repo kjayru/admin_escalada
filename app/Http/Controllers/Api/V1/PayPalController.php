@@ -3,12 +3,10 @@
 namespace App\Http\Controllers\Api\V1;
 
 use App\Http\Controllers\Controller;
-use App\Mail\DonationConfirmation;
 use App\Models\Donation;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Log;
-use Illuminate\Support\Facades\Mail;
 
 class PayPalController extends Controller
 {
@@ -170,14 +168,40 @@ class PayPalController extends Controller
                         'captured_at'     => now(),
                     ]);
 
-                    // Enviar email de confirmación al donador
+                    // Enviar email de confirmación al donador vía Brevo API
                     if ($payerEmail) {
                         try {
-                            Mail::to($payerEmail)->send(new DonationConfirmation(
-                                donorName: $payerName,
-                                amount:    number_format($donatedAmount, 2, '.', ''),
-                                currency:  $currency,
-                            ));
+                            $htmlContent = view('emails.donation-confirmation', [
+                                'donorName' => $payerName,
+                                'amount'    => number_format($donatedAmount, 2, '.', ''),
+                                'currency'  => $currency,
+                            ])->render();
+
+                            $brevoResponse = Http::withHeaders([
+                                'api-key'      => env('BREVO_KEY'),
+                                'Content-Type' => 'application/json',
+                                'Accept'       => 'application/json',
+                            ])->post('https://api.brevo.com/v3/smtp/email', [
+                                'sender'      => [
+                                    'name'  => config('app.name', 'Escalada Libre'),
+                                    'email' => 'noreply@escaladalibre.org',
+                                ],
+                                'to'          => [['email' => $payerEmail]],
+                                'subject'     => '¡Tu donación fue exitosa! — Escalada Libre A.C.',
+                                'htmlContent' => $htmlContent,
+                            ]);
+
+                            if (!$brevoResponse->successful()) {
+                                Log::error('PayPal: Error enviando email de confirmación vía Brevo', [
+                                    'status' => $brevoResponse->status(),
+                                    'body'   => $brevoResponse->body(),
+                                ]);
+                            } else {
+                                Log::info('PayPal: Email de confirmación enviado', [
+                                    'to'        => $payerEmail,
+                                    'messageId' => $brevoResponse->json('messageId'),
+                                ]);
+                            }
                         } catch (\Exception $e) {
                             Log::error('PayPal: Error enviando email de confirmación', ['message' => $e->getMessage()]);
                         }
