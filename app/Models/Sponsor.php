@@ -33,6 +33,11 @@ class Sponsor extends Model
         'twitter_url',
         'email',
         'status',
+        'og_title',
+        'og_description',
+        'og_image_media_id',
+        'og_image_width',
+        'og_image_height',
     ];
 
     public function logo(): BelongsTo
@@ -118,6 +123,11 @@ class Sponsor extends Model
     public function contactMediaFile(): BelongsTo
     {
         return $this->belongsTo(MediaFile::class, 'contact_media_id');
+    }
+
+    public function ogImageFile(): BelongsTo
+    {
+        return $this->belongsTo(MediaFile::class, 'og_image_media_id');
     }
 
     public function placements(): HasMany

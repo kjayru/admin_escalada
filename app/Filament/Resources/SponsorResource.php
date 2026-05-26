@@ -190,6 +190,44 @@ class SponsorResource extends Resource
                             ->placeholder('contacto@patrocinador.com')
                             ->prefixIcon('heroicon-o-envelope'),
                     ])->columns(3),
+
+                // ── SEO / Open Graph ─────────────────────────────────────────
+                Section::make('SEO / Open Graph')
+                    ->description('Configura cómo se verá esta página al compartirla en redes sociales (Facebook, WhatsApp, Twitter, etc.).')
+                    ->schema([
+                        TextInput::make('og_title')
+                            ->label('og:title')
+                            ->maxLength(255)
+                            ->placeholder('Ej: Valley Plastic & Paper Recycling – Patrocinador Escalada Libre')
+                            ->helperText('Título que aparece al compartir en redes. Si se deja vacío, se usa el nombre del patrocinador.')
+                            ->columnSpanFull(),
+                        Textarea::make('og_description')
+                            ->label('og:description')
+                            ->rows(3)
+                            ->maxLength(500)
+                            ->placeholder('Ej: Descubre cómo Valley Plastic apoya la escalada libre y el cuidado del medio ambiente.')
+                            ->helperText('Descripción que aparece al compartir en redes. Si se deja vacío, se usa el tagline o la descripción.')
+                            ->columnSpanFull(),
+                        MediaPicker::make('og_image_media_id')
+                            ->label('og:image')
+                            ->nullable()
+                            ->helperText('Imagen para redes sociales. Recomendado: 1200×630 px (horizontal). Si se deja vacío, se usa el logo del patrocinador.')
+                            ->columnSpanFull(),
+                        TextInput::make('og_image_width')
+                            ->label('og:image:width')
+                            ->numeric()
+                            ->minValue(1)
+                            ->maxValue(9999)
+                            ->placeholder('1200')
+                            ->helperText('Ancho en píxeles de la imagen OG.'),
+                        TextInput::make('og_image_height')
+                            ->label('og:image:height')
+                            ->numeric()
+                            ->minValue(1)
+                            ->maxValue(9999)
+                            ->placeholder('630')
+                            ->helperText('Alto en píxeles de la imagen OG.'),
+                    ])->columns(2),
             ]);
     }
 

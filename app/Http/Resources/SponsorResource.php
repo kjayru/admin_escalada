@@ -92,6 +92,18 @@ class SponsorResource extends JsonResource
                 'email'    => $this->email,
             ],
 
+            // -- Open Graph / SEO --
+            'og' => [
+                'title'        => $this->og_title,
+                'description'  => $this->og_description,
+                'image'        => $this->mediaItem(
+                    $this->whenLoaded('ogImageFile', fn() => $this->ogImageFile),
+                    null,
+                ),
+                'image_width'  => $this->og_image_width,
+                'image_height' => $this->og_image_height,
+            ],
+
             'status'     => $this->status,
             'created_at' => $this->created_at?->toIso8601String(),
             'updated_at' => $this->updated_at?->toIso8601String(),
