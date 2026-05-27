@@ -90,7 +90,8 @@ class ProductResource extends Resource
                             ->maxLength(10),
                         MediaPicker::make('featured_media_id')
                             ->label('Imagen Destacada')
-                            ->nullable(),
+                            ->nullable()
+                            ->helperText('Las imágenes que se suban deberán colocarse dentro de un contenedor con medida fija de ancho 680px × 725 px de alto, para asegurar su correcta visualización y evitar recortes o deformaciones en el diseño.'),
                     ])->columns(3),
 
                 Section::make('Galería de Imágenes')
@@ -109,7 +110,7 @@ class ProductResource extends Resource
                                 $record->galleryFiles()->sync($syncData);
                             })
                             ->columnSpanFull()
-                            ->helperText('Las imágenes aparecerán en el orden que las organices aquí.'),
+                            ->helperText('Las imágenes aparecerán en el orden que las organices aquí. Las imágenes que se suban deberán colocarse dentro de un contenedor con medida fija de ancho 680px × 725 px de alto, para asegurar su correcta visualización y evitar recortes o deformaciones en el diseño.'),
                     ]),
 
                 Section::make('Descripción')
