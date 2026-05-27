@@ -94,11 +94,11 @@ class SponsorResource extends Resource
                     ->description('Logos del patrocinador para diferentes secciones del sitio.')
                     ->schema([
                         MediaPicker::make('circle_logo_media_id')
-                            ->label('2. Logo circular para el slider')
+                            ->label('Logo circular para el slider')
                             ->nullable()
                             ->helperText('Dimensiones recomendadas: 256×256 px (cuadrado). Se mostrará a 256px de ancho en el slider de la Home.'),
                         MediaPicker::make('section_logo_media_id')
-                            ->label('5. Logo de la sección (cabecera del landing)')
+                            ->label('Logo de la sección (cabecera del landing)')
                             ->nullable()
                             ->helperText('Dimensiones recomendadas: ancho variable × 94px altura. Aparece centrado en la parte superior del landing.'),
                     ])->columns(2),
@@ -108,7 +108,7 @@ class SponsorResource extends Resource
                     ->description('Imagen de fondo que aparece detrás del logo y el texto en el slider de la Home.')
                     ->schema([
                         MediaPicker::make('slide_image_media_id')
-                            ->label('4. Imagen de fondo del slider')
+                            ->label('Imagen de fondo del slider')
                             ->nullable()
                             ->helperText('Dimensiones recomendadas: 1920×1080 px o superior. Formato panorámico para hero/slider full width.')
                             ->columnSpanFull(),
@@ -135,7 +135,7 @@ class SponsorResource extends Resource
                             ->nullable()
                             ->helperText('Dimensiones recomendadas: 1127×670 px. Cuarta imagen del slider.'),
                         MediaPicker::make('highlight_media_id')
-                            ->label('7. Imagen destacada para box "¿Te gustó este producto?"')
+                            ->label('Imagen destacada para box "¿Te gustó este producto?"')
                             ->nullable()
                             ->helperText('Dimensiones recomendadas: 220×220 px (cuadrado). Se mostrará circular. Si no se define, usa la Imagen 1.')
                             ->columnSpanFull(),
