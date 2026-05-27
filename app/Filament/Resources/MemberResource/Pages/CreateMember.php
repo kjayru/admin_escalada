@@ -8,4 +8,9 @@ use Filament\Resources\Pages\CreateRecord;
 class CreateMember extends CreateRecord
 {
     protected static string $resource = MemberResource::class;
+
+    protected function afterCreate(): void
+    {
+        $this->redirect($this->getResource()::getUrl('create'));
+    }
 }
