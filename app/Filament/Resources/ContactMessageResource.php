@@ -82,7 +82,6 @@ class ContactMessageResource extends Resource
                     ])->columns(4),
                 Section::make('Mensaje')
                     ->schema([
-                        TextEntry::make('subject')->label('Asunto')->columnSpanFull(),
                         TextEntry::make('message')->label('Contenido')->columnSpanFull(),
                         TextEntry::make('created_at')
                             ->label('Recibido')
@@ -103,10 +102,6 @@ class ContactMessageResource extends Resource
                     ->label('Email')
                     ->searchable()
                     ->copyable(),
-                TextColumn::make('subject')
-                    ->label('Asunto')
-                    ->limit(40)
-                    ->searchable(),
                 TextColumn::make('status')
                     ->label('Estado')
                     ->badge()
