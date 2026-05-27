@@ -87,9 +87,10 @@ class SponsorResource extends JsonResource
 
             // -- Redes sociales --
             'social' => [
-                'facebook' => $this->facebook_url,
-                'twitter'  => $this->twitter_url,
-                'email'    => $this->email,
+                'facebook'  => $this->facebook_url,
+                'instagram' => $this->instagram_url,
+                'twitter'   => $this->twitter_url,
+                'email'     => $this->email,
             ],
 
             // -- Open Graph / SEO --

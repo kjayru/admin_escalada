@@ -30,6 +30,7 @@ class Sponsor extends Model
         'contact_text',
         'contact_media_id',
         'facebook_url',
+        'instagram_url',
         'twitter_url',
         'email',
         'status',

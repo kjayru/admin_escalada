@@ -177,6 +177,12 @@ class SponsorResource extends Resource
                             ->maxLength(255)
                             ->placeholder('https://facebook.com/...')
                             ->prefixIcon('heroicon-o-globe-alt'),
+                        TextInput::make('instagram_url')
+                            ->label('Instagram')
+                            ->url()
+                            ->maxLength(255)
+                            ->placeholder('https://instagram.com/...')
+                            ->prefixIcon('heroicon-o-globe-alt'),
                         TextInput::make('twitter_url')
                             ->label('X (Twitter)')
                             ->url()
@@ -189,7 +195,7 @@ class SponsorResource extends Resource
                             ->maxLength(255)
                             ->placeholder('contacto@patrocinador.com')
                             ->prefixIcon('heroicon-o-envelope'),
-                    ])->columns(3),
+                    ])->columns(4),
 
                 // ── SEO / Open Graph ─────────────────────────────────────────
                 Section::make('SEO / Open Graph')
