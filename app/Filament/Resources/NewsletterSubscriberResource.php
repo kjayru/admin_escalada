@@ -13,6 +13,8 @@ use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Columns\BadgeColumn;
 use Filament\Tables\Filters\SelectFilter;
 use Filament\Tables\Table;
+use Filament\Tables\Actions\Action;
+use Filament\Tables\Actions\DeleteAction;
 use Filament\Actions\DeleteBulkAction;
 use Illuminate\Validation\Rule;
 
@@ -82,11 +84,6 @@ class NewsletterSubscriberResource extends Resource
                     ->copyable()
                     ->sortable(),
 
-                TextColumn::make('name')
-                    ->label('Nombre')
-                    ->searchable()
-                    ->placeholder('—'),
-
                 TextColumn::make('status')
                     ->label('Estado')
                     ->badge()
@@ -113,6 +110,23 @@ class NewsletterSubscriberResource extends Resource
                         'active'       => 'Activo',
                         'unsubscribed' => 'Dado de baja',
                     ]),
+            ])
+            ->actions([
+                Action::make('unsubscribe')
+                    ->label('Dar de baja')
+                    ->icon('heroicon-o-x-circle')
+                    ->color('warning')
+                    ->requiresConfirmation()
+                    ->modalHeading('Dar de baja al suscriptor')
+                    ->modalDescription('¿Estás seguro de que deseas dar de baja a este suscriptor?')
+                    ->modalSubmitActionLabel('Sí, dar de baja')
+                    ->visible(fn ($record) => $record->status === 'active')
+                    ->action(fn ($record) => $record->update(['status' => 'unsubscribed'])),
+                DeleteAction::make()
+                    ->label('Eliminar')
+                    ->modalHeading('Eliminar suscriptor')
+                    ->modalDescription('¿Estás seguro de que deseas eliminar este suscriptor? Esta acción no se puede deshacer.')
+                    ->modalSubmitActionLabel('Sí, eliminar'),
             ])
             ->bulkActions([
                 DeleteBulkAction::make(),
