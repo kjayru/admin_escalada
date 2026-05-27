@@ -89,14 +89,10 @@ class SponsorResource extends Resource
                             ->helperText('URL a la que apunta el botón "Comprar aquí" en el landing'),
                     ])->columns(2),
 
-                // ── 1. Logo para boxes rectangulares ────────────────────────
+                // ── Logos ────────────────────────────────────────────────────
                 Section::make('Logos')
                     ->description('Logos del patrocinador para diferentes secciones del sitio.')
                     ->schema([
-                        MediaPicker::make('logo_media_id')
-                            ->label('1. Logo para boxes rectangulares')
-                            ->nullable()
-                            ->helperText('Dimensiones recomendadas: 600×400 px (horizontal) o 400×600 px (vertical). Aparece en boxes de 547px altura en la Home.'),
                         MediaPicker::make('circle_logo_media_id')
                             ->label('2. Logo circular para el slider')
                             ->nullable()
