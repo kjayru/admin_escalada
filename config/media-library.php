@@ -29,7 +29,7 @@ return [
     /*
      * By default all conversions will be performed on a queue.
      */
-    'queue_conversions_by_default' => env('QUEUE_CONVERSIONS_BY_DEFAULT', true),
+    'queue_conversions_by_default' => env('QUEUE_CONVERSIONS_BY_DEFAULT', false),
 
     /*
      * Should database transactions be run after database commits?
@@ -165,8 +165,8 @@ return [
      */
     'image_generators' => [
         Spatie\MediaLibrary\Conversions\ImageGenerators\Image::class,
-        Spatie\MediaLibrary\Conversions\ImageGenerators\Webp::class,
-        Spatie\MediaLibrary\Conversions\ImageGenerators\Avif::class,
+        // Spatie\MediaLibrary\Conversions\ImageGenerators\Webp::class, // Deshabilitado temporalmente - causaba errores
+        // Spatie\MediaLibrary\Conversions\ImageGenerators\Avif::class, // Deshabilitado temporalmente - causaba errores
         Spatie\MediaLibrary\Conversions\ImageGenerators\Pdf::class,
         Spatie\MediaLibrary\Conversions\ImageGenerators\Svg::class,
         // Video generator deshabilitado - usamos nuestro Job de conversión
