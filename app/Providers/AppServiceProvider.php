@@ -29,6 +29,11 @@ class AppServiceProvider extends ServiceProvider
             return config('app.frontend_url')."/password-reset/$token?email={$notifiable->getEmailForPasswordReset()}";
         });
 
+        // Disable media conversions on Slimani File model to prevent WebP/Avif conversion errors
+        File::registerMediaConversionsUsing(function () {
+            // No conversions - prevents thumb.webp and preview.webp generation
+        });
+
         // MediaPicker::getFile() is called in Slimani's blade template to show the
         // current selected file preview. The package does not define this method, so
         // we register it as a macro here.
