@@ -1,5 +1,7 @@
 <?php
 
+$paypalMode = strtolower(env('PAYPAL_MODE', 'sandbox'));
+
 return [
 
     /*
@@ -36,9 +38,14 @@ return [
     ],
 
     'paypal' => [
-        'mode' => env('PAYPAL_MODE', 'sandbox'), // sandbox or live
-        'client_id' => env('PAYPAL_SANDBOX_CLIENT_ID'),
-        'client_secret' => env('PAYPAL_SANDBOX_CLIENT_SECRET'),
+        'mode' => $paypalMode, // sandbox or live
+        'currency' => env('PAYPAL_CURRENCY', 'MXN'),
+        'client_id' => $paypalMode === 'live'
+            ? env('PAYPAL_LIVE_CLIENT_ID')
+            : env('PAYPAL_SANDBOX_CLIENT_ID'),
+        'client_secret' => $paypalMode === 'live'
+            ? env('PAYPAL_LIVE_CLIENT_SECRET')
+            : env('PAYPAL_SANDBOX_CLIENT_SECRET'),
     ],
 
 ];

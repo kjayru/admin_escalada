@@ -80,7 +80,7 @@ class PayPalController extends Controller
                     'purchase_units' => [
                         [
                             'amount' => [
-                                'currency_code' => env('PAYPAL_CURRENCY', 'MXN'),
+                                'currency_code' => config('services.paypal.currency', 'MXN'),
                                 'value' => number_format($validated['amount'], 2, '.', ''),
                             ],
                             'description' => 'Donación a Escalada Libre Costa Rica',
@@ -155,7 +155,7 @@ class PayPalController extends Controller
                     $payerEmail    = $formData['correo'] ?? $data['payer']['email_address'] ?? '';
                     $payerName     = trim(($formData['nombre'] ?? $data['payer']['name']['given_name'] ?? '') . ' ' . ($formData['apellido'] ?? $data['payer']['name']['surname'] ?? ''));
                     $donatedAmount = isset($formData['cantidad']) ? (float) $formData['cantidad'] : ($capture['amount']['value'] ?? 0);
-                    $currency      = $capture['amount']['currency_code'] ?? env('PAYPAL_CURRENCY', 'MXN');
+                    $currency      = $capture['amount']['currency_code'] ?? config('services.paypal.currency', 'MXN');
 
                     Donation::create([
                         'paypal_order_id' => $orderId,
