@@ -10,8 +10,8 @@ use Illuminate\Support\Facades\Log;
 
 class PayPalController extends Controller
 {
-    private string $clientId;
-    private string $clientSecret;
+    private ?string $clientId;
+    private ?string $clientSecret;
     private string $baseUrl;
 
     public function __construct()
@@ -23,12 +23,44 @@ class PayPalController extends Controller
             : 'https://api-m.sandbox.paypal.com';
     }
 
+    private function logContext(array $extra = []): array
+    {
+        return array_merge([
+            'mode' => config('services.paypal.mode'),
+            'currency' => config('services.paypal.currency', 'MXN'),
+            'base_url' => $this->baseUrl,
+            'frontend_url' => config('app.frontend_url'),
+            'client_id_configured' => filled($this->clientId),
+            'client_secret_configured' => filled($this->clientSecret),
+        ], $extra);
+    }
+
+    private function maskedEmail(?string $email): ?string
+    {
+        if (!$email || !str_contains($email, '@')) {
+            return $email;
+        }
+
+        [$name, $domain] = explode('@', $email, 2);
+        $visible = substr($name, 0, 2);
+
+        return $visible . str_repeat('*', max(strlen($name) - 2, 1)) . '@' . $domain;
+    }
+
     /**
      * Obtener token de acceso de PayPal
      */
     private function getAccessToken(): ?string
     {
         try {
+            Log::info('PayPal: Solicitando access token', $this->logContext());
+
+            if (blank($this->clientId) || blank($this->clientSecret)) {
+                Log::error('PayPal: Credenciales incompletas para obtener access token', $this->logContext());
+
+                return null;
+            }
+
             $response = Http::withBasicAuth($this->clientId, $this->clientSecret)
                 ->asForm()
                 ->post("{$this->baseUrl}/v1/oauth2/token", [
@@ -36,19 +68,23 @@ class PayPalController extends Controller
                 ]);
 
             if ($response->successful()) {
+                Log::info('PayPal: Access token obtenido correctamente', $this->logContext([
+                    'http_status' => $response->status(),
+                ]));
+
                 return $response->json()['access_token'];
             }
 
-            Log::error('PayPal: Error obteniendo access token', [
-                'status' => $response->status(),
+            Log::error('PayPal: Error obteniendo access token', $this->logContext([
+                'http_status' => $response->status(),
                 'body' => $response->body(),
-            ]);
+            ]));
 
             return null;
         } catch (\Exception $e) {
-            Log::error('PayPal: Excepción obteniendo access token', [
+            Log::error('PayPal: Excepción obteniendo access token', $this->logContext([
                 'message' => $e->getMessage(),
-            ]);
+            ]));
             return null;
         }
     }
@@ -65,9 +101,21 @@ class PayPalController extends Controller
             'correo' => 'required|email',
         ]);
 
+        Log::info('PayPal: Iniciando creación de orden', $this->logContext([
+            'amount' => number_format($validated['amount'], 2, '.', ''),
+            'payer_email' => $this->maskedEmail($validated['correo']),
+            'return_url' => config('app.frontend_url') . '/como-apoyar/paypal?success=true',
+            'cancel_url' => config('app.frontend_url') . '/como-apoyar/paypal?canceled=true',
+        ]));
+
         $token = $this->getAccessToken();
 
         if (!$token) {
+            Log::error('PayPal: Creación de orden detenida por falta de access token', $this->logContext([
+                'amount' => number_format($validated['amount'], 2, '.', ''),
+                'payer_email' => $this->maskedEmail($validated['correo']),
+            ]));
+
             return response()->json([
                 'error' => 'No se pudo autenticar con PayPal',
             ], 500);
@@ -103,22 +151,36 @@ class PayPalController extends Controller
                 ]);
 
             if ($response->successful()) {
-                return response()->json($response->json());
+                $data = $response->json();
+
+                Log::info('PayPal: Orden creada correctamente', $this->logContext([
+                    'http_status' => $response->status(),
+                    'order_id' => $data['id'] ?? null,
+                    'paypal_status' => $data['status'] ?? null,
+                    'amount' => number_format($validated['amount'], 2, '.', ''),
+                    'payer_email' => $this->maskedEmail($validated['correo']),
+                ]));
+
+                return response()->json($data);
             }
 
-            Log::error('PayPal: Error creando orden', [
-                'status' => $response->status(),
+            Log::error('PayPal: Error creando orden', $this->logContext([
+                'http_status' => $response->status(),
                 'body' => $response->body(),
-            ]);
+                'amount' => number_format($validated['amount'], 2, '.', ''),
+                'payer_email' => $this->maskedEmail($validated['correo']),
+            ]));
 
             return response()->json([
                 'error' => 'No se pudo crear la orden de PayPal',
                 'details' => $response->json(),
             ], 500);
         } catch (\Exception $e) {
-            Log::error('PayPal: Excepción creando orden', [
+            Log::error('PayPal: Excepción creando orden', $this->logContext([
                 'message' => $e->getMessage(),
-            ]);
+                'amount' => number_format($validated['amount'], 2, '.', ''),
+                'payer_email' => $this->maskedEmail($validated['correo']),
+            ]));
 
             return response()->json([
                 'error' => 'Error procesando la solicitud',
@@ -133,9 +195,21 @@ class PayPalController extends Controller
     {
         $formData = $request->only(['nombre', 'apellido', 'correo', 'cantidad']);
 
+        Log::info('PayPal: Iniciando captura de orden', $this->logContext([
+            'order_id' => $orderId,
+            'amount' => $formData['cantidad'] ?? null,
+            'payer_email' => $this->maskedEmail($formData['correo'] ?? null),
+        ]));
+
         $token = $this->getAccessToken();
 
         if (!$token) {
+            Log::error('PayPal: Captura detenida por falta de access token', $this->logContext([
+                'order_id' => $orderId,
+                'amount' => $formData['cantidad'] ?? null,
+                'payer_email' => $this->maskedEmail($formData['correo'] ?? null),
+            ]));
+
             return response()->json([
                 'error' => 'No se pudo autenticar con PayPal',
             ], 500);
@@ -168,6 +242,14 @@ class PayPalController extends Controller
                         'captured_at'     => now(),
                     ]);
 
+                    Log::info('PayPal: Donación guardada en BD', $this->logContext([
+                        'order_id' => $orderId,
+                        'amount' => $donatedAmount,
+                        'currency' => $currency,
+                        'paypal_status' => $data['status'] ?? 'COMPLETED',
+                        'payer_email' => $this->maskedEmail($payerEmail),
+                    ]));
+
                     // Enviar email de confirmación al donador vía Brevo API
                     if ($payerEmail) {
                         try {
@@ -198,7 +280,7 @@ class PayPalController extends Controller
                                 ]);
                             } else {
                                 Log::info('PayPal: Email de confirmación enviado', [
-                                    'to'        => $payerEmail,
+                                    'to'        => $this->maskedEmail($payerEmail),
                                     'messageId' => $brevoResponse->json('messageId'),
                                 ]);
                             }
@@ -207,33 +289,41 @@ class PayPalController extends Controller
                         }
                     }
                 } catch (\Exception $e) {
-                    Log::error('PayPal: Error guardando donación en BD', ['message' => $e->getMessage()]);
+                    Log::error('PayPal: Error guardando donación en BD', $this->logContext([
+                        'order_id' => $orderId,
+                        'message' => $e->getMessage(),
+                    ]));
                 }
 
-                Log::info('PayPal: Pago capturado exitosamente', [
+                Log::info('PayPal: Pago capturado exitosamente', $this->logContext([
                     'order_id'    => $orderId,
-                    'status'      => $data['status'] ?? null,
-                    'payer_email' => $data['payer']['email_address'] ?? null,
-                ]);
+                    'http_status' => $response->status(),
+                    'paypal_status' => $data['status'] ?? null,
+                    'payer_email' => $this->maskedEmail($data['payer']['email_address'] ?? null),
+                ]));
 
                 return response()->json($data);
             }
 
-            Log::error('PayPal: Error capturando orden', [
+            Log::error('PayPal: Error capturando orden', $this->logContext([
                 'order_id' => $orderId,
-                'status' => $response->status(),
+                'http_status' => $response->status(),
                 'body' => $response->body(),
-            ]);
+                'amount' => $formData['cantidad'] ?? null,
+                'payer_email' => $this->maskedEmail($formData['correo'] ?? null),
+            ]));
 
             return response()->json([
                 'error' => 'No se pudo capturar el pago',
                 'details' => $response->json(),
             ], 500);
         } catch (\Exception $e) {
-            Log::error('PayPal: Excepción capturando orden', [
+            Log::error('PayPal: Excepción capturando orden', $this->logContext([
                 'order_id' => $orderId,
                 'message' => $e->getMessage(),
-            ]);
+                'amount' => $formData['cantidad'] ?? null,
+                'payer_email' => $this->maskedEmail($formData['correo'] ?? null),
+            ]));
 
             return response()->json([
                 'error' => 'Error procesando la captura del pago',
@@ -255,9 +345,17 @@ class PayPalController extends Controller
      */
     public function getOrder(string $orderId)
     {
+        Log::info('PayPal: Iniciando consulta de orden', $this->logContext([
+            'order_id' => $orderId,
+        ]));
+
         $token = $this->getAccessToken();
 
         if (!$token) {
+            Log::error('PayPal: Consulta detenida por falta de access token', $this->logContext([
+                'order_id' => $orderId,
+            ]));
+
             return response()->json([
                 'error' => 'No se pudo autenticar con PayPal',
             ], 500);
@@ -268,17 +366,31 @@ class PayPalController extends Controller
                 ->get("{$this->baseUrl}/v2/checkout/orders/{$orderId}");
 
             if ($response->successful()) {
-                return response()->json($response->json());
+                $data = $response->json();
+
+                Log::info('PayPal: Orden consultada correctamente', $this->logContext([
+                    'order_id' => $orderId,
+                    'http_status' => $response->status(),
+                    'paypal_status' => $data['status'] ?? null,
+                ]));
+
+                return response()->json($data);
             }
+
+            Log::error('PayPal: Error consultando orden', $this->logContext([
+                'order_id' => $orderId,
+                'http_status' => $response->status(),
+                'body' => $response->body(),
+            ]));
 
             return response()->json([
                 'error' => 'No se pudo obtener la orden',
             ], 404);
         } catch (\Exception $e) {
-            Log::error('PayPal: Excepción obteniendo orden', [
+            Log::error('PayPal: Excepción obteniendo orden', $this->logContext([
                 'order_id' => $orderId,
                 'message' => $e->getMessage(),
-            ]);
+            ]));
 
             return response()->json([
                 'error' => 'Error obteniendo la orden',
